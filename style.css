@@ -1,0 +1,62 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 50px;
+}
+.HeaderLeft {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: fit-content;
+}
+.HeaderRight {
+  margin-right: 50px;
+}
+.HeaderRight > button {
+  margin: 15px;
+}
+/* --------------------------------------Body-------------------------------------- */
+body {
+  background-color: #f5f387;
+}
+section {
+  display: grid;
+}
+
+/* --------------------------------------Body-------------------------------------- */
+footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  bottom: 0%;
+  width: 100%;
+  height: 5%;
+  background-color: rgba(23, 98, 167, 0.73);
+}
+.FooterLeft {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-around;
+  margin-left: 10%;
+  width: 20%;
+}
+.FooterLeft > button {
+  margin-left: 2%;
+}
+.FooterRight {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-around;
+  margin-right: 10%;
+  width: 20%;
+}
