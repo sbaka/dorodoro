@@ -1,0 +1,62 @@
+section {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+.illustration > h1 {
+  font-family: "Bubblegum Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 145px;
+  color: #4381a8;
+}
+.illustration > h1 > b {
+  color: #ffffff;
+  font-size: 199px;
+  text-shadow: 0px 4px 4px #000000;
+}
+
+.loginContainer {
+  background: rgba(255, 255, 255, 0.77);
+  border: 1px solid #000000;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+  max-height: 729px;
+  min-width: 30%;
+  padding: 30px;
+}
+.loginContainer > form {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-evenly;
+  align-content: center;
+}
+.loginContainer > form > input,
+.btns > input {
+  border: 2px solid #1762a7;
+  border-radius: 10px;
+  font-family: "Bubblegum Sans";
+  font-weight: 400;
+  font-size: 24px;
+}
+.input {
+  height: 40px;
+  padding: 15px;
+}
+.btns {
+  display: flex;
+  flex-direction: column;
+  height: 25%;
+  align-items: stretch;
+  justify-content: space-around;
+}
+.btns > input[type="submit"] {
+  background: #4381a8;
+  color: #ffffff;
+  height: 70px;
+}
+.btns > input[type="button"] {
+  height: 70px;
+}

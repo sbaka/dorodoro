@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DoroDoro</title>
     <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./indexStyle.css" />
   </head>
   <body>
     <header>
@@ -33,7 +34,7 @@
           </h5>
         </div>
 
-        <button>Start Session</button>
+        <button id="login">Start Session</button>
       </div>
       <div class="empty"></div>
     </section>
@@ -48,4 +49,9 @@
       <button>Facebook</button>
     </div>
   </footer>
+  <script type="text/javascript">
+    document.getElementById("login").onclick = function () {
+      location.href = "/login/login.html";
+    };
+  </script>
 </html>
