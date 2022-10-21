@@ -1,52 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DoroDoro</title>
-    <link rel="stylesheet" href="../style.css" />
-    <link rel="stylesheet" href="./login.css" />
-  </head>
-  <body>
-    <header>
-      <div class="HeaderLeft">
-        <img src="../assets/Logo.png" alt="logo.png" />
-        <h4>DoroDoro</h4>
-      </div>
-      <div class="HeaderRight">
-        <button>Sign in</button>
-        <button>Sign up</button>
-      </div>
-    </header>
-    <section>
-      <div class="illustration">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DoroDoro</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="./login.css" />
+</head>
+
+<body>
+  <header>
+    <div id="HeaderLeft">
+      <img src="../assets/Logo.png" alt="logo.png" />
+      <h4>DoroDoro</h4>
+    </div>
+    <div class="HeaderRight">
+      <button>Sign in</button>
+      <button>Sign up</button>
+    </div>
+  </header>
+  <section>
+    <div class="illustration">
+      <center>
         <h1>Join <b>US.</b></h1>
         <img src="../assets/joinUS.png " alt="standing tomato " />
-      </div>
-      <div class="loginContainer">
-        <h2>Create an account now.</h2>
-        <h3>Already a member ? <a href="#"> Sign In</a></h3>
+      </center>
+    </div>
+    <div class="empty"></div>
+    <div class="containers">
+      <!-- ******************SIGN In***************** -->
+      <div class="overLap signInContainer">
+        <h2>Connect to your account now.</h2>
+        <h3>You don’t have an account ? <a href="#Foo" onclick="toggleSign();">Sign up</a></h3>
+
         <form action="#" method="post">
-          <input type="text" class="input" />
-          <input type="email" name="email" id="email" class="input" />
-          <input type="password" name="pwd" id="pwd" class="input" />
+          <input type="text" class="input" placeholder="UserName or Email : " />
+          <input type="password" name="pwd" class="input" placeholder="Password :" />
+          <div class="btns">
+            <input type="submit" value="Sign in" />
+            <input type="button" value="Sign in with Google" />
+          </div>
+        </form>
+      </div>
+      <!-- ******************SIGN Up******************** -->
+      <div class="overLap signUpContainer">
+        <h2>Create an account now.</h2>
+        <h3>Already a member ? <a href="#Foo" onclick="toggleSign();"> Sign In</a></h3>
+        <form action="#" method="post">
+          <input type="text" class="input" placeholder="Name : " />
+          <input type="email" name="email" id="email" placeholder="Email : " class="input" />
+          <input type="password" name="pwd" placeholder="Password :" class="input" />
           <div class="btns">
             <input type="submit" value="Sign up" />
             <input type="button" value="Sign up with Google" />
           </div>
         </form>
       </div>
-    </section>
-  </body>
-  <footer>
-    <div class="FooterLeft">
-      <button>About us</button>
-      <button>Contact</button>
     </div>
-    <div class="FooterRight">
-      <button>Twitter</button>
-      <button>Facebook</button>
-    </div>
-  </footer>
+  </section>
+</body>
+<footer>
+  <div class="FooterLeft">
+    <button>About us</button>
+    <button>Contact</button>
+  </div>
+  <div class="FooterRight">
+    <button>Twitter</button>
+    <button>Facebook</button>
+  </div>
+</footer>
+
+<script src="scriptSign.js">
+
+</script>
+<script>
+  document.getElementById("HeaderLeft").onclick = function () {
+    location.href = "../index.html"
+  };</script>
+
 </html>

@@ -1,11 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap");
+
 * {
   margin: 0;
   padding: 0;
 }
+
 button {
   cursor: pointer;
 }
+
 header {
   display: flex;
   flex-direction: row;
@@ -13,19 +16,24 @@ header {
   align-items: center;
   margin: 10px 50px;
 }
-.HeaderLeft {
+
+#HeaderLeft {
   display: flex;
   flex-direction: row;
   align-items: center;
   width: fit-content;
+  cursor: pointer;
 }
+
 .HeaderRight {
   margin-right: 50px;
 }
-.HeaderRight > button {
+
+.HeaderRight>button {
   margin: 15px;
 }
-header > div > button {
+
+header>div>button {
   background-color: transparent;
   font-family: "Bubblegum Sans";
   color: #4381a8;
@@ -40,6 +48,7 @@ body {
   flex-direction: column;
   background-color: #f5f387;
 }
+
 /* --------------------------------------Body-------------------------------------- */
 footer {
   display: flex;
@@ -53,6 +62,7 @@ footer {
   background-color: rgba(23, 98, 167, 0.73);
   margin-top: auto;
 }
+
 .FooterLeft {
   display: flex;
   flex-direction: row-reverse;
@@ -61,9 +71,11 @@ footer {
   margin-left: 10%;
   width: 20%;
 }
-.FooterLeft > button {
+
+.FooterLeft>button {
   margin-left: 2%;
 }
+
 .FooterRight {
   display: flex;
   flex-direction: row-reverse;
@@ -72,7 +84,8 @@ footer {
   margin-right: 10%;
   width: 20%;
 }
-footer > div > button {
+
+footer>div>button {
   background-color: transparent;
   font-family: "Bubblegum Sans";
   color: #ffffff;

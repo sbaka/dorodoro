@@ -1,57 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DoroDoro</title>
-    <link rel="stylesheet" href="./style.css" />
-    <link rel="stylesheet" href="./indexStyle.css" />
-  </head>
-  <body>
-    <header>
-      <div class="HeaderLeft">
-        <img src="assets/Logo.png" alt="logo.png" />
-        <h4>DoroDoro</h4>
-      </div>
-      <div class="HeaderRight">
-        <button>Sign in</button>
-        <button>Sign up</button>
-      </div>
-    </header>
-    <section>
-      <div class="empty"></div>
-      <div class="happyImg">
-        <img src="assets/Happy tomato.png" alt="Happy tomato.png" />
-      </div>
-      <div class="empty"></div>
-      <div class="ContentSection">
-        <div class="textSection">
-          <h2>Enjoy Studying</h2>
-          <h5>
-            With our new website, studying with the famous pomodoro technique is
-            much fun.
-          </h5>
-        </div>
 
-        <button id="login">Start Session</button>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DoroDoro</title>
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="./indexStyle.css" />
+</head>
+
+<body>
+  <header>
+    <div id="HeaderLeft">
+      <img src="assets/Logo.png" alt="logo.png" />
+      <h4>DoroDoro</h4>
+    </div>
+    <div id="HeaderRight">
+      <button>Sign in</button>
+      <button>Sign up</button>
+    </div>
+  </header>
+  <section>
+    <div class="empty"></div>
+    <div class="happyImg">
+      <img src="assets/Happy tomato.png" alt="Happy tomato.png" />
+    </div>
+    <div class="empty"></div>
+    <div class="ContentSection">
+      <div class="textSection">
+        <h2>Enjoy Studying</h2>
+        <h5>
+          With our new website, studying with the famous pomodoro technique is
+          much fun.
+        </h5>
       </div>
-      <div class="empty"></div>
-    </section>
-  </body>
-  <footer>
-    <div class="FooterLeft">
-      <button>About us</button>
-      <button>Contact</button>
+
+      <button id="login">Start Session</button>
     </div>
-    <div class="FooterRight">
-      <button>Twitter</button>
-      <button>Facebook</button>
-    </div>
-  </footer>
-  <script type="text/javascript">
-    document.getElementById("login").onclick = function () {
-      location.href = "/login/login.html";
-    };
-  </script>
+    <div class="empty"></div>
+  </section>
+</body>
+<footer>
+  <div class="FooterLeft">
+    <button>About us</button>
+    <button>Contact</button>
+  </div>
+  <div class="FooterRight">
+    <button>Twitter</button>
+    <button>Facebook</button>
+  </div>
+</footer>
+<script type="text/javascript" src="script.js"></script>
+<script>
+  document.getElementById("login").onclick = function () {
+    location.href = "./login/login.html";
+  };
+</script>
+
 </html>
