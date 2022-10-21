@@ -9,7 +9,7 @@
   </head>
   <body>
     <header>
-      <div class="HeaderLeft">
+      <div id="HeaderLeft">
         <img src="../assets/Logo.png" alt="logo.png" />
         <h4>DoroDoro</h4>
       </div>

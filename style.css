@@ -3,6 +3,8 @@
 * {
   margin: 0;
   padding: 0;
+  font-family: 'Bubblegum Sans';
+
 }
 
 button {
@@ -25,11 +27,14 @@ header {
   cursor: pointer;
 }
 
-.HeaderRight {
+#HeaderRight {
+  display: flex;
+  flex-direction: row;
   margin-right: 50px;
+
 }
 
-.HeaderRight>button {
+#HeaderRight>button {
   margin: 15px;
 }
 
@@ -44,9 +49,14 @@ header>div>button {
 
 /* --------------------------------------Body-------------------------------------- */
 body {
+  height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: #f5f387;
+}
+
+section {
+  height: 100%;
 }
 
 /* --------------------------------------Body-------------------------------------- */
