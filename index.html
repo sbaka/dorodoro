@@ -12,13 +12,13 @@
 
 <body>
   <header>
-    <div id="HeaderLeft">
+    <div id="HeaderLeft" onclick="{goHome()}">
       <img src="assets/Logo.png" alt="logo.png" />
       <h4>DoroDoro</h4>
     </div>
     <div id="HeaderRight">
-      <button>Sign in</button>
-      <button>Sign up</button>
+      <button onclick="{goSignIn()}">Sign in</button>
+      <button onclick="{goSignUp()}">Sign up</button>
     </div>
   </header>
   <section>
@@ -36,7 +36,7 @@
         </h5>
       </div>
 
-      <button id="login">Sign up</button>
+      <button onclick="{goSignUp()}">Sign up</button>
     </div>
     <div class="empty"></div>
   </section>
@@ -52,10 +52,6 @@
   </div>
 </footer>
 <script type="text/javascript" src="script.js"></script>
-<script>
-  document.getElementById("login").onclick = function () {
-    location.href = "./login/login.html";
-  };
-</script>
+<script type="text/javascript" src="navigation.js"></script>
 
 </html>

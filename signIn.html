@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DoroDoro</title>
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="./sign_style.css" />
+</head>
+
+<body>
+  <header>
+    <div id="HeaderLeft" onclick="{goHome()}">
+      <img src="assets/Logo.png" alt="logo.png" />
+      <h4>DoroDoro</h4>
+    </div>
+    <div id="HeaderRight">
+      <button onclick="{goSignIn()}">Sign in</button>
+      <button onclick="{goSignUp()}">Sign up</button>
+    </div>
+  </header>
+  <section>
+    <div class="illustration">
+      <center>
+        <h1>Join <b>US.</b></h1>
+        <img src="./assets/joinUS.png " alt="standing tomato " />
+      </center>
+    </div>
+    <!-- <div class="empty"></div> -->
+
+    <div class="signInContainer">
+      <h2>Connect to your account now.</h2>
+      <h3>You don’t have an account ? <a href="#Foo" onclick="{goSignUp()}">Sign up</a></h3>
+      <form action="#" method="post">
+        <input type="text" class="input" placeholder="UserName or Email : " />
+        <input type="password" name="pwd" class="input" placeholder="Password :" />
+        <div class="btns">
+          <input type="submit" value="Sign in" />
+          <input type="button" value="Sign in with Google" />
+        </div>
+      </form>
+    </div>
+
+  </section>
+</body>
+<footer>
+  <div class="FooterLeft">
+    <button>About us</button>
+    <button>Contact</button>
+  </div>
+  <div class="FooterRight">
+    <button>Twitter</button>
+    <button>Facebook</button>
+  </div>
+</footer>
+
+<script src="scriptSign.js" />
+</script>
+<script type="text/javascript" src="navigation.js">
+</script>
+
+</html>
