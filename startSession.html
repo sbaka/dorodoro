@@ -13,7 +13,7 @@
 
 <body>
     <header>
-        <div id="HeaderLeft">
+        <div id="HeaderLeft" onclick="{goHome()}">
             <img src="../assets/Logo.png" alt="logo.png" />
             <h4>DoroDoro</h4>
         </div>
@@ -52,10 +52,7 @@
         <button>Facebook</button>
     </div>
 </footer>
-<script>
-    document.getElementById("HeaderLeft").onclick = function () {
-        location.href = "./index.html"
-    };
+<script type="text/javascript" src="navigation.js">
 </script>
 
 </html>
