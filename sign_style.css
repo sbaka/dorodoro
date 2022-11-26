@@ -48,9 +48,7 @@ section {
 
 /* DIFF HEIGHT */
 .signUpContainer {
-  height: 70%;
-  min-height: 630px;
-  transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+  height: fit-content;
 }
 
 .signInContainer {
@@ -81,18 +79,23 @@ section {
   font-family: "Bubblegum Sans";
   font-weight: 400;
   font-size: 24px;
+}
+.signInContainer > form > input {
   margin: 20px;
 }
-
+.signUpContainer > form > input,
+.btns > input {
+  margin: 10px;
+}
 .input {
-  height: 40px;
+  height: 20px;
   padding: 15px;
 }
 
 .btns {
   display: flex;
   flex-direction: column;
-  height: calc(30% + 20px);
+  height: calc(30% - 20px);
   align-items: stretch;
   justify-content: space-around;
 }
