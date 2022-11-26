@@ -4,27 +4,27 @@ section {
   justify-content: space-around;
 }
 
-.illustration>center>h1 {
+.illustration > center > h1 {
   font-family: "Bubblegum Sans";
   font-style: normal;
   font-weight: 400;
-  font-size: 145px;
+  font-size: 120px;
   color: #4381a8;
 }
 
 .illustration {
   display: flex;
   flex-direction: column;
-
 }
 
-.illustration > center >img {
-  width: 50%;
+.illustration > img {
+  align-self: center;
+  height: 60%;
 }
 
-.illustration>center>h1>b {
+.illustration > center > h1 > b {
   color: #ffffff;
-  font-size: 199px;
+  font-size: 125px;
   text-shadow: 0px 4px 4px #000000;
 }
 
@@ -54,18 +54,17 @@ section {
 }
 
 .signInContainer {
-  height: 554px;
-  min-height: 554px;
+  height: fit-content;
 }
 
-.signUpContainer>h3>a,
-.signInContainer>h3>a {
+.signUpContainer > h3 > a,
+.signInContainer > h3 > a {
   color: #4381a8;
   text-decoration: none;
 }
 
-.signUpContainer>form,
-.signInContainer>form {
+.signUpContainer > form,
+.signInContainer > form {
   height: calc(100% - 50px);
   display: flex;
   flex-direction: column;
@@ -74,14 +73,15 @@ section {
   align-content: center;
 }
 
-.signUpContainer>form>input,
-.signInContainer>form>input,
-.btns>input {
+.signUpContainer > form > input,
+.signInContainer > form > input,
+.btns > input {
   border: 2px solid #1762a7;
   border-radius: 10px;
   font-family: "Bubblegum Sans";
   font-weight: 400;
   font-size: 24px;
+  margin: 20px;
 }
 
 .input {
@@ -97,16 +97,16 @@ section {
   justify-content: space-around;
 }
 
-.btns>input[type="submit"] {
+.btns > input[type="submit"] {
   background: #4381a8;
   color: #ffffff;
   height: 60px;
 }
 
-.btns>input[type="button"] {
+.btns > input[type="button"] {
   height: 60px;
   background-image: url(../assets/googleLogo.png);
   background-repeat: no-repeat;
   background-position: left;
-  background-position-x: calc(100% - 100px);
+  background-position-x: calc(100% - 10px);
 }

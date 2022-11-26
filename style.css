@@ -3,7 +3,7 @@
 * {
   margin: 0;
   padding: 0;
-  font-family: 'Bubblegum Sans';
+  font-family: "Bubblegum Sans";
 }
 
 html,
@@ -36,28 +36,27 @@ header {
   display: flex;
   flex-direction: row;
   margin-right: 50px;
-
 }
 
-#HeaderRight>button {
+#HeaderRight > button {
   margin: 15px;
 }
 
 #circle {
   border-radius: 100%;
-  background-color: #4381A8;
+  background-color: #4381a8;
   width: 70px;
   height: 70px;
   font-size: 45px;
-  color: #FFFFFF;
+  color: #ffffff;
   display: flex;
-  font-family: 'Bubblegum Sans';
+  font-family: "Bubblegum Sans";
   align-items: center;
   justify-content: center;
   margin: 15px;
 }
 
-header>div>button {
+header > div > button {
   background-color: transparent;
   font-family: "Bubblegum Sans";
   color: #4381a8;
@@ -77,12 +76,9 @@ body {
 section {
   position: relative;
   min-height: 80%;
+}
 
-}
-center{
-  height: 80%;
-}
-img{
+img {
   height: 80%;
   width: 80%;
 }
@@ -110,7 +106,7 @@ footer {
   width: 20%;
 }
 
-.FooterLeft>button {
+.FooterLeft > button {
   margin-left: 2%;
 }
 
@@ -123,7 +119,7 @@ footer {
   width: 20%;
 }
 
-footer>div>button {
+footer > div > button {
   background-color: transparent;
   font-family: "Bubblegum Sans";
   color: #ffffff;
