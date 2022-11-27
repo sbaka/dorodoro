@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DoroDoro</title>
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="start_style.css" />
+  </head>
+
+  <body>
+    <header>
+      <div id="HeaderLeft" onclick="{goHome()}">
+        <img src="../assets/Logo.png" alt="logo.png" />
+        <h4>DoroDoro</h4>
+      </div>
+      <div id="HeaderRight">
+        <button>Sign in</button>
+        <button>Sign up</button>
+        <div id="circle">A</div>
+      </div>
+    </header>
+    <section>
+      <div class="illustration">
+        <img src="/assets/walking strawberry.png" alt="" srcset="" />
+      </div>
+      <div class="timer">
+        <div id="countdown">
+          <div id="countdown-number"></div>
+          <svg id="svg">
+            <circle r="18" cx="20" cy="20"></circle>
+          </svg>
+        </div>
+      </div>
+    </section>
+    <footer>
+      <div class="FooterLeft">
+        <button>About us</button>
+        <button>Contact</button>
+      </div>
+      <div class="FooterRight">
+        <button>Twitter</button>
+        <button>Facebook</button>
+      </div>
+    </footer>
+  </body>
+  <script type="text/javascript" src="timer.js"></script>
+  <script type="text/javascript" src="navigation.js"></script>
+</html>
