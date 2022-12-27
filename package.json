@@ -1,27 +1,5 @@
 {
-  "name": "dorodoro",
-  "version": "1.0.0",
-  "description": "website with pomodoro technic",
-  "main": "firebase.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/sbaka/dorodoro.git"
-  },
-  "keywords": [
-    "pomodoro",
-    "web"
-  ],
-  "author": "kebraoui Abdellatif",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/sbaka/dorodoro/issues"
-  },
-  "homepage": "https://github.com/sbaka/dorodoro#readme",
   "dependencies": {
-    "firebase": "^9.15.0",
-    "firebase-tools": "^11.19.0"
+    "firebase": "^9.15.0"
   }
 }

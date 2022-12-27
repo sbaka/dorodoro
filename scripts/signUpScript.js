@@ -5,7 +5,7 @@ const signUpBtn = document.getElementById("sign_up_submit")
 const email = document.getElementById("email")
 const password = document.getElementById("pwd")
 const userName = document.getElementById("userName")
-const auth = getAuth();
+const auth = getAuth(app);
 createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
         // Signed in 
