@@ -1,85 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DoroDoro</title>
-    <link rel="stylesheet" href="./style.css" />
-    <!-- <link rel="stylesheet" href="./sign_style.css" /> -->
-    <link rel="stylesheet" href="./setting.css" />
-  </head>
 
-  <body>
-    <header>
-      <div id="HeaderLeft" onclick="{goHome()}">
-        <img src="../assets/Logo.png" alt="logo.png" />
-        <h4>DoroDoro</h4>
-      </div>
-      <div id="HeaderRight">
-        <button>Start</button>
-        <button>settings</button>
-        <div id="circle">A</div>
-      </div>
-    </header>
-    <section>
-      <div class="illustration">
-        <center>
-          <h1>Let's Fix it</h1>
-        </center>
-        <img src="./assets/cerise.png " alt="happy cerise" />
-      </div>
-      <!-- <div class="empty"></div> -->
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DoroDoro</title>
+  <link rel="stylesheet" href="./style.css" />
+  <!-- <link rel="stylesheet" href="./sign_style.css" /> -->
+  <link rel="stylesheet" href="./setting.css" />
+</head>
 
-      <div class="settingsContainer">
-        <div class="title">
-          <h2>Settings</h2>
-          <div>
-            <img src="./assets/settings.png" alt="settings emote" />
-          </div>
+<body>
+  <header>
+    <div id="HeaderLeft" onclick="{goHome()}">
+      <img src="../assets/Logo.png" alt="logo.png" />
+      <h4>DoroDoro</h4>
+    </div>
+    <div id="HeaderRight">
+      <button>Start</button>
+      <button>settings</button>
+      <div id="circle">A</div>
+    </div>
+  </header>
+  <section>
+    <div class="illustration">
+      <center>
+        <h1>Let's Fix it</h1>
+      </center>
+      <img src="./assets/cerise.png " alt="happy cerise" />
+    </div>
+    <!-- <div class="empty"></div> -->
+
+    <div class="settingsContainer">
+      <div class="title">
+        <h2>Settings</h2>
+        <div>
+          <img src="./assets/settings.png" alt="settings emote" />
         </div>
+      </div>
 
-        <div class="settingItems">
-          <div class="settingItem">
-            <label for="pomoDur">Pomodoro Duration</label>
-            <input type="range" name="pomoDur" id="pomoDur" placeholder="0" />
-          </div>
-          <div class="settingItem">
-            <label for="sBrDur">Short break duration</label>
-            <input type="range" name="sBrDur" id="sBrDur" placeholder="25" />
-          </div>
-          <div class="settingItem">
-            <label for="brDur">Long break duration</label>
-            <input type="range" name="brDur" id="brDur" placeholder="25" />
-          </div>
-          <div class="settingItem">
-            <label for="sBrDur">Number of pomodoros</label>
-            <input type="range" name="noPomo" id="noPomo" placeholder="25" />
-          </div>
-          <div class="settingItem">
-            <label for="lBrInter">Long break intervalle</label>
-            <input
-              type="range"
-              name="lBrInter"
-              id="lBrInter"
-              placeholder="25"
-            />
-          </div>
+      <div class="settingItems">
+        <div class="settingItem">
+          <label for="pomoDur">Pomodoro Duration</label>
+          <input type="range" name="pomoDur" id="pomoDur" placeholder="0" />
         </div>
-        <button>Done</button>
+        <div class="settingItem">
+          <label for="sBrDur">Short break duration</label>
+          <input type="range" name="sBrDur" id="sBrDur" placeholder="25" />
+        </div>
+        <div class="settingItem">
+          <label for="brDur">Long break duration</label>
+          <input type="range" name="brDur" id="brDur" placeholder="25" />
+        </div>
+        <div class="settingItem">
+          <label for="sBrDur">Number of pomodoros</label>
+          <input type="range" name="noPomo" id="noPomo" placeholder="25" />
+        </div>
+        <div class="settingItem">
+          <label for="lBrInter">Long break intervalle</label>
+          <input type="range" name="lBrInter" id="lBrInter" placeholder="25" />
+        </div>
       </div>
-    </section>
+      <button>Done</button>
+    </div>
+  </section>
 
-    <footer>
-      <div class="FooterLeft">
-        <button>About us</button>
-        <button>Contact</button>
-      </div>
-      <div class="FooterRight">
-        <button>Twitter</button>
-        <button>Facebook</button>
-      </div>
-    </footer>
-  </body>
-  <script type="text/javascript" src="navigation.js"></script>
+  <footer>
+    <div class="FooterLeft">
+      <button>About us</button>
+      <button>Contact</button>
+    </div>
+    <div class="FooterRight">
+      <button>Twitter</button>
+      <button>Facebook</button>
+    </div>
+  </footer>
+</body>
+<script type="text/javascript" src="navigation.js"></script>
+
 </html>
