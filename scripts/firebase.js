@@ -1,5 +1,6 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -8,6 +9,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebas
 const firebaseConfig = {
     apiKey: "AIzaSyAHwYY5X50lv6eKNlvCqUGpve4zbIKU2bA",
     authDomain: "dorodoro-1234.firebaseapp.com",
+    databaseURL: "https://dorodoro-1234-default-rtdb.firebaseio.com",
     projectId: "dorodoro-1234",
     storageBucket: "dorodoro-1234.appspot.com",
     messagingSenderId: "210359007345",
@@ -17,4 +19,5 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export { app }
+const analytics = getAnalytics(app);
+export { app, analytics }

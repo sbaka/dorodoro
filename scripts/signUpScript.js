@@ -1,4 +1,4 @@
-import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { app } from "./firebase.js"
 
 const signUpBtn = document.getElementById("sign_up_submit")
