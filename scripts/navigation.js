@@ -9,3 +9,9 @@ function goSignUp() {
 function goHome() {
     location.href = "../pages/index.html"
 }
+function goStart() {
+    location.href = "../pages/start.html"
+}
+function goSettings() {
+    location.href = "../pages/settings.html"
+}

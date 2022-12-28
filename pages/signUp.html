@@ -8,6 +8,9 @@
   <title>DoroDoro</title>
   <link rel="stylesheet" href="../styles/style.css" />
   <link rel="stylesheet" href="../styles/sign_style.css" />
+  <!-- for google icons -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 
 <body>
@@ -40,6 +43,10 @@
         <input type="text" class="input" id="userName" placeholder="Name : " />
         <input type="email" class="input" name="email" id="email" placeholder="Email : " />
         <input type="password" class="input" name="pwd" id="pwd" placeholder="Password :" />
+        <div id="error">
+          <span class="material-symbols-outlined"> error </span>
+          <p id="error_msg_container">1</p>
+        </div>
         <div class="btns">
           <input type="submit" value="Sign up" id="sign_up_submit" onclick="" />
           <input type="button" value="Sign up with Google" />

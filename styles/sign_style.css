@@ -116,3 +116,30 @@ section {
   background-position: left;
   background-position-x: calc(100% - 10px);
 }
+
+#error {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px;
+  padding: 20px 0;
+  height: fit-content;
+  max-width: 100%;
+  background-color: #ffc7c7;
+  border-radius: 5px;
+}
+
+#error>p {
+  flex: 2;
+}
+
+/* google fonts icon */
+.material-symbols-outlined {
+  margin: 0 15px;
+  color: rgb(249, 62, 62);
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 48
+}
