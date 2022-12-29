@@ -2,13 +2,13 @@ const countdownNumberEl = document.getElementById('countdown-number');
 const start = document.getElementById("start");
 const circle = document.getElementById("svg")
 // get initial countdown
-const STUDY_TIMER = 120; // user timer
+const STUDY_TIMER = minToSec(30); // user timer
 const REST_TIMER = 5;
 var studyCountdown = STUDY_TIMER  // variable for countdown
 var restCountdown = REST_TIMER // var for countdown
 var currentTimer = 0;
 var started = false
-//init the timer
+//to save the id of the timer in line 20
 var myTimer
 //set the timer to the user time
 countdownNumberEl.innerHTML = secondsToMinutes(STUDY_TIMER); // set the user timer
@@ -54,7 +54,9 @@ function startTimer() {
 function msToMinutes(ms) {
     return Math.floor(ms / 60000)
 }
-
+function minToSec(min) {
+    return min * 60
+}
 function secondsToMinutes(s) {
     if (s < 60) {
         s = s.toLocaleString('en-US', {

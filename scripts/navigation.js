@@ -1,5 +1,5 @@
 function goSignIn() {
-    location.href = "../pages/signIn.html";
+    location.href = "https://abdellatif-kbr.me/dorodoro/pages/signIn.html";
 };
 
 function goSignUp() {
