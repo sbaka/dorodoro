@@ -3,15 +3,15 @@ function goSignIn() {
 };
 
 function goSignUp() {
-    location.href = "../pages/signUp.html";
+    location.href = "https://abdellatif-kbr.me/dorodoro/pages/signUp.html";
 };
 
 function goHome() {
-    location.href = "../index.html"
+    location.href = "https://abdellatif-kbr.me/dorodoro/index.html"
 }
 function goStart() {
-    location.href = "../pages/start.html"
+    location.href = "https://abdellatif-kbr.me/dorodoro/pages/start.html"
 }
 function goSettings() {
-    location.href = "../pages/settings.html"
+    location.href = "https://abdellatif-kbr.me/dorodoro/pages/settings.html"
 }
