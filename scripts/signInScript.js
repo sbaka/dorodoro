@@ -21,8 +21,6 @@ if (authUser) {
     //user is signed in. Redirect to start
     goStart()
 } else {
-    // No user is signed in.
-    console.log("hello", user);
     signUpBtn.onclick = function () {
         onAuthStateChanged
         if (email.value.length > 0 && password.value.length > 0) {
