@@ -28,12 +28,26 @@
     </div>
     <div class="timer">
       <div id="countdown">
-        <div id="countdown-number"></div>
-        <svg id="svg">
-          <circle r="18" cx="20" cy="20"></circle>
+        <div id="timer_display">
+          <h3 id="countdown-number"></h3>
+        </div>
+        <svg height="400" width="400">
+          <defs>
+            <linearGradient id="gradient" x1="50%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#4381A8" />
+              <stop offset="80%" stop-color="#CECB3A" />
+            </linearGradient>
+          </defs>
+          <circle id="svg" cx="200" cy="200" r="175" stroke="url(#gradient)" stroke-width="3" fill="red" />
+          Sorry, your browser does not support inline SVG.
         </svg>
       </div>
+      <div class="bottom">
+        <button id="start" type="submit"> start </button>
+        <button id="settigns" onclick="{goSettings()}"> Settings</button>
+      </div>
     </div>
+
   </section>
   <footer>
     <div class="FooterLeft">

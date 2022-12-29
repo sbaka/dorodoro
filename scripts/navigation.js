@@ -7,7 +7,7 @@ function goSignUp() {
 };
 
 function goHome() {
-    location.href = "../pages/index.html"
+    location.href = "../index.html"
 }
 function goStart() {
     location.href = "../pages/start.html"

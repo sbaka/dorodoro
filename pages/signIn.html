@@ -8,6 +8,8 @@
   <title>DoroDoro</title>
   <link rel="stylesheet" href="../styles/style.css" />
   <link rel="stylesheet" href="../styles/sign_style.css" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 
 <body>
@@ -34,10 +36,14 @@
       <h2>Connect to your account now.</h2>
       <h3>You don’t have an account ? <a href="#Foo" onclick="{goSignUp()}">Sign up</a></h3>
       <div id="form">
-        <input type="text" class="input" placeholder="UserName or Email : " />
-        <input type="password" name="pwd" class="input" placeholder="Password :" />
+        <input type="text" id="email" class="input" placeholder="Email : " />
+        <input type="password" id="pwd" class="input" placeholder="Password :" />
+        <div id="error">
+          <span class="material-symbols-outlined"> error </span>
+          <p id="error_msg_container"></p>
+        </div>
         <div class="btns">
-          <input type="submit" value="Sign in" />
+          <input type="submit" value="Sign in" id="sign_in_submit" />
           <input type="button" value="Sign in with Google" />
         </div>
       </div>
@@ -56,7 +62,7 @@
   </div>
 </footer>
 
-<script type="text/javascript" src="../scripts/signInScript.js" />
+<script type="module" src="../dist/signIn.js" />
 </script>
 <script type="text/javascript" src="../scripts/navigation.js"></script>
 

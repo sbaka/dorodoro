@@ -1,6 +1,6 @@
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { app } from "./firebase.js"
-import { goStart } from "./navigation.js";
+import "./navigation.js";
 const signUpBtn = document.getElementById("sign_up_submit")
 const email = document.getElementById("email")
 const password = document.getElementById("pwd")
@@ -19,7 +19,7 @@ signUpBtn.onclick = function () {
                 await updateProfile(user, {
                     displayName: userName.value,
                 })
-                sessionStorage.setItem(user.email, user.displayName)
+                sessionStorage.setItem(user.uid, user.displayName)
                 goStart()
             })
             .catch((error) => {
