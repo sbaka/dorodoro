@@ -14,9 +14,10 @@ const errorField = document.getElementById("error")
 const errorContainer = document.getElementById("error_msg_container")
 const auth = getAuth(app);
 
+const authUser = Object.keys(sessionStorage)
+    .filter(item => item.startsWith('firebase:authUser'))[0]
 
-var user = auth.currentUser;
-if (user) {
+if (authUser) {
     //user is signed in. Redirect to start
     goStart()
 } else {

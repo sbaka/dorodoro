@@ -9,31 +9,37 @@ const errorField = document.getElementById("error")
 const errorContainer = document.getElementById("error_msg_container")
 const auth = getAuth(app);
 
-
-signUpBtn.onclick = function () {
-    if (email.value.length > 0 && password.value.length > 0 && userName.value.length > 0) {
-        createUserWithEmailAndPassword(auth, email.value, password.value)
-            .then(async (userCredential) => {
-                // Signed in 
-                const user = userCredential.user;
-                await updateProfile(user, {
-                    displayName: userName.value,
+const authUser = Object.keys(sessionStorage)
+    .filter(item => item.startsWith('firebase:authUser'))[0]
+if (authUser) {
+    //user is signed in. Redirect to start
+    goStart()
+} else {
+    signUpBtn.onclick = function () {
+        if (email.value.length > 0 && password.value.length > 0 && userName.value.length > 0) {
+            createUserWithEmailAndPassword(auth, email.value, password.value)
+                .then(async (userCredential) => {
+                    // Signed in 
+                    const user = userCredential.user;
+                    await updateProfile(user, {
+                        displayName: userName.value,
+                    })
+                    sessionStorage.setItem(user.uid, user.displayName)
+                    goStart()
                 })
-                sessionStorage.setItem(user.uid, user.displayName)
-                goStart()
-            })
-            .catch((error) => {
-                //TODO: handle errors
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                //change the content of tje div and diplay it
-                errorContainer.innerHTML = errorMessage
-                errorField.style.display = "flex"
-            });
+                .catch((error) => {
+                    //TODO: handle errors
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    //change the content of tje div and diplay it
+                    errorContainer.innerHTML = errorMessage
+                    errorField.style.display = "flex"
+                });
 
-    } else {
-        //TODO: handle errors
-        alert("No Input can be empty")
+        } else {
+            //TODO: handle errors
+            alert("No Input can be empty")
+        }
+
     }
-
 }

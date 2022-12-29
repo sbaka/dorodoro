@@ -108,7 +108,7 @@ svg circle {
 /* key frames */
 @keyframes countdown {
   from {
-    stroke-dashoffset: 0px;
+    stroke-dashoffset: 10px;
   }
 
   to {
