@@ -38,11 +38,13 @@ header {
   margin-right: 50px;
 }
 
-#HeaderRight > button {
+#HeaderRight>button {
   margin: 15px;
 }
 
 #circle {
+  position: relative;
+  cursor: pointer;
   border-radius: 100%;
   background-color: #4381a8;
   width: 70px;
@@ -56,7 +58,44 @@ header {
   margin: 15px;
 }
 
-header > div > button {
+#popup_sign {
+  visibility: hidden;
+  position: absolute;
+  z-index: 1;
+  top: 120%;
+  width: 200px;
+  height: 100px;
+  /* display */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  /*sytle*/
+  background-color: white;
+  border: 1px solid black;
+}
+
+#popup_sign .show {
+  visibility: visible;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s;
+}
+
+#popup_sign button {
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  height: 50%;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+#popup_sign button:hover {
+  background-color: #d9d9d9;
+}
+
+header>div>button {
   background-color: transparent;
   font-family: "Bubblegum Sans";
   color: #4381a8;
@@ -106,7 +145,7 @@ footer {
   width: 20%;
 }
 
-.FooterLeft > button {
+.FooterLeft>button {
   margin-left: 2%;
 }
 
@@ -119,7 +158,7 @@ footer {
   width: 20%;
 }
 
-footer > div > button {
+footer>div>button {
   background-color: transparent;
   font-family: "Bubblegum Sans";
   color: #ffffff;

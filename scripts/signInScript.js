@@ -1,9 +1,9 @@
 import {
     getAuth,
     signInWithEmailAndPassword,
-    onAuthStateChanged,
     browserSessionPersistence,
-    setPersistence
+    setPersistence,
+    GoogleAuthProvider
 } from "firebase/auth";
 import { app } from "./firebase.js"
 import "./navigation.js";
@@ -13,7 +13,7 @@ const password = document.getElementById("pwd")
 const errorField = document.getElementById("error")
 const errorContainer = document.getElementById("error_msg_container")
 const auth = getAuth(app);
-
+//check if the use is connected // by the session storage
 const authUser = Object.keys(sessionStorage)
     .filter(item => item.startsWith('firebase:authUser'))[0]
 
@@ -22,7 +22,6 @@ if (authUser) {
     goStart()
 } else {
     signUpBtn.onclick = function () {
-        onAuthStateChanged
         if (email.value.length > 0 && password.value.length > 0) {
             console.log("clicked");
             setPersistence(auth, browserSessionPersistence)

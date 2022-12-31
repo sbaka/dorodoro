@@ -15,3 +15,9 @@ function goStart() {
 function goSettings() {
     location.href = "https://abdellatif-kbr.me/dorodoro/pages/settings.html"
 }
+
+var popupShown = false
+document.getElementById("circle").onclick = () => {
+    var popup = document.getElementById("popup_sign");
+    popup.classList.toggle("show");
+}
