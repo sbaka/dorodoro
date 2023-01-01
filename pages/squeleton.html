@@ -7,6 +7,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DoroDoro</title>
   <link rel="stylesheet" href="../styles/style.css" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 
 <body>
@@ -18,11 +20,31 @@
     <div id="HeaderRight">
       <button>Sign in</button>
       <button>Sign up</button>
-      <div id="circle">A</div>
+      <div class="circle">A</div>
     </div>
   </header>
   <section>
-
+    <div class="log_out">
+      <h1>Are you sure you want to log out ?</h1>
+      <div id="logout_btns">
+        <button id="logout_yes">Yes</button>
+        <button id="logout_no">No</button>
+      </div>
+    </div>
+    <div id="edit_profile_popup">
+      <div class="circle" id="circle">A</div>
+      <h3>
+        <span class="material-symbols-outlined">
+          edit
+        </span>
+        Edit my profile picture
+      </h3>
+      <div id="inputs">
+        <input type="text" name="edit-username" id="edit_username" placeholder="Enter your new username">
+        <input type="text" name="edit-pwd" id="edit_pwd" placeholder="Enter your new passweord">
+      </div>
+      <button type="submit" id="submit_edit">done</button>
+    </div>
   </section>
   <footer>
     <div class="FooterLeft">

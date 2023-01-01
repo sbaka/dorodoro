@@ -21,15 +21,16 @@
     </div>
     <div id="HeaderRight">
       <button onclick="{goSettings()}">Settings</button>
-      <button onclick="{goStart()}">Start</button>
-      <div id="circle">A
-        <div id="popup_sign">
-          <button>
+      <div id="profil">
+        <div class="circle" id="circle">A</div>
+        <div class="popup_sign" id="my_popup">
+          <button id="edit_profile">
             <span class="material-symbols-outlined">
               edit
             </span>
-            Edit my profile</button>
-          <button>
+            Edit my profile
+          </button>
+          <button id="logout">
             <span class="material-symbols-outlined">
               logout
             </span>
@@ -37,7 +38,6 @@
           </button>
         </div>
       </div>
-
     </div>
   </header>
   <section>
@@ -62,10 +62,30 @@
       </div>
       <div class="bottom">
         <button id="start" type="submit"> start </button>
-        <button id="settigns" onclick="{goSettings()}"> Settings</button>
+        <button id="settigns" onclick="{goSettings()}">Settings</button>
       </div>
     </div>
-
+    <div class="log_out" id="logout_popup">
+      <h1>Are you sure you want to log out ?</h1>
+      <div id="logout_btns">
+        <button id="logout_yes">Yes</button>
+        <button id="logout_no">No</button>
+      </div>
+    </div>
+    <div id="edit_profile_popup">
+      <div class="circle">A</div>
+      <h3>
+        <span class="material-symbols-outlined">
+          edit
+        </span>
+        Edit my profile picture
+      </h3>
+      <div id="inputs">
+        <input type="text" name="edit-username" id="edit_username" placeholder="Enter your new username">
+        <input type="text" name="edit-pwd" id="edit_pwd" placeholder="Enter your new passweord">
+      </div>
+      <button type="submit" id="submit_edit">done</button>
+    </div>
   </section>
   <footer>
     <div class="FooterLeft">
@@ -77,6 +97,7 @@
       <button>Facebook</button>
     </div>
   </footer>
+  <div class="overlay" id="overlay"></div>
 </body>
 <script type="text/javascript" src="../scripts/timer.js"></script>
 <script type="text/javascript" src="../scripts/navigation.js"></script>
