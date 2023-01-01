@@ -45,7 +45,8 @@ if (authUser) {
                     })
                     //set the user in session
                     await setPersistence(auth, browserSessionPersistence)
-                    sessionStorage.setItem(user.uid, user.displayName)
+                    //TODO: implement the logic that retreives the user from this place and then tests if the user is signed in
+                    sessionStorage.setItem("user", user.displayName)
                     goStart()
                 })
                 .catch((error) => {
@@ -73,6 +74,7 @@ if (authUser) {
                 await setPersistence(auth, browserSessionPersistence)
                 const user = result.user;
                 console.log(user);
+                goStart()
                 // ...
             }).catch((error) => {
                 // Handle Errors here.

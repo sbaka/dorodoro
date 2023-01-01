@@ -23,7 +23,6 @@ if (authUser) {
 } else {
     signUpBtn.onclick = function () {
         if (email.value.length > 0 && password.value.length > 0) {
-            console.log("clicked");
             setPersistence(auth, browserSessionPersistence)
                 .then(() => {
                     signInWithEmailAndPassword(auth, email.value, password.value).then((_) => {
