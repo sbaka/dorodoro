@@ -58,23 +58,43 @@
       <div class="settingItems">
         <div class="settingItem">
           <label for="pomoDur">Pomodoro Duration</label>
-          <input type="range" name="pomoDur" id="pomoDur" placeholder="0" />
+          <div class="range">
+            <input type="range" name="pomoDur" id="pomoDur" min="25" value="25"
+              oninput="{ this.nextElementSibling.value = this.value + ' min'}" />
+            <input type="text" name="minutes" disabled="disabled">
+          </div>
         </div>
         <div class="settingItem">
           <label for="sBrDur">Short break duration</label>
-          <input type="range" name="sBrDur" id="sBrDur" placeholder="25" />
+          <div class="range">
+            <input type="range" name="sBrDur" id="sBrDur" min="1" value="3" max="10"
+              oninput="{ this.nextElementSibling.value = this.value + ' min'}" />
+            <input type="text" name="minutes" disabled="disabled">
+          </div>
         </div>
         <div class="settingItem">
           <label for="brDur">Long break duration</label>
-          <input type="range" name="brDur" id="brDur" placeholder="25" />
+          <div class="range">
+            <input type="range" name="brDur" id="brDur" min="15" value="20" max="30"
+              oninput="{ this.nextElementSibling.value = this.value + ' min'}" />
+            <input type="text" name="minutes" disabled="disabled">
+          </div>
         </div>
         <div class="settingItem">
           <label for="sBrDur">Number of pomodoros</label>
-          <input type="range" name="noPomo" id="noPomo" placeholder="25" />
+          <div class="range">
+            <input type="range" name="noPomo" id="noPomo" min="1" value="1" max="10"
+              oninput="{ this.nextElementSibling.value = this.value + ' pomos'}" />
+            <input type="text" name="nbrOfPomos" disabled="disabled">
+          </div>
         </div>
         <div class="settingItem">
           <label for="lBrInter">Long break intervalle</label>
-          <input type="range" name="lBrInter" id="lBrInter" placeholder="25" />
+          <div class="range">
+            <input type="range" name="lBrInter" id="lBrInter" min="1" value="2" max="4"
+              oninput="{ this.nextElementSibling.value = this.value + ' SBr'}" />
+            <input type="text" name="long_break_interval" disabled="disabled">
+          </div>
         </div>
       </div>
       <button>Done</button>
@@ -117,5 +137,6 @@
 </body>
 <script type="text/javascript" src="../scripts/navigation.js"></script>
 <script type="text/javascript" src="../scripts/popups.js"></script>
+<script type="text/javascript" src="../scripts/pomoSettings.js"></script>
 
 </html>
