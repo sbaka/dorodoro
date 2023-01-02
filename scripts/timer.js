@@ -1,9 +1,22 @@
 const countdownNumberEl = document.getElementById('countdown-number');
 const start = document.getElementById("start");
 const circle = document.getElementById("svg")
-// get initial countdown
-const STUDY_TIMER = minToSec(30); // user timer
-const REST_TIMER = 5;
+//get user perference 
+settings = JSON.parse(localStorage.getItem('settings'))
+// get initial countdown from user preferences
+const STUDY_TIMER = minToSec(parseInt(settings["Pomo Duration"])); // user timer
+const REST_TIMER = minToSec(parseInt(settings["Short Break Duration"]));
+const LONG_REST_TIMER = minToSec(parseInt(settings["Long Break Duration"]))
+const LONG_BREAK_INTERVAL = minToSec(parseInt(settings["Long Break Interval"]))
+const POMOS_NUM = minToSec(parseInt(settings["Number Of Pomos"]))
+
+/*
+1- A pomo cycle is 1 study-timer + 1 rest_timer
+2- after LONG_BREAK_INTERVAL times => start a longbreak
+3- stop after POMOS_NUM reaches 0 (decrements)
+ */
+
+
 var studyCountdown = STUDY_TIMER  // variable for countdown
 var restCountdown = REST_TIMER // var for countdown
 var currentTimer = 0;
