@@ -7,7 +7,7 @@ import {
 } from "firebase/auth";
 import { app } from "./firebase.js"
 import "./navigation.js";
-const signUpBtn = document.getElementById("sign_in_submit")
+const signInBtn = document.getElementById("sign_in_submit")
 const email = document.getElementById("email")
 const password = document.getElementById("pwd")
 const errorField = document.getElementById("error")
@@ -21,7 +21,7 @@ if (authUser) {
     //user is signed in. Redirect to start
     goStart()
 } else {
-    signUpBtn.onclick = function () {
+    signInBtn.onclick = function () {
         if (email.value.length > 0 && password.value.length > 0) {
             setPersistence(auth, browserSessionPersistence)
                 .then(() => {

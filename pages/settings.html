@@ -81,7 +81,7 @@
           </div>
         </div>
         <div class="settingItem">
-          <label for="sBrDur">Number of pomodoros</label>
+          <label for="noPomo">Number of pomodoros</label>
           <div class="range">
             <input type="range" name="noPomo" id="noPomo" min="1" value="1" max="10"
               oninput="{ this.nextElementSibling.value = this.value + ' pomos'}" />
@@ -97,7 +97,7 @@
           </div>
         </div>
       </div>
-      <button>Done</button>
+      <button id="submit_settings">Done</button>
     </div>
     </div>
     <div class="log_out" id="logout_popup">
@@ -138,5 +138,6 @@
 <script type="text/javascript" src="../scripts/navigation.js"></script>
 <script type="text/javascript" src="../scripts/popups.js"></script>
 <script type="text/javascript" src="../scripts/pomoSettings.js"></script>
+<script type="module" src="../dist/conn.js"></script>
 
 </html>
