@@ -206,7 +206,7 @@ if (authUser) {
 function loadUserSettings(user) {
     const db = getDatabase(app);
     onValue(ref(db, 'users/' + user.uid), (snapshot) => {
-        const userSettings = snapshot.val()
+        var userSettings = snapshot.val()
         //setting the users params
         localStorage.setItem("settings", JSON.stringify(userSettings))
         setParams(userSettings);
