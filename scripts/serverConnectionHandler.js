@@ -6,24 +6,28 @@ import {
     setPersistence,
     browserLocalPersistence,
     GoogleAuthProvider,
-    signInWithPopup
+    signInWithPopup,
+    signOut
 } from "firebase/auth";
 import { getDatabase, ref, set, onValue } from "firebase/database";
 import { app } from "./firebase.js"
 import "./navigation.js";
 
 const localPages = ["pages/signIn.html", "pages/signUp.html", "index.html"]
+const loggedInPages = ["start.html", "startSession.html", "settings.html"]
 //check if the use is connected // by the session storage
 const checker = localPages.some(page => window.location.href.includes(page))
 const authUser = Object.keys(localStorage)
     .filter(item => item.startsWith('firebase:authUser'))[0]
-
+//get firebase credentials
+const auth = getAuth(app);
 if (authUser) {
     //user is signed in. Redirect to start
     //if the user is trying to reach any of these pages redirect to start 
     const user = JSON.parse(localStorage.getItem(authUser))
     if (checker) {
         //TODO: check if the email is activated before redirecting
+
         goStartHome()
     } else {
         // the user is logged and in the right pages
@@ -84,21 +88,32 @@ if (authUser) {
                 });
             }
         }
+        const isInLoggedPages = loggedInPages.some(page => window.location.href.includes(page))
+        if (isInLoggedPages) {
+            const logoutBtn = document.getElementById("logout_yes")
+            logoutBtn.onclick = () => {
+                signOut(auth).then(() => {
+                    localStorage.clear()
+                    goHome()
+                }).catch(() => {
+                    alert("some error occured")
+                })
+            }
+        }
     }
 
 
 } else {
     //if the user isn't signed in redirect to the sign in pages 
     //TODO: give user only access in the allowed pages
-
+    console.log(checker);
     if (!checker) {
         //redirect to the home page 
         goHome()
     }
 
     //if the user isn't signed in accept clicks
-    //get firebase credentials
-    const auth = getAuth(app);
+
     const provider = new GoogleAuthProvider()
 
     //get the required fields

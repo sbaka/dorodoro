@@ -1,119 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DoroDoro</title>
-    <link rel="stylesheet" href="../styles/style.css" />
-    <link rel="stylesheet" href="../styles/start_style.css" />
-    <!-- google fonts edit icon -->
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-    />
-  </head>
 
-  <body>
-    <header>
-      <div id="HeaderLeft" onclick="{goHome()}">
-        <img src="../assets/Logo.png" alt="logo.png" />
-        <h4>DoroDoro</h4>
-      </div>
-      <div id="HeaderRight">
-        <button onclick="{goSettings()}">Settings</button>
-        <div id="profil">
-          <div class="circle" id="circle">A</div>
-          <div class="popup_sign" id="my_popup">
-            <button id="edit_profile">
-              <span class="material-symbols-outlined"> edit </span>
-              Edit my profile
-            </button>
-            <button id="logout">
-              <span class="material-symbols-outlined"> logout </span>
-              Sign-out
-            </button>
-          </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DoroDoro</title>
+  <link rel="stylesheet" href="../styles/style.css" />
+  <link rel="stylesheet" href="../styles/start_style.css" />
+  <!-- google fonts edit icon -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+
+<body>
+  <header>
+    <div id="HeaderLeft" onclick="{goStartHome()}">
+      <img src="../assets/Logo.png" alt="logo.png" />
+      <h4>DoroDoro</h4>
+    </div>
+    <div id="HeaderRight">
+      <button onclick="{goSettings()}">Settings</button>
+      <div id="profil">
+        <div class="circle" id="circle">A</div>
+        <div class="popup_sign" id="my_popup">
+          <button id="edit_profile">
+            <span class="material-symbols-outlined"> edit </span>
+            Edit my profile
+          </button>
+          <button id="logout">
+            <span class="material-symbols-outlined"> logout </span>
+            Sign-out
+          </button>
         </div>
       </div>
-    </header>
-    <section>
-      <div class="illustration">
-        <img src="../assets/walking strawberry.png" alt="" srcset="" />
-      </div>
-      <div class="timer">
-        <div id="countdown">
-          <div id="timer_display">
-            <h3 id="countdown-number"></h3>
-          </div>
-          <svg height="400" width="400">
-            <defs>
-              <linearGradient id="gradient" x1="50%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#4381A8" />
-                <stop offset="80%" stop-color="#CECB3A" />
-              </linearGradient>
-            </defs>
-            <circle
-              id="svg"
-              cx="200"
-              cy="200"
-              r="175"
-              stroke="url(#gradient)"
-              stroke-width="3"
-              fill="red"
-            />
-            Sorry, your browser does not support inline SVG.
-          </svg>
+    </div>
+  </header>
+  <section>
+    <div class="illustration">
+      <img src="../assets/walking strawberry.png" alt="" srcset="" />
+    </div>
+    <div class="timer">
+      <div id="countdown">
+        <div id="timer_display">
+          <h3 id="countdown-number"></h3>
         </div>
-        <div class="bottom">
-          <button id="start" type="submit">start</button>
-          <button id="settigns" onclick="{goSettings()}">Settings</button>
-        </div>
+        <svg height="400" width="400">
+          <defs>
+            <linearGradient id="gradient" x1="50%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#4381A8" />
+              <stop offset="80%" stop-color="#CECB3A" />
+            </linearGradient>
+          </defs>
+          <circle id="svg" cx="200" cy="200" r="175" stroke="url(#gradient)" stroke-width="3" fill="red" />
+          Sorry, your browser does not support inline SVG.
+        </svg>
       </div>
-      <div class="log_out" id="logout_popup">
-        <h1>Are you sure you want to log out ?</h1>
-        <div id="logout_btns">
-          <button id="logout_yes">Yes</button>
-          <button id="logout_no">No</button>
-        </div>
+      <div class="bottom">
+        <button id="start" type="submit">start</button>
+        <button id="settigns" onclick="{goSettings()}">Settings</button>
       </div>
-      <div id="edit_profile_popup">
-        <div class="circle">A</div>
-        <h3>
-          <span class="material-symbols-outlined"> edit </span>
-          Edit my profile picture
-        </h3>
-        <div id="inputs">
-          <input
-            type="text"
-            name="edit-username"
-            id="edit_username"
-            placeholder="Enter your new username"
-          />
-          <input
-            type="text"
-            name="edit-pwd"
-            id="edit_pwd"
-            placeholder="Enter your new passweord"
-          />
-        </div>
-        <button type="submit" id="submit_edit">done</button>
+    </div>
+    <div class="log_out" id="logout_popup">
+      <h1>Are you sure you want to log out ?</h1>
+      <div id="logout_btns">
+        <button id="logout_yes">Yes</button>
+        <button id="logout_no">No</button>
       </div>
-    </section>
-    <footer>
-      <div class="FooterLeft">
-        <button>About us</button>
-        <button>Contact</button>
+    </div>
+    <div id="edit_profile_popup">
+      <div class="circle">A</div>
+      <h3>
+        <span class="material-symbols-outlined"> edit </span>
+        Edit my profile picture
+      </h3>
+      <div id="inputs">
+        <input type="text" name="edit-username" id="edit_username" placeholder="Enter your new username" />
+        <input type="text" name="edit-pwd" id="edit_pwd" placeholder="Enter your new passweord" />
       </div>
-      <div class="FooterRight">
-        <button>Twitter</button>
-        <button>Facebook</button>
-      </div>
-    </footer>
-    <div class="overlay" id="overlay"></div>
-  </body>
-  <script type="text/javascript" src="../scripts/timer.js"></script>
-  <script type="text/javascript" src="../scripts/navigation.js"></script>
-  <script type="text/javascript" src="../scripts/popups.js"></script>
-  <script type="module" src="../dist/conn.js"></script>
+      <button type="submit" id="submit_edit">done</button>
+    </div>
+  </section>
+  <footer>
+    <div class="FooterLeft">
+      <button>About us</button>
+      <button>Contact</button>
+    </div>
+    <div class="FooterRight">
+      <button>Twitter</button>
+      <button>Facebook</button>
+    </div>
+  </footer>
+  <div class="overlay" id="overlay"></div>
+</body>
+<script type="text/javascript" src="../scripts/timer.js"></script>
+<script type="text/javascript" src="../scripts/navigation.js"></script>
+<script type="text/javascript" src="../scripts/popups.js"></script>
+<script type="module" src="../dist/conn.js"></script>
+
 </html>
