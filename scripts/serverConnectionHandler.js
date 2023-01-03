@@ -35,7 +35,7 @@ if (authUser) {
         const db = getDatabase(app);
         //only store these once => check for them before adding
         if (userSettings === undefined || userSettings === null) {
-            loadUserSettings(db, user)
+            loadUserSettings(user)
         } else {
             //default settings
             localStorage.setItem("settings", JSON.stringify({
@@ -49,7 +49,7 @@ if (authUser) {
         if (window.location.href.includes("settings.html")) {
             // connect to the db
             const db = getDatabase(app);
-            loadUserSettings(db, user)
+            loadUserSettings(user)
             const userPreference = JSON.parse(localStorage.getItem("settings"))
             //setting the users params
             setParams(userPreference)
@@ -64,7 +64,7 @@ if (authUser) {
                     "Long Break Interval": lBrInter.value
                 }).then(() => {
                     // Data saved successfully!
-                    loadUserSettings(db, user)
+                    loadUserSettings(user)
                     console.log("saved successully");
                 }).catch((error) => {
                     // The write failed...
@@ -125,6 +125,7 @@ if (authUser) {
                         await setPersistence(auth, browserLocalPersistence)
                         //TODO: implement the logic that retreives the user from this place and then tests if the user is signed in
                         localStorage.setItem("user", user.displayName)
+                        loadUserSettings(user)
                         authUser = "firebase:authUser"
                         goStart()
                     })
@@ -145,8 +146,9 @@ if (authUser) {
                 setPersistence(auth, browserLocalPersistence)
                     .then(() => {
                         signInWithEmailAndPassword(auth, email.value, password.value)
-                            .then(async (_) => {
+                            .then(async (creds) => {
                                 authUser = "firebase:authUser"
+                                loadUserSettings(creds.user)
                                 goStart()
                             }).catch((error) => {
                                 //TODO: handle errors
@@ -182,6 +184,7 @@ if (authUser) {
                 // The signed-in user info.
                 await setPersistence(auth, browserLocalPersistence)
                 authUser = "firebase:authUser"
+                loadUserSettings(result.user)
                 goStartHome()
                 // ...
             }).catch((error) => {
@@ -200,7 +203,8 @@ if (authUser) {
 
 
 }
-function loadUserSettings(db, user) {
+function loadUserSettings(user) {
+    const db = getDatabase(app);
     onValue(ref(db, 'users/' + user.uid), (snapshot) => {
         const userSettings = snapshot.val()
         //setting the users params
