@@ -59,7 +59,7 @@
         <div class="settingItem">
           <label for="pomoDur">Pomodoro Duration</label>
           <div class="range">
-            <input type="range" name="pomoDur" id="pomoDur" min="25" value="25"
+            <input type="range" name="pomoDur" id="pomoDur" min="20" value="25"
               oninput="{ this.nextElementSibling.value = this.value + ' min'}" />
             <input type="text" name="minutes" disabled="disabled">
           </div>
@@ -67,7 +67,7 @@
         <div class="settingItem">
           <label for="sBrDur">Short break duration</label>
           <div class="range">
-            <input type="range" name="sBrDur" id="sBrDur" min="1" value="3" max="10"
+            <input type="range" name="sBrDur" id="sBrDur" min="1" value="5" max="10"
               oninput="{ this.nextElementSibling.value = this.value + ' min'}" />
             <input type="text" name="minutes" disabled="disabled">
           </div>
@@ -83,7 +83,7 @@
         <div class="settingItem">
           <label for="noPomo">Number of pomodoros</label>
           <div class="range">
-            <input type="range" name="noPomo" id="noPomo" min="1" value="1" max="10"
+            <input type="range" name="noPomo" id="noPomo" min="1" value="4" max="10"
               oninput="{ this.nextElementSibling.value = this.value + ' pomos'}" />
             <input type="text" name="nbrOfPomos" disabled="disabled">
           </div>

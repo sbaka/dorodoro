@@ -29,8 +29,8 @@ if (authUser) {
         // the user is logged and in the right pages
         const db = getDatabase(app);
         //wherever we are save the settings in session 
-        //TODO: only store these once => check for them before adding
-        const userSettings = Object.keys(sessionStorage)
+        //only store these once => check for them before adding
+        const userSettings = Object.keys(localStorage)
             .filter(item => item.startsWith('settings'))[0]
         if (userSettings === undefined) {
             onValue(ref(db, 'users/' + user.uid), (snapshot) => {

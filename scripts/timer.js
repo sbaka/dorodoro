@@ -3,6 +3,16 @@ const start = document.getElementById("start");
 const circle = document.getElementById("svg")
 //get user perference 
 settings = JSON.parse(localStorage.getItem('settings'))
+//if there is no settings yet use defaults
+if (settings === null) {
+    settings = {
+        "Pomo Duration": "25",
+        "Short Break Duration": "5",
+        "Long Break Duration": "15",
+        "Long Break Interval": "2",
+        "Number Of Pomos": "1"
+    }
+}
 // get initial countdown from user preferences
 const STUDY_TIMER = minToSec(parseInt(settings["Pomo Duration"])); // user timer
 const REST_TIMER = minToSec(parseInt(settings["Short Break Duration"]));
