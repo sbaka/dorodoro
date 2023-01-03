@@ -15,65 +15,47 @@ import "./navigation.js";
 
 const localPages = ["pages/signIn.html", "pages/signUp.html", "index.html"]
 const loggedInPages = ["start.html", "startSession.html", "settings.html"]
-//check if the use is connected // by the session storage
+
 const checker = localPages.some(page => window.location.href.includes(page))
 const isInLoggedPages = loggedInPages.some(page => window.location.href.includes(page))
-const authUser = Object.keys(localStorage)
-    .filter(item => item.startsWith('firebase:authUser'))[0]
-//get firebase credentials
-const auth = getAuth(app);
+//check if the user is logged in 
+const authUser = Object.keys(localStorage).filter(item => item.startsWith('firebase:authUser'))[0]
+//check if the settings are loaded
+const userSettings = Object.keys(localStorage).filter(item => item.startsWith('settings'))[0]
+console.log(authUser);
 if (authUser) {
-    //user is signed in. Redirect to start
     //if the user is trying to reach any of these pages redirect to start 
     const user = JSON.parse(localStorage.getItem(authUser))
     if (checker) {
-        //TODO: check if the email is activated before redirecting
+        //TODO: check if the email is verified before redirecting
+        console.log("User is logged in and trying to reach on of the following", localPages);
         goStartHome()
-        console.log("the user is trying to reach non allowed pages redirect to start");
     } else {
         // the user is logged and in the right pages
         const db = getDatabase(app);
-        //wherever we are save the settings in session 
         //only store these once => check for them before adding
-        const userSettings = Object.keys(localStorage)
-            .filter(item => item.startsWith('settings'))[0]
-        if (userSettings === undefined) {
-            onValue(ref(db, 'users/' + user.uid), (snapshot) => {
-                const userSettings = snapshot.val()
-                //setting the users params
-                localStorage.setItem("settings", JSON.stringify(userSettings))
-            })
+        if (userSettings === undefined || userSettings === null) {
+            loadUserSettings(db, user)
+        } else {
+            //default settings
+            localStorage.setItem("settings", JSON.stringify({
+                "Pomo Duration": "25",
+                "Short Break Duration": "5",
+                "Long Break Duration": "15",
+                "Long Break Interval": "2",
+                "Number Of Pomos": "1"
+            }))
         }
         if (window.location.href.includes("settings.html")) {
             // connect to the db
             const db = getDatabase(app);
-            //the required fields
-            const saveSetting = document.getElementById("submit_settings")
-            const pomoDur = document.getElementById("pomoDur")
-            const sBrDur = document.getElementById("sBrDur")
-            const brDur = document.getElementById("brDur")
-            const noPomo = document.getElementById("noPomo")
-            const lBrInter = document.getElementById("lBrInter")
-
-            //get the settings from the session storage instead of fetching them 
+            loadUserSettings(db, user)
             const userPreference = JSON.parse(localStorage.getItem("settings"))
             //setting the users params
-            pomoDur.value = userPreference["Pomo Duration"]
-            pomoDur.nextElementSibling.value = userPreference["Pomo Duration"] + " min"
-
-            sBrDur.value = userPreference["Short Break Duration"]
-            sBrDur.nextElementSibling.value = userPreference["Short Break Duration"] + " min"
-
-            brDur.value = userPreference["Long Break Duration"]
-            brDur.nextElementSibling.value = userPreference["Long Break Duration"] + " min"
-
-            noPomo.value = userPreference["Number Of Pomos"]
-            noPomo.nextElementSibling.value = userPreference["Number Of Pomos"] + " pomos"
-
-            lBrInter.value = userPreference["Long Break Interval"]
-            lBrInter.nextElementSibling.value = userPreference["Long Break Interval"] + " SBr"
-
+            setParams(userPreference)
+            const saveSetting = document.getElementById("submit_settings")
             saveSetting.onclick = () => {
+                //save the user prefered params to the user/uid path
                 set(ref(db, 'users/' + user.uid), {
                     "Pomo Duration": pomoDur.value,
                     "Short Break Duration": sBrDur.value,
@@ -82,6 +64,7 @@ if (authUser) {
                     "Long Break Interval": lBrInter.value
                 }).then(() => {
                     // Data saved successfully!
+                    loadUserSettings(db, user)
                     console.log("saved successully");
                 }).catch((error) => {
                     // The write failed...
@@ -93,7 +76,7 @@ if (authUser) {
         if (isInLoggedPages) {
             const logoutBtn = document.getElementById("logout_yes")
             logoutBtn.onclick = () => {
-                signOut(auth).then(() => {
+                signOut(getAuth(app)).then(() => {
                     localStorage.clear()
                     goHome()
                 }).catch(() => {
@@ -114,7 +97,7 @@ if (authUser) {
     }
 
     //if the user isn't signed in accept clicks
-
+    const auth = getAuth(app);
     const provider = new GoogleAuthProvider()
 
     //get the required fields
@@ -142,6 +125,7 @@ if (authUser) {
                         await setPersistence(auth, browserLocalPersistence)
                         //TODO: implement the logic that retreives the user from this place and then tests if the user is signed in
                         localStorage.setItem("user", user.displayName)
+                        authUser = "firebase:authUser"
                         goStart()
                     })
                     .catch((error) => {
@@ -154,43 +138,24 @@ if (authUser) {
                     });
             }
         }
-        /*register with google logic */
-        googleSign.onclick = function () {
-            signInWithPopup(auth, provider)
-                .then(async (result) => {
-                    // This gives you a Google Access Token. You can use it to access the Google API.
-                    const credential = GoogleAuthProvider.credentialFromResult(result);
-                    const token = credential.accessToken;
-                    // The signed-in user info.
-                    await setPersistence(auth, browserLocalPersistence)
-                    const user = result.user;
-                    console.log(user);
-                    goStartHome()
-                    // ...
-                }).catch((error) => {
-                    // Handle Errors here.
-                    const errorCode = error.code;
-                    var errorMessage = "iniErr: " + error.message;
-                    // The email of the user's account used.
-                    const email = "em: " + error.customData.email;
-                    // The AuthCredential type that was used.
-                    const credential = "cred: " + GoogleAuthProvider.credentialFromError(error);
-                    //TODO: handle errors
-                    //change the content of tje div and diplay it
-                    errorMessage += " " + email + " " + credential
-                    errorContainer.innerHTML = errorMessage
-                    errorField.style.display = "flex"
-                });
-        }
     } else if (window.location.href.includes("signIn")) {
         /*login logic */
         signInBtn.onclick = function () {
             if (email.value.length > 0 && password.value.length > 0) {
                 setPersistence(auth, browserLocalPersistence)
                     .then(() => {
-                        signInWithEmailAndPassword(auth, email.value, password.value).then((_) => {
-                            goStart()
-                        })
+                        signInWithEmailAndPassword(auth, email.value, password.value)
+                            .then(async (_) => {
+                                authUser = "firebase:authUser"
+                                goStart()
+                            }).catch((error) => {
+                                //TODO: handle errors
+                                const errorCode = error.code;
+                                const errorMessage = error.message;
+                                //change the content of tje div and diplay it
+                                errorContainer.innerHTML = errorMessage
+                                errorField.style.display = "flex"
+                            });
                     })
                     .catch((error) => {
                         //TODO: handle errors
@@ -207,8 +172,63 @@ if (authUser) {
         }
     }
 
-
+    /*sign with google logic */
+    googleSign.onclick = function () {
+        signInWithPopup(auth, provider)
+            .then(async (result) => {
+                // This gives you a Google Access Token. You can use it to access the Google API.
+                const credential = GoogleAuthProvider.credentialFromResult(result);
+                const token = credential.accessToken;
+                // The signed-in user info.
+                await setPersistence(auth, browserLocalPersistence)
+                authUser = "firebase:authUser"
+                goStartHome()
+                // ...
+            }).catch((error) => {
+                // Handle Errors here.
+                const errorCode = error.code;
+                var errorMessage = error.message;
+                // The email of the user's account used.
+                const email = error.customData.email;
+                // The AuthCredential type that was used.
+                const credential = GoogleAuthProvider.credentialFromError(error);
+                //TODO: handle errors
+                //change the content of the div and diplay it
+                errorMessage += " " + email + " " + credential
+                errorContainer.innerHTML = errorMessage
+                errorField.style.display = "flex"
+            });
+    }
 
 
 }
+function loadUserSettings(db, user) {
+    onValue(ref(db, 'users/' + user.uid), (snapshot) => {
+        const userSettings = snapshot.val()
+        //setting the users params
+        localStorage.setItem("settings", JSON.stringify(userSettings))
+        setParams(userSettings);
+    })
+}
+function setParams(userPreference) {
+    const pomoDur = document.getElementById("pomoDur")
+    const sBrDur = document.getElementById("sBrDur")
+    const brDur = document.getElementById("brDur")
+    const noPomo = document.getElementById("noPomo")
+    const lBrInter = document.getElementById("lBrInter")
 
+    pomoDur.value = userPreference["Pomo Duration"]
+    pomoDur.nextElementSibling.value = userPreference["Pomo Duration"] + " min"
+
+    sBrDur.value = userPreference["Short Break Duration"]
+    sBrDur.nextElementSibling.value = userPreference["Short Break Duration"] + " min"
+
+    brDur.value = userPreference["Long Break Duration"]
+    brDur.nextElementSibling.value = userPreference["Long Break Duration"] + " min"
+
+    noPomo.value = userPreference["Number Of Pomos"]
+    noPomo.nextElementSibling.value = userPreference["Number Of Pomos"] + " pomos"
+
+    lBrInter.value = userPreference["Long Break Interval"]
+    lBrInter.nextElementSibling.value = userPreference["Long Break Interval"] + " SBr"
+}
