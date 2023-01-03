@@ -17,6 +17,7 @@ const localPages = ["pages/signIn.html", "pages/signUp.html", "index.html"]
 const loggedInPages = ["start.html", "startSession.html", "settings.html"]
 //check if the use is connected // by the session storage
 const checker = localPages.some(page => window.location.href.includes(page))
+const isInLoggedPages = loggedInPages.some(page => window.location.href.includes(page))
 const authUser = Object.keys(localStorage)
     .filter(item => item.startsWith('firebase:authUser'))[0]
 //get firebase credentials
@@ -27,8 +28,8 @@ if (authUser) {
     const user = JSON.parse(localStorage.getItem(authUser))
     if (checker) {
         //TODO: check if the email is activated before redirecting
-
         goStartHome()
+        console.log("the user is trying to reach non allowed pages redirect to start");
     } else {
         // the user is logged and in the right pages
         const db = getDatabase(app);
@@ -88,7 +89,7 @@ if (authUser) {
                 });
             }
         }
-        const isInLoggedPages = loggedInPages.some(page => window.location.href.includes(page))
+
         if (isInLoggedPages) {
             const logoutBtn = document.getElementById("logout_yes")
             logoutBtn.onclick = () => {
@@ -106,10 +107,10 @@ if (authUser) {
 } else {
     //if the user isn't signed in redirect to the sign in pages 
     //TODO: give user only access in the allowed pages
-    console.log(checker);
-    if (!checker) {
+    if (isInLoggedPages) {
         //redirect to the home page 
         goHome()
+        console.log("User not signed in Redirecting");
     }
 
     //if the user isn't signed in accept clicks
