@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
 dotenv.config()
 // https://firebase.google.com/docs/web/setup#available-libraries
 console.log(process.env.apiKey);

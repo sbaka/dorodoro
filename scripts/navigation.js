@@ -1,24 +1,46 @@
 //navigation
+// function goSignIn() {
+//     location.href = "https://abdellatif-kbr.me/dorodoro/pages/signIn.html";
+// };
+
+// function goSignUp() {
+//     location.href = "https://abdellatif-kbr.me/dorodoro/pages/signUp.html";
+// };
+
+// function goHome() {
+//     location.href = "https://abdellatif-kbr.me/dorodoro/index.html"
+// }
+// function goStart() {
+//     location.href = "https://abdellatif-kbr.me/dorodoro/pages/start.html"
+// }
+// function goSettings() {
+//     location.href = "https://abdellatif-kbr.me/dorodoro/pages/settings.html"
+// }
+
+// function goStartHome() {
+//     location.href = "https://abdellatif-kbr.me/dorodoro/pages/startSession.html"
+// }
+//navigation
 function goSignIn() {
-    location.href = "https://abdellatif-kbr.me/dorodoro/pages/signIn.html";
+    location.href = "./pages/signIn.html";
 };
 
 function goSignUp() {
-    location.href = "https://abdellatif-kbr.me/dorodoro/pages/signUp.html";
+    location.href = "./pages/signUp.html";
 };
 
 function goHome() {
-    location.href = "https://abdellatif-kbr.me/dorodoro/index.html"
+    location.href = "./index.html"
 }
 function goStart() {
-    location.href = "https://abdellatif-kbr.me/dorodoro/pages/start.html"
+    location.href = "../pages/start.html"
 }
 function goSettings() {
-    location.href = "https://abdellatif-kbr.me/dorodoro/pages/settings.html"
+    location.href = "../pages/settings.html"
 }
 
 function goStartHome() {
-    location.href = "https://abdellatif-kbr.me/dorodoro/pages/startSession.html"
+    location.href = "../pages/startSession.html"
 }
 //set the webpage logo
 var link = document.querySelector("link[rel~='icon']");
