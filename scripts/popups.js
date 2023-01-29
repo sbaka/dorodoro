@@ -18,6 +18,18 @@ document.getElementById("logout_no").onclick = () => {
     remove(logoutPopUp)
     remove(overlay)
 }
+document.getElementById("logout_yes").onclick = () => {
+    remove(logoutPopUp)
+    remove(overlay)
+    firebase.auth().signOut().then(function () {
+        // Sign-out successful.
+        localStorage.clear()
+        goHome()
+    }).catch(function (error) {
+        // An error happened.
+        alert(error)
+    });
+}
 
 //edit profile popup
 document.getElementById("edit_profile").onclick = () => {
