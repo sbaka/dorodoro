@@ -20,7 +20,7 @@ firebase.auth().onAuthStateChanged(function (user) {
 
         saveSetting.onclick = () => {
             //save the user prefered params to the user/uid path
-            db.ref(db, 'users/' + user.uid).set({
+            db.ref('users/' + user.uid).set({
                 "Pomo Duration": pomoDur.value,
                 "Short Break Duration": sBrDur.value,
                 "Long Break Duration": brDur.value,
