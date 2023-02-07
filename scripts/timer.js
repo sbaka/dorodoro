@@ -14,9 +14,9 @@ if (settings === null) {
     }
 }
 // get initial countdown from user preferences
-const STUDY_TIMER = minToSec(parseInt(settings["Pomo Duration"])); // user timer
-const REST_TIMER = minToSec(parseInt(settings["Short Break Duration"]));
-const LONG_REST_TIMER = minToSec(parseInt(settings["Long Break Duration"]))
+const POMO_DURATION = minToSec(parseInt(settings["Pomo Duration"])); // user timer
+const SHORT_BREAK = minToSec(parseInt(settings["Short Break Duration"]));
+const LONG_BREAK = minToSec(parseInt(settings["Long Break Duration"]))
 const LONG_BREAK_INTERVAL = minToSec(parseInt(settings["Long Break Interval"]))
 const POMOS_NUM = minToSec(parseInt(settings["Number Of Pomos"]))
 
@@ -27,21 +27,29 @@ const POMOS_NUM = minToSec(parseInt(settings["Number Of Pomos"]))
  */
 
 
-var studyCountdown = STUDY_TIMER  // variable for countdown
-var restCountdown = REST_TIMER // var for countdown
+var studyCountdown = POMO_DURATION  // variable for countdown
+var restCountdown = SHORT_BREAK // var for countdown
 var currentTimer = 0;
 var started = false
 //to save the id of the timer in line 20
 var myTimer
 //set the timer to the user time
-countdownNumberEl.innerHTML = secondsToMinutes(STUDY_TIMER); // set the user timer
-
+countdownNumberEl.innerHTML = secondsToMinutes(POMO_DURATION); // set the user timer
+//init the animation
+var animation = anime({
+    targets: '#ring',
+    strokeDashoffset: [0, anime.setDashoffset],
+    easing: 'linear',
+    duration: POMO_DURATION * 1000,
+    // direction: 'alternate',
+});
+animation.pause();
 // the main event which is clicking the start button
 start.onclick = function () {
     if (!started) {
         //start the timer and th animation
         myTimer = setInterval(startTimer, 1000)
-        circle.style.animation = `countdown ${STUDY_TIMER}s linear infinite forwards`
+        animation.play()
         start.textContent = "Pause"
         start.style.backgroundColor = "#D92828"
         started = true
@@ -49,7 +57,7 @@ start.onclick = function () {
         //stop timer
         clearInterval(myTimer)
         //stop animation
-        circle.style.animationPlayState = 'paused';
+        animation.pause()
         start.textContent = "Resume"
         start.style.backgroundColor = "#2ecc71"
         started = false
@@ -59,11 +67,10 @@ start.onclick = function () {
 
 function startTimer() {
     if (studyCountdown > 0) {
-        console.log(studyCountdown);
         studyCountdown = --studyCountdown;
         countdownNumberEl.innerHTML = secondsToMinutes(studyCountdown);
     } else {
-        countdownNumberEl.innerHTML = secondsToMinutes(STUDY_TIMER);
+        countdownNumberEl.innerHTML = secondsToMinutes(POMO_DURATION);
         start.textContent = "Start"
         start.style.backgroundColor = "#2ecc71"
         circle.style.animation = `none`

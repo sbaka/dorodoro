@@ -45,15 +45,15 @@
         <div id="timer_display">
           <h3 id="countdown-number"></h3>
         </div>
-        <svg height="400" width="400">
+        <svg width="400" height="400">
           <defs>
-            <linearGradient id="gradient" x1="50%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stop-color="#4381A8" />
-              <stop offset="80%" stop-color="#CECB3A" />
+            <linearGradient id="gradient" x1="0%" y1="50%" x2="50%" y2="0%">
+              <stop offset="0%" stop-color="#ff0066" />
+              <stop offset="100%" stop-color="#00bfff" />
             </linearGradient>
           </defs>
-          <circle id="svg" cx="200" cy="200" r="175" stroke="url(#gradient)" stroke-width="3" fill="red" />
-          Sorry, your browser does not support inline SVG.
+          <circle cx="200" cy="200" id="ring" r="160" fill="none" stroke="url(#gradient)" stroke-width="15"
+            stroke-dasharray="500" stroke-dashoffset="0" />
         </svg>
       </div>
       <div class="bottom">
@@ -93,6 +93,7 @@
   </footer>
   <div class="overlay" id="overlay"></div>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
 <script type="text/javascript" src="../scripts/timer.js"></script>
 <script type="text/javascript" src="../scripts/navigation.js"></script>
 <script type="text/javascript" src="../scripts/popups.js"></script>
@@ -112,5 +113,6 @@
   const app = firebase.initializeApp(config);
 </script>
 <script src="../scripts/redirect.js"></script>
+
 
 </html>

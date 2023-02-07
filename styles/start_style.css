@@ -56,16 +56,11 @@ svg {
   position: absolute;
   z-index: -1;
   transform: rotateY(-180deg) rotateZ(-90deg);
+  height: 400px;
+  width: 400px;
 }
 
-svg circle {
-  stroke-dasharray: 1100px;
-  stroke-dashoffset: 0px;
-  stroke-linecap: round;
-  stroke-width: 18px;
-  fill: none;
-  /* animation: countdown 40s linear infinite forwards; */
-}
+
 
 
 .bottom {
