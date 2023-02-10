@@ -31,6 +31,7 @@ section {
 
 #timer_display {
   height: 20%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -50,7 +51,18 @@ section {
   z-index: 3;
 }
 
-
+#pomo-type {
+  font-family: "Bubblegum Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 32px;
+  color: #4381A8;
+  -webkit-text-stroke: 0px transparent;
+  /*adding stroke to the header*/
+  width: 50%;
+  text-align: center;
+  z-index: 3;
+}
 
 svg {
   position: absolute;

@@ -8,7 +8,6 @@ const noPomo = document.getElementById("noPomo")
 const lBrInter = document.getElementById("lBrInter")
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-
         if (userSettings !== null && userSettings !== undefined) {
             if (window.location.href.includes("startSession")) {
                 loadUserSettings(user)
@@ -16,6 +15,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                 setParams(userSettings)
                 saveSetting.onclick = () => {
                     //save the user prefered params to the user/uid path
+                    saveSetting.innerHTML = ""
                     db.ref('users/' + user.uid).set({
                         "Pomo Duration": pomoDur.value,
                         "Short Break Duration": sBrDur.value,
@@ -32,19 +32,23 @@ firebase.auth().onAuthStateChanged(function (user) {
                             "Long Break Interval": lBrInter.value
                         }))
                         // Data saved successfully!
-                        console.log("saved successully");
+                        goStart()
                     }).catch((error) => {
                         // The write failed...
                         console.error(error);
                     });
                 }
             }
+            console.log("hello world");
+        } else {
+            loadUserSettings(user)
+            setParams(userSettings)
         }
 
-
     }
-});
 
+
+});
 function loadUserSettings(user) {
     var userSettings;
     console.log("loading data");
