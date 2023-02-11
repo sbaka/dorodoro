@@ -53,12 +53,26 @@
               <stop offset="100%" stop-color="#4381A8" />
             </linearGradient>
           </defs>
+          <circle cx="200" cy="200" id="ring" r="160" fill="none" stroke="#d5d5d5" stroke-width="15"
+            stroke-dasharray="10000" stroke-dashoffset="0" />
           <circle cx="200" cy="200" id="ring" r="160" fill="none" stroke="url(#gradient)" stroke-width="15"
             stroke-dasharray="10000" stroke-dashoffset="0" />
         </svg>
       </div>
       <div class="bottom">
-        <button id="start" type="submit">start</button>
+        <div class="controls">
+          <button id="restart" type="submit">
+            <span class="material-symbols-outlined">
+              restart_alt
+            </span>
+          </button>
+          <button id="start" type="submit">start</button>
+          <button id="skip" type="submit">
+            <span class="material-symbols-outlined">
+              skip_next
+            </span>
+          </button>
+        </div>
         <button id="settigns" onclick="{goSettings()}">Settings</button>
       </div>
     </div>

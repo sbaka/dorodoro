@@ -1,11 +1,14 @@
 const countdownNumberEl = document.getElementById('countdown-number');
 const start = document.getElementById("start");
+const restart = document.getElementById("restart");
 const pomoType = document.getElementById("pomo-type");
+const skip = document.getElementById("skip");
 
 const timer = {
     POMO: 1,
     SBREAK: 2,
     LBREAK: 3,
+    FINISHED: 4,
 }
 
 
@@ -28,9 +31,9 @@ if (settings === null) {
 //minToSec(parseInt(settings["Pomo Duration"]))
 const POMO_DURATION = minToSec(parseInt(settings["Pomo Duration"])); // user timer
 const SHORT_BREAK = minToSec(parseInt(settings["Short Break Duration"]));
-const LONG_BREAK = minToSec(parseInt(settings["Long Break Duration"]))
-const LONG_BREAK_INTERVAL = minToSec(parseInt(settings["Long Break Interval"]))
-const REPETITION = minToSec(parseInt(settings["Number Of Pomos"]))
+const LONG_BREAK = minToSec(parseInt(settings["Long Break Duration"]));
+const LONG_BREAK_INTERVAL = parseInt(settings["Long Break Interval"]);
+const REPETITION = parseInt(settings["Number Of Pomos"]);
 
 
 /*
@@ -57,27 +60,128 @@ lBrAnimation.pause()
 sBrAnimation.pause()
 
 
+restart.disabled = true;
+
 
 start.onclick = () => {
+    restart.disabled = false;
     switch (state) {
         case timer.POMO:
-            pomoType.innerHTML = "Time to focus"
-            pomoTimer(timeLeft)
+            pomoType.innerHTML = "Time to focus";
+            pomoTimer(timeLeft);
             break;
         case timer.SBREAK:
-            pomoType.innerHTML = "Relax a little"
-            breakTimer(timeLeft, timer.SBREAK)
+            pomoType.innerHTML = "Relax a little";
+            breakTimer(timeLeft, timer.SBREAK);
             break;
         case timer.LBREAK:
-            pomoType.innerHTML = "What about a fresh breeze ?"
-            breakTimer(timeLeft, timer.LBREAK)
+            pomoType.innerHTML = "What about a fresh breeze ?";
+            breakTimer(timeLeft, timer.LBREAK);
+            break;
+        case timer.FINISHED:
+            count = 1;
+            skip.disabled = false;
+            state = timer.POMO;
+            pomoType.innerHTML = "Time to focus";
+            pomoTimer(timeLeft);
             break;
         default:
             break;
     }
 }
 
+restart.onclick = () => {
+    restart.disabled = true;
+    switch (state) {
+        case timer.POMO:
+            pomoType.innerHTML = "Time to focus";
+            pomoAnimation.restart();
+            pomoTimer(POMO_DURATION);
+            break;
+        case timer.SBREAK:
+            pomoType.innerHTML = "Relax a little";
+            sBrAnimation.restart();
+            breakTimer(SHORT_BREAK, timer.SBREAK);
+            break;
+        case timer.LBREAK:
+            pomoType.innerHTML = "What about a fresh breeze ?";
+            lBrAnimation.restart();
+            breakTimer(LONG_BREAK, timer.LBREAK);
+            break;
+        default:
+            break;
+    }
+}
+skip.onclick = () => {
+    //set the button back to resume
+    started = false;
+    start.textContent = "Play"
+    start.style.backgroundColor = "#2ecc71"
+    //clear the current (previous) timer
+    clearInterval(currentTimerID)
+    //reset all the animations then pause them so they dont play alone
+    pomoAnimation.restart();
+    sBrAnimation.restart();
+    lBrAnimation.restart();
+    pomoAnimation.pause()
+    lBrAnimation.pause()
+    sBrAnimation.pause()
 
+    //handel the skips accordingly
+    switch (state) {
+        case timer.POMO:
+            if (count < REPETITION) {
+                if ((count % LONG_BREAK_INTERVAL) == 0) {
+                    pomoType.innerHTML = "What about a fresh breeze ?"
+                    countdownNumberEl.innerHTML = secondsToMinutes(LONG_BREAK);
+                    state = timer.LBREAK
+                    timeLeft = LONG_BREAK
+                } else {
+                    console.log(count);
+                    pomoType.innerHTML = "Relax a little"
+                    countdownNumberEl.innerHTML = secondsToMinutes(SHORT_BREAK);
+                    state = timer.SBREAK
+                    timeLeft = SHORT_BREAK
+                }
+            } else {
+                skip.disabled = true;
+                state = timer.FINISHED
+                countdownNumberEl.innerHTML = ""
+                pomoType.innerHTML = "Looks like you finished all your pomodoros well done champ !"
+            }
+            break;
+        case timer.SBREAK:
+            if (count < REPETITION) {
+                pomoType.innerHTML = "Time to focus"
+                countdownNumberEl.innerHTML = secondsToMinutes(POMO_DURATION);
+                state = timer.POMO
+                timeLeft = POMO_DURATION
+            } else {
+                skip.disabled = true;
+                state = timer.FINISHED
+                countdownNumberEl.innerHTML = ""
+                pomoType.innerHTML = "Looks like you finished all your pomodoros well done champ !"
+            }
+            count++;
+            break;
+        case timer.LBREAK:
+            if (count < REPETITION) {
+                pomoType.innerHTML = "Time to focus"
+                countdownNumberEl.innerHTML = secondsToMinutes(POMO_DURATION);
+                state = timer.POMO
+                timeLeft = POMO_DURATION
+            } else {
+                skip.disabled = true;
+                state = timer.FINISHED
+                countdownNumberEl.innerHTML = ""
+                pomoType.innerHTML = "Looks like you finished all your pomodoros well done champ !"
+            }
+            count++;
+            break;
+        default:
+            break;
+    }
+}
 //pomo
 function pomoTimer(duration) {
     timeLeft = duration;
@@ -98,6 +202,11 @@ function pomoTimer(duration) {
                         timeLeft = SHORT_BREAK
                         state = timer.SBREAK
                     }
+                } else {
+                    skip.disabled = true;
+                    state = timer.FINISHED
+                    countdownNumberEl.innerHTML = ""
+                    pomoType.innerHTML = "Looks like you finished all your pomodoros well done champ !"
                 }
                 clearInterval(currentTimerID)
                 started = false;
@@ -132,6 +241,11 @@ function breakTimer(duration, type) {
                 }
                 clearInterval(currentTimerID)
                 started = false
+            } else {
+                skip.disabled = true;
+                state = timer.FINISHED
+                countdownNumberEl.innerHTML = ""
+                pomoType.innerHTML = "Looks like you finished all your pomodoros well done champ !"
             }
         }, 1000);
         start.textContent = "Pause"
@@ -184,32 +298,3 @@ function secondsToMinutes(s) {
         return m + ":" + s
     }
 }
-
-
-
-
-// //short break
-// function shortBrTimer() {
-//     console.log("short br started");
-//     timeLeft = SHORT_BREAK;
-//     animation = animate(timeLeft)
-//     if (!started) {
-//         animation.play()
-//         currentTimer = setInterval(() => {
-//             timeLeft--;
-//             countdownNumberEl.innerHTML = secondsToMinutes(timeLeft);
-//             if (timeLeft < 1) {
-//                 if (count < REPETITION) {
-//                     count++;
-//                     pomoTimer()
-//                 }
-//                 clearInterval(currentTimer)
-//                 started = !started
-//             }
-//         }, 1000);
-//         started = !started
-//     } else {
-//         animation.pause()
-//         clearInterval(currentTimer)
-//     }
-// }
