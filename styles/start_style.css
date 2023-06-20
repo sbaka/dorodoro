@@ -51,6 +51,11 @@ section {
   z-index: 3;
 }
 
+#count {
+  align-self: center;
+  font-size: 24px;
+}
+
 #pomo-type {
   font-family: "Bubblegum Sans";
   font-style: normal;

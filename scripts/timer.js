@@ -3,6 +3,7 @@ const start = document.getElementById("start");
 const restart = document.getElementById("restart");
 const pomoType = document.getElementById("pomo-type");
 const skip = document.getElementById("skip");
+const countDisplay = document.getElementById("count");
 
 const timer = {
     POMO: 1,
@@ -42,8 +43,6 @@ const REPETITION = parseInt(settings["Number Of Pomos"]);
 3- stop after POMOS_NUM reaches 0 (decrements)
  */
 
-countdownNumberEl.innerHTML = secondsToMinutes(POMO_DURATION);
-pomoType.innerHTML = "Time to focus"
 //its = to 1 bcz after the first timer it should start a long timer 
 let count = 1;
 let currentTimerID;
@@ -63,6 +62,11 @@ sBrAnimation.pause()
 restart.disabled = true;
 
 
+countdownNumberEl.innerHTML = secondsToMinutes(POMO_DURATION);
+pomoType.innerHTML = "Time to focus"
+countDisplay.innerHTML = `${count} out of ${REPETITION}`
+
+
 start.onclick = () => {
     restart.disabled = false;
     switch (state) {
@@ -79,11 +83,13 @@ start.onclick = () => {
             breakTimer(timeLeft, timer.LBREAK);
             break;
         case timer.FINISHED:
+            //when this is clicked reset everything 
             count = 1;
+            countDisplay.innerHTML = `${count} out of ${REPETITION}`
             skip.disabled = false;
             state = timer.POMO;
             pomoType.innerHTML = "Time to focus";
-            pomoTimer(timeLeft);
+            pomoTimer(POMO_DURATION);
             break;
         default:
             break;
@@ -112,13 +118,17 @@ restart.onclick = () => {
             break;
     }
 }
+
+
 skip.onclick = () => {
     //set the button back to resume
     started = false;
     start.textContent = "Play"
     start.style.backgroundColor = "#2ecc71"
+
     //clear the current (previous) timer
     clearInterval(currentTimerID)
+
     //reset all the animations then pause them so they dont play alone
     pomoAnimation.restart();
     sBrAnimation.restart();
@@ -163,6 +173,7 @@ skip.onclick = () => {
                 pomoType.innerHTML = "Looks like you finished all your pomodoros well done champ !"
             }
             count++;
+            countDisplay.innerHTML = `${count} out of ${REPETITION}`
             break;
         case timer.LBREAK:
             if (count < REPETITION) {
@@ -177,11 +188,13 @@ skip.onclick = () => {
                 pomoType.innerHTML = "Looks like you finished all your pomodoros well done champ !"
             }
             count++;
+            countDisplay.innerHTML = `${count} out of ${REPETITION}`
             break;
         default:
             break;
     }
 }
+
 //pomo
 function pomoTimer(duration) {
     timeLeft = duration;
@@ -236,6 +249,7 @@ function breakTimer(duration, type) {
             if (timeLeft < 1) {
                 if (count < REPETITION) {
                     count++;
+                    countDisplay.innerHTML = `${count} out of ${REPETITION}`
                     state = timer.POMO
                     timeLeft = POMO_DURATION
                 }
