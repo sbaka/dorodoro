@@ -64,52 +64,31 @@ this project isn't 100% done actually its not even fully usable as of now (10/10
 
 ```sh
 └── dorodoro/
+    ├── .firebase/
+    │   └── hosting.cHVibGlj.cache
     ├── .firebaserc
     ├── .gitattributes
     ├── .gitignore
     ├── .hintrc
-    ├──
     ├── firebase.json
-    ├── index.html
+    ├── image.png
     ├── jsconfig.json
     ├── LICENSE
     ├── package-lock.json
     ├── package.json
     ├── public/
-        assets/
-    │     ├── cerise.png
-    │     ├── googleLogo.png
-    │     ├── Happy tomato.png
-    │     ├── joinUS.png
-    │     ├── Logo-blue.png
-    │   ├── Logo-green.png
-    │   ├── Logo.ico
-    │   ├── Logo.png
-    │   ├── settings.png
-    │   ├── Strong_pepper.png
-    │   └── walking strawberry.png
     │   ├── about.html
+    │   ├── assets/
+    │   ├── index.html
+    │   ├── scripts/
     │   ├── settings.html
     │   ├── signIn.html
     │   ├── signUp.html
     │   ├── squeleton.html
     │   ├── start.html
-    │   └── startSession.html
-    ├── scripts/
-    │   ├── dbAccess.js
-    │   ├── navigation.js
-    │   ├── pomoSettings.js
-    │   ├── popups.js
-    │   ├── redirect.js
-    │   ├── signScript.js
-    │   └── timer.js
-    └── styles/
-        ├── about_style.css
-        ├── indexStyle.css
-        ├── setting.css
-        ├── sign_style.css
-        ├── start_style.css
-        └── style.css
+    │   ├── startSession.html
+    │   └── styles/
+    └── README.md
 ```
 
 ---
