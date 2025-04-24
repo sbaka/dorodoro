@@ -1,0 +1,190 @@
+/* Responsive styles for DoroDoro */
+
+/* Base responsive rules */
+* {
+  box-sizing: border-box;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Large screens (default) */
+body {
+  min-height: 100vh;
+}
+
+header {
+  padding: 10px 5%;
+  margin: 10px 2%;
+}
+
+/* Medium screens (tablets) */
+@media screen and (max-width: 992px) {
+  .textSection > h2 {
+    font-size: 60px;
+    margin: 20px 0;
+  }
+  
+  .textSection > h5 {
+    font-size: 24px;
+  }
+  
+  .ContentSection > button {
+    font-size: 30px;
+    width: 220px;
+    padding: 15px;
+  }
+  
+  #HeaderRight > button {
+    font-size: 24px;
+  }
+  
+  header {
+    margin: 10px 2%;
+  }
+  
+  .FooterLeft, .FooterRight {
+    width: 30%;
+  }
+  
+  footer > div > button {
+    font-size: 24px;
+  }
+}
+
+/* Small screens (mobile phones) */
+@media screen and (max-width: 768px) {
+  section {
+    flex-direction: column;
+    padding: 20px 5%;
+  }
+  
+  .empty {
+    display: none;
+  }
+  
+  .happyImg {
+    flex: 1;
+    margin-bottom: 20px;
+    max-width: 80%;
+  }
+  
+  .ContentSection {
+    flex: 1;
+    width: 100%;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .textSection {
+    text-align: center;
+  }
+  
+  .textSection > h2 {
+    font-size: 40px;
+    margin: 15px 0;
+    text-align: center;
+  }
+  
+  .textSection > h5 {
+    font-size: 20px;
+    text-align: center;
+  }
+  
+  .ContentSection > button {
+    font-size: 24px;
+    width: 200px;
+    padding: 10px;
+    margin: 20px 0;
+  }
+  
+  #HeaderLeft > h4 {
+    font-size: 24px;
+  }
+  
+  #HeaderLeft > img {
+    height: 40px;
+    width: auto;
+  }
+  
+  #HeaderRight {
+    margin-right: 0;
+  }
+  
+  #HeaderRight > button {
+    margin: 5px;
+    font-size: 18px;
+  }
+  
+  footer {
+    height: auto;
+    padding: 10px 0;
+  }
+  
+  .FooterLeft, .FooterRight {
+    width: 45%;
+    margin: 0 2%;
+  }
+  
+  footer > div > button {
+    font-size: 18px;
+  }
+}
+
+/* Extra small screens */
+@media screen and (max-width: 480px) {
+  header {
+    flex-direction: column;
+    margin: 5px;
+  }
+  
+  #HeaderRight {
+    margin-top: 10px;
+  }
+  
+  .textSection > h2 {
+    font-size: 30px;
+  }
+  
+  .textSection > h5 {
+    font-size: 16px;
+  }
+  
+  .ContentSection > button {
+    font-size: 20px;
+    width: 180px;
+  }
+  
+  .FooterLeft, .FooterRight {
+    flex-direction: column;
+  }
+  
+  footer > div > button {
+    margin: 5px 0;
+  }
+}
+
+/* Fix for footer positioning */
+body {
+  position: relative;
+  padding-bottom: 60px;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+@media screen and (max-height: 700px) {
+  body {
+    padding-bottom: 100px;
+  }
+  
+  footer {
+    position: relative;
+    margin-top: 40px;
+  }
+}

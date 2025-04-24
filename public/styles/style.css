@@ -20,26 +20,47 @@ header {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin: 10px 50px;
+  padding: 10px 20px;
+  margin: 0;
 }
 
 #HeaderLeft {
   display: flex;
   flex-direction: row;
   align-items: center;
-  width: -moz-fit-content;
+  gap: 10px;
   width: fit-content;
   cursor: pointer;
+  background: transparent;
+  border: none;
+}
+
+#HeaderLeft > img {
+  height: 50px;
+  width: auto;
+}
+
+#HeaderLeft > h4 {
+  font-size: 24px;
+  color: #4381a8;
 }
 
 #HeaderRight {
   display: flex;
   flex-direction: row;
-  margin-right: 50px;
+  align-items: center;
+  gap: 15px;
 }
 
-#HeaderRight>button {
-  margin: 15px;
+#HeaderRight > button {
+  margin: 0;
+  padding: 8px 15px;
+  transition: all 0.3s ease;
+  border-radius: 5px;
+}
+
+#HeaderRight > button:hover {
+  background-color: rgba(67, 129, 168, 0.1);
 }
 
 #profil {
@@ -105,31 +126,31 @@ header>div>button {
 
 /* --------------------------------------Body-------------------------------------- */
 body {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: #f5f387;
-
+  position: relative;
 }
 
 section {
-  position: relative;
-  min-height: 80%;
+  flex-grow: 1;
   display: flex;
+  padding: 20px;
 }
 
 img {
-  height: 80%;
-  width: 80%;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 
 button {
-  transition: ease-out .2s;
+  transition: all 0.3s ease;
 }
 
 button:hover {
   transform: scale(1.05);
-  transition: ease-in .2s;
 }
 
 .button {
@@ -182,8 +203,9 @@ footer {
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 8%;
-
+  height: auto;
+  min-height: 60px;
+  padding: 10px 0;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -193,11 +215,11 @@ footer {
 
 .FooterLeft {
   display: flex;
-  flex-direction: row-reverse;
+  flex-direction: row;
   align-items: center;
-  justify-content: space-around;
-  margin-left: 10%;
-  width: 20%;
+  justify-content: flex-start;
+  margin-left: 5%;
+  gap: 20px;
 }
 
 .FooterLeft>button {
@@ -206,11 +228,29 @@ footer {
 
 .FooterRight {
   display: flex;
-  flex-direction: row-reverse;
+  flex-direction: row;
   align-items: center;
-  justify-content: space-around;
-  margin-right: 10%;
-  width: 20%;
+  justify-content: flex-end;
+  margin-right: 5%;
+  gap: 20px;
+}
+
+footer > div > button {
+  background-color: transparent;
+  font-family: "Bubblegum Sans";
+  color: #ffffff;
+  font-weight: 400;
+  font-size: clamp(18px, 3vw, 30px);
+  border: none;
+  padding: 5px 10px;
+  margin: 0;
+  transition: all 0.3s ease;
+}
+
+footer > div > button:hover {
+  text-decoration: underline;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
 }
 
 /* disable clicks */
@@ -337,6 +377,15 @@ footer>div>button {
   font-family: "Bubblegum Sans";
   color: #ffffff;
   font-weight: 400;
-  font-size: 30px;
+  font-size: clamp(18px, 3vw, 30px);
   border: none;
+  padding: 5px 10px;
+  margin: 0;
+  transition: all 0.3s ease;
+}
+
+footer>div>button:hover {
+  text-decoration: underline;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
 }

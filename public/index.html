@@ -11,16 +11,16 @@
   <meta name="author" content="Abdellatif Kebraoui">
   <title>DoroDoro - Pomodoro Study Timer</title>
   <link rel="stylesheet" href="./styles/style.css" />
-  <link rel="stylesheet" href="./styles/indexStyle.css" />
+  <link rel="stylesheet" href="./styles/index.css" />
   <link rel="icon" type="image/x-icon" href="./assets/Logo.ico">
 </head>
 
 <body>
   <header>
-    <div id="HeaderLeft" onclick="{goHome()}">
+    <button id="HeaderLeft" onclick="{goHome()}">
       <img src="./assets/Logo.png" alt="DoroDoro Logo" />
       <h4>DoroDoro</h4>
-    </div>
+    </button>
     <div id="HeaderRight">
       <button onclick="{goSignIn()}">Sign in</button>
       <button onclick="{goSignUp()}">Sign up</button>
@@ -44,16 +44,7 @@
     </div>
     <div class="empty"></div>
   </section>
-  <footer>
-    <div class="FooterLeft">
-      <button>About us</button>
-      <button>Contact</button>
-    </div>
-    <div class="FooterRight">
-      <button>Twitter</button>
-      <button>Facebook</button>
-    </div>
-  </footer>
+
 </body>
 <!-- screpts and stuff needed for the website -->
 <script type="text/javascript" src="./scripts/navigation.js"></script>
@@ -73,7 +64,4 @@
   const app = firebase.initializeApp(config);
 </script>
 <script type="module" src="/scripts/redirect.js"></script>
-<!-- <script type="module" src="../dist/conn.js"></script> -->
-<!-- <script type="text/javascript" src="/scripts/signInScript.js"></script> -->
-
 </html>
