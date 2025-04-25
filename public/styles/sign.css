@@ -310,18 +310,17 @@ section {
     padding: 15px;
     gap: 20px;
   }
+
 }
 
 @media (max-width: 768px) {
-  section {
-    flex-direction: column;
-    padding: 10px;
-  }
-  
+
   .illustration {
     margin-bottom: 20px;
   }
-  
+  .illustration{
+    display: none;
+  }
   .signUpContainer,
   .signInContainer {
     width: 90%;
@@ -336,47 +335,13 @@ section {
   .btns input {
     height: 50px;
   }
-}
-
-@media (max-width: 480px) {
+  
   .illustration h1 {
-    font-size: 50px;
+    font-size: clamp(40px, 8vw, 60px);
+    margin-bottom: 20px;
   }
   
-  .signUpContainer,
-  .signInContainer {
-    width: 95%;
-    padding: 15px;
-  }
-  
-  .input-group {
-    margin-bottom: 15px;
-  }
-  
-  .btns {
-    gap: 10px;
-  }
-}
-
-/* For very small screens */
-@media (max-width: 320px) {
-  .signUpContainer h2,
-  .signInContainer h2 {
-    font-size: 20px;
-  }
-  
-  .signUpContainer h3,
-  .signInContainer h3 {
-    font-size: 14px;
-  }
-  
-  .input {
-    height: 40px;
-    font-size: 14px;
-  }
-  
-  .btns input {
-    height: 45px;
-    font-size: 16px;
+  .illustration img {
+    max-height: 300px;
   }
 }

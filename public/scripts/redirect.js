@@ -8,7 +8,7 @@ const PAGES = {
   HOME: '/home.html',
   INDEX: '/index.html',
   LOGIN: '/login.html',
-  SIGNUP: '/signup.html',
+  SIGNUP: '/sign-up.html',
   START: '/start.html',
   SETTINGS: '/settings.html',
   ABOUT: '/about.html'

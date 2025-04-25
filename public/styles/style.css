@@ -37,6 +37,9 @@ header {
   align-items: center;
   position: sticky;
   top: 0px;
+  margin-top: 1rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
   background-color: var(--accent-color);
   z-index: 1000;
 }
@@ -556,4 +559,145 @@ footer>div>button:hover {
   text-decoration: underline;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 5px;
+}
+
+/* Responsive adjustments for base elements */
+@media (max-width: 768px) {
+
+  
+  header {
+    padding: 8px 15px;
+    margin: 8px 10px;
+  }
+  
+  #header-left {
+    gap: 8px;
+  }
+  
+  #header-left > h4 {
+    font-size: 22px;
+  }
+  
+  #header-left > img {
+    height: 35px;
+    width: auto;
+  }
+  
+  #header-right {
+    gap: 10px;
+  }
+  
+  #header-right > button {
+    padding: 8px 16px;
+    font-size: 16pt;
+  }
+  #edit-profile-popup {
+    width: 75%;
+    padding: 15px;
+
+  }
+  #edit-form-inputs {
+    align-items: start;
+  }
+  .primary-button {
+    padding: 10px 18px;
+    font-size: 16px;
+  }
+  
+  /* Make dialogs more mobile-friendly */
+  .dialog {
+    width: 90%;
+    max-width: 400px;
+    padding: 15px;
+  }
+  
+  .profile-image {
+    width: 60px;
+    height: 60px;
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    flex-direction: column;
+    gap: 10px;
+    padding: 8px;
+  }
+  
+  #header-right {
+    width: 100%;
+    justify-content: space-around;
+  }
+  
+  #header-right > button {
+    font-size: 16pt;
+    padding: 6px 12px;
+  }
+  
+  .popup-sign {
+    right: 0;
+    width: 180px;
+  }
+  
+  .circle {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+  
+  #profil {
+    margin-left: 0;
+  }
+  
+  .dialog {
+    padding: 12px;
+  }
+  
+  .form-group input {
+    font-size: 14pt;
+    padding: 8px 12px;
+  }
+  
+  .dialog-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .dialog-actions button {
+    width: 100%;
+  }
+}
+
+/* Improved touch targets for mobile */
+@media (pointer: coarse) {
+  .circle, button, input[type="submit"], input[type="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .popup-menu-btn {
+    padding: 10px 15px;
+  }
+}
+
+/* Support for very small devices */
+@media (max-width: 360px) {
+  #header-left > h4 {
+    font-size: 20px;
+  }
+  
+  #header-left > img {
+    height: 30px;
+  }
+  
+  #header-right > button {
+    font-size: 16pt;
+    padding: 5px 10px;
+  }
+  
+  .circle {
+    width: 36px;
+    height: 36px;
+  }
 }

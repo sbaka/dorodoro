@@ -1,13 +1,13 @@
 const auth = firebase.auth()
 
-const signInBtn = document.getElementById("sign_in_submit")
-const signUpBtn = document.getElementById("sign_up_submit")
-const googleSign = document.getElementById("sign_with_google")
+const signInBtn = document.getElementById("sign-in-submit")
+const signUpBtn = document.getElementById("sign-up-submit")
+const googleSign = document.getElementById("sign-with-google")
 const email = document.getElementById("email")
 const password = document.getElementById("pwd")
 const userName = document.getElementById("userName")
 const errorField = document.getElementById("error")
-const errorContainer = document.getElementById("error_msg_container")
+const errorContainer = document.getElementById("error-msg-container")
 
 // Validation patterns
 const namePattern = /^[A-Za-z\s]{3,30}$/;
@@ -78,7 +78,7 @@ function validateField(field, pattern) {
  * Updates the submit button state based on form validity
  */
 function updateSubmitButton() {
-  const submitButton = document.getElementById('sign_up_submit');
+  const submitButton = document.getElementById('sign-up-submit');
   if (submitButton) {
     submitButton.disabled = !(formValid.name && formValid.email && formValid.password);
     submitButton.classList.toggle('disabled', !(formValid.name && formValid.email && formValid.password));
@@ -142,7 +142,7 @@ function updatePasswordStrength(password) {
  */
 function showError(message) {
   const errorDiv = document.getElementById('error');
-  const errorMsg = document.getElementById('error_msg_container');
+  const errorMsg = document.getElementById('error-msg-container');
   
   if (errorDiv && errorMsg) {
     errorMsg.textContent = message;
@@ -175,7 +175,7 @@ async function handleSignUp(event) {
   }
   
   // Show loading state
-  const submitButton = document.getElementById('sign_up_submit');
+  const submitButton = document.getElementById('sign-up-submit');
   const originalText = submitButton.value;
   submitButton.value = 'Please wait...';
   submitButton.disabled = true;
@@ -239,7 +239,7 @@ async function handleSignIn(event) {
   }
   
   // Show loading state
-  const submitButton = document.getElementById('sign_in_submit');
+  const submitButton = document.getElementById('sign-in-submit');
   const originalText = submitButton.value;
   submitButton.value = 'Signing in...';
   submitButton.disabled = true;
@@ -289,7 +289,7 @@ async function handleSignIn(event) {
  * Handles Google sign-in
  */
 function signInWithGoogle() {
-  const googleBtn = document.getElementById('sign_with_google');
+  const googleBtn = document.getElementById('sign-with-google');
   googleBtn.value = 'Connecting...';
   googleBtn.disabled = true;
   
@@ -312,7 +312,7 @@ function signInWithGoogle() {
 // Initialize the page
 document.addEventListener('DOMContentLoaded', function() {
   // Add event listeners
-  const signInButton = document.getElementById('sign_in_submit');
+  const signInButton = document.getElementById('sign-in-submit');
   if (signInButton) {
     // The form's onsubmit handles this, but we're being extra careful
     signInButton.addEventListener('click', function(e) {
@@ -321,7 +321,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  const signUpButton = document.getElementById('sign_up_submit');
+  const signUpButton = document.getElementById('sign-up-submit');
   if (signUpButton) {
     // The form's onsubmit handles this, but we're being extra careful
     signUpButton.addEventListener('click', function(e) {
@@ -330,7 +330,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  const googleButton = document.getElementById('sign_with_google');
+  const googleButton = document.getElementById('sign-with-google');
   if (googleButton) {
     googleButton.addEventListener('click', signInWithGoogle);
   }

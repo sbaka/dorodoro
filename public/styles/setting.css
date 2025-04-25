@@ -237,25 +237,39 @@ input[type="range"]:focus {
 /* Dialog/Modal styles */
 
 /* Responsive styles */
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .settings-page {
     flex-direction: column;
   }
   
+
+
   .settings-container {
+    width: 90%;
     margin: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .settings-container {
+    width: 85%;
   }
   
   .illustration {
-    padding: 1rem;
-  }
-  
-  .illustration h1 {
-    font-size: 2rem;
+    display: none;
+    
   }
   
   .title h2 {
     font-size: 1.75rem;
+  }
+  
+  .settingItem {
+    padding: 1rem;
+  }
+  
+  .settingItem label {
+    font-size: 1.1rem;
   }
   
   .settings-actions {
@@ -265,6 +279,100 @@ input[type="range"]:focus {
   
   .primary-button, .secondary-button, .danger-button {
     width: 100%;
+  }
+  
+  .scrollable-items {
+    padding: 0.75rem 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .settings-container {
+    padding: 1rem;
+  }
+  
+  .title h2 {
+    font-size: 1.5rem;
+  }
+  
+  .title img {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .settingItem label {
+    font-size: 1rem;
+  }
+  
+  .range-value-min, .range-value-max {
+    width: 20px;
+    font-size: 0.8rem;
+  }
+  
+  .range-input {
+    font-size: 0.9rem;
+    width: 70px;
+  }
+  
+  .setting-description {
+    font-size: 0.8rem;
+  }
+}
+
+/* For extra small screens */
+@media (max-width: 360px) {
+  .range-container {
+    gap: 0.5rem;
+  }
+  
+  .settings-container {
+    padding: 0.8rem;
+  }
+  
+  input[type="range"] {
+    height: 6px;
+  }
+  
+  input[type="range"]::-webkit-slider-thumb {
+    width: 18px;
+    height: 18px;
+  }
+  
+  input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* For devices with limited height */
+@media (max-height: 700px) {
+  .settings-page {
+    min-height: auto;
+  }
+  
+  .illustration h1 {
+    margin-bottom: 1rem;
+  }
+  
+  .illustration img {
+    max-height: 200px;
+  }
+  
+  .settingItem {
+    margin-bottom: 0.75rem;
+  }
+}
+
+/* Better touch targets for mobile */
+@media (pointer: coarse) {
+  .toggle-password,
+  input[type="range"]::-webkit-slider-thumb,
+  input[type="range"]::-moz-range-thumb {
+    transform: scale(1.15);
+  }
+  
+  button {
+    min-height: 44px;
   }
 }
 
