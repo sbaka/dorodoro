@@ -10,8 +10,8 @@
   <meta name="keywords" content="Pomodoro, study, student, university, focus">
   <meta name="author" content="Abdellatif Kebraoui">
   <title>DoroDoro - Pomodoro Study Timer</title>
-  <link rel="stylesheet" href="../styles/style.css" />
-  <link rel="stylesheet" href="../styles/sign_style.css" />
+  <link rel="stylesheet" href="./styles/style.css" />
+  <link rel="stylesheet" href="./styles/sign.css" />
   <!-- for google icons -->
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -20,7 +20,7 @@
 <body>
   <header>
     <div id="HeaderLeft" onclick="{goHome()}">
-      <img src="../assets/Logo.png" alt="logo.png" />
+      <img src="./assets/Logo.png" alt="DoroDoro Logo" />
       <h4>DoroDoro</h4>
     </div>
     <div id="HeaderRight">
@@ -30,48 +30,71 @@
   </header>
   <section>
     <div class="illustration">
-      <center>
-        <h1>Join <b>US.</b></h1>
-      </center>
-      <img src="../assets/joinUS.png " alt="standing tomato " />
+      <h1>Join <b>US.</b></h1>
+      <img src="./assets/joinUS.png" alt="DoroDoro mascot welcoming new users" />
     </div>
     <div class="empty"></div>
 
     <div class="signUpContainer">
       <h2>Create an account now.</h2>
       <h3>
-        Already a member ? <a href="#Foo" onclick="{goSignIn()}"> Sign In</a>
+        Already a member? <a href="#" onclick="{goSignIn(); return false;}" aria-label="Go to sign in page">Sign In</a>
       </h3>
 
-      <div id="form">
-        <input type="text" class="input" id="userName" placeholder="Name : " />
-        <input type="email" class="input" name="email" id="email" placeholder="Email : " />
-        <input type="password" class="input" name="pwd" id="pwd" placeholder="Password :" />
-        <div id="error">
+      <form id="form" onsubmit="handleSignUp(event)">
+        <div class="input-group">
+          <label for="userName" class="sr-only">Name</label>
+          <input type="text" class="input" id="userName" placeholder="Name" 
+                 aria-required="true" minlength="3" autocomplete="name"
+                 oninput="validateField(this, namePattern)" />
+          <span class="validation-message" id="userName-validation"></span>
+        </div>
+        
+        <div class="input-group">
+          <label for="email" class="sr-only">Email</label>
+          <input type="email" class="input" name="email" id="email" 
+                 placeholder="Email" aria-required="true" autocomplete="email"
+                 oninput="validateField(this, emailPattern)" />
+          <span class="validation-message" id="email-validation"></span>
+        </div>
+        
+        <div class="input-group">
+          <label for="pwd" class="sr-only">Password</label>
+          <div class="password-container">
+            <input type="password" class="input" name="pwd" id="pwd" 
+                   placeholder="Password" aria-required="true" minlength="8"
+                   autocomplete="new-password"
+                   oninput="validateField(this, passwordPattern)" />
+            <button type="button" class="toggle-password" aria-label="Show password"
+                    onclick="togglePasswordVisibility()">
+              <span class="material-symbols-outlined">visibility</span>
+            </button>
+          </div>
+          <span class="validation-message" id="pwd-validation"></span>
+          <div class="password-strength" id="password-strength">
+            <div class="strength-meter">
+              <div class="strength-bar" id="strength-bar"></div>
+            </div>
+            <span id="strength-text">Password strength</span>
+          </div>
+        </div>
+        
+        <div id="error" aria-live="polite">
           <span class="material-symbols-outlined"> error </span>
           <p id="error_msg_container"></p>
         </div>
+        
         <div class="btns">
-          <input type="submit" class="button" value="Sign up" id="sign_up_submit" onclick="" />
+          <input type="submit" class="button" value="Sign up" id="sign_up_submit" />
           <input type="button" class="button" value="Continue with Google" id="sign_with_google" />
         </div>
-      </div>
+      </form>
     </div>
   </section>
-  <footer>
-    <div class="FooterLeft">
-      <button>About us</button>
-      <button>Contact</button>
-    </div>
-    <div class="FooterRight">
-      <button>Twitter</button>
-      <button>Facebook</button>
-    </div>
-  </footer>
 </body>
 
-
-<script type="text/javascript" src="../scripts/navigation.js"></script>
+<!-- Scripts -->
+<script type="text/javascript" src="./scripts/navigation.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script>
@@ -87,8 +110,7 @@
   };
   const app = firebase.initializeApp(config);
 </script>
-<script src="../scripts/signScript.js"></script>
-<script src="../scripts/redirect.js"></script>
-
+<script src="./scripts/signScript.js"></script>
+<script src="./scripts/redirect.js"></script>
 
 </html>

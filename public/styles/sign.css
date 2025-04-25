@@ -2,144 +2,381 @@ section {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-}
-
-.illustration>center>h1 {
-  font-family: "Bubblegum Sans";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 120px;
-  color: #4381a8;
+  align-items: center;
+  min-height: 75vh;
+  padding: 20px;
+  flex-wrap: wrap;
+  gap: 30px;
 }
 
 .illustration {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%;
 }
 
-.illustration>img {
-  align-self: center;
-  height: 60%;
+.illustration h1 {
+  font-family: "Bubblegum Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-size: clamp(60px, 10vw, 120px);
+  line-height: 1.2;
+  text-align: center;
+  color: #4381a8;
+  margin-bottom: 30px;
 }
 
-.illustration>center>h1>b {
+.illustration h1 b {
   color: #ffffff;
-  font-size: 125px;
-  text-shadow: 0px 4px 4px #000000;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.7);
 }
 
-/* .empty {
-  flex: 1;
-} */
+.illustration img {
+  max-width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: contain;
+}
 
 /* --------------------------------------CONTAINERS STYLE------------------------------------------- */
 
 /* SIZE AND LOOK*/
 .signUpContainer,
 .signInContainer {
-  background: rgba(255, 255, 255, 0.77);
+  background: rgba(255, 255, 255, 0.85);
   border: 1px solid #000000;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.25);
   border-radius: 20px;
-  min-width: 30%;
-  max-width: 50%;
+  width: min(500px, 95%);
   padding: 30px;
+  transition: all 0.3s ease;
 }
 
-/* DIFF HEIGHT */
-.signUpContainer {
-  height: fit-content;
+.signUpContainer:hover,
+.signInContainer:hover {
+  box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.35);
 }
 
-.signInContainer {
-  height: fit-content;
+/* Container headers */
+.signUpContainer h2,
+.signInContainer h2 {
+  font-size: clamp(24px, 5vw, 32px);
+  margin-bottom: 10px;
+  color: #4381a8;
 }
 
-.signUpContainer>h3>a,
-.signInContainer>h3>a {
+.signUpContainer h3,
+.signInContainer h3 {
+  font-size: clamp(16px, 3vw, 20px);
+  margin-bottom: 20px;
+  color: #555;
+}
+
+.signUpContainer h3 a,
+.signInContainer h3 a {
   color: #4381a8;
   text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease;
 }
 
-.signUpContainer>#form,
-.signInContainer>#form {
-  height: calc(100% - 50px);
+.signUpContainer h3 a:hover,
+.signInContainer h3 a:hover {
+  text-decoration: underline;
+  color: #1762a7;
+}
+
+/* Form styling */
+#form {
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  justify-content: space-evenly;
-  align-content: center;
+  width: 100%;
 }
 
-.signUpContainer>#form>input,
-.signInContainer>#form>input,
-.btns>input {
+.input-group {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.input {
+  height: 50px;
+  padding: 10px 15px;
+  width: 100%;
   border: 2px solid #1762a7;
   border-radius: 10px;
   font-family: "Bubblegum Sans";
   font-weight: 400;
-  font-size: 24px;
+  font-size: 18px;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 
-.signInContainer>#form>input {
-  margin: 20px;
+.input:focus {
+  outline: none;
+  border-color: #4381a8;
+  box-shadow: 0 0 0 3px rgba(67, 129, 168, 0.25);
 }
 
-.signUpContainer>#form>input,
-.btns>input {
-  margin: 10px;
+.input::placeholder {
+  color: #999;
+  opacity: 0.8;
 }
 
-.input {
-  height: 20px;
-  padding: 15px;
+/* Password container for the toggle button */
+.password-container {
+  position: relative;
+  width: 100%;
 }
 
+.toggle-password {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #777;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* Button styling */
 .btns {
   display: flex;
   flex-direction: column;
-  height: calc(30% - 20px);
-  align-items: stretch;
-  justify-content: space-around;
+  width: 100%;
+  gap: 15px;
+  margin-top: 10px;
 }
 
-.btns>input[type="submit"] {
+.btns input {
+  height: 60px;
+  border: none;
+  border-radius: 10px;
+  font-family: "Bubblegum Sans";
+  font-weight: 400;
+  font-size: clamp(18px, 4vw, 24px);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btns input[type="submit"] {
   background: #4381a8;
   color: #ffffff;
-  height: 60px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.btns>input[type="button"] {
-  height: 60px;
+.btns input[type="submit"]:hover {
+  background: #1762a7;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.btns input[type="submit"]:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+.btns input[type="submit"].disabled {
+  background: #93b9d1;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btns input[type="button"] {
+  background-color: #ffffff;
+  color: #333;
+  border: 2px solid #1762a7;
+  position: relative;
+  padding-right: 40px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btns input[type="button"]:hover {
+  background-color: #f5f5f5;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.btns input[type="button"]:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+.btns input[type="button"]::after {
+  content: '';
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
   background-image: url(../assets/googleLogo.png);
+  background-size: contain;
   background-repeat: no-repeat;
-  background-position: left;
-  background-position-x: calc(100% - 10px);
 }
 
+/* Error messages */
 #error {
-  display: none;
+  visibility: hidden;
+  display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin: 10px;
-  padding: 20px 0;
-  height: fit-content;
-  max-width: 100%;
-  background-color: #ffc7c7;
-  border-radius: 5px;
+  margin: 15px 0;
+  padding: 15px;
+  background-color: #ffebeb;
+  border: 1px solid #ffb8b8;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(255, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
 
-#error>p {
-  flex: 2;
+#error p {
+  flex: 1;
+  margin: 0;
+  color: #d32f2f;
+  font-size: 16px;
+  padding-right: 10px;
 }
 
-/* google fonts icon */
 .material-symbols-outlined {
-  margin: 0 15px;
-  color: rgb(249, 62, 62);
+  color: #d32f2f;
+  margin-right: 10px;
   font-variation-settings:
     'FILL' 0,
     'wght' 400,
     'GRAD' 0,
     'opsz' 48
+}
+
+/* Validation messages */
+.validation-message {
+  display: block;
+  font-size: 14px;
+  margin-top: 5px;
+  height: 20px;
+  transition: all 0.3s ease;
+}
+
+.validation-message.error {
+  color: #d32f2f;
+}
+
+.validation-message.success {
+  color: #2e7d32;
+}
+
+/* Password strength meter */
+.password-strength {
+  margin-top: 10px;
+}
+
+.strength-meter {
+  height: 6px;
+  background-color: #e0e0e0;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+
+.strength-bar {
+  height: 100%;
+  width: 0;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+#strength-text {
+  font-size: 14px;
+  color: #777;
+}
+
+/* Accessibility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  section {
+    padding: 15px;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  section {
+    flex-direction: column;
+    padding: 10px;
+  }
+  
+  .illustration {
+    margin-bottom: 20px;
+  }
+  
+  .signUpContainer,
+  .signInContainer {
+    width: 90%;
+    padding: 20px;
+  }
+  
+  .input {
+    height: 45px;
+    font-size: 16px;
+  }
+  
+  .btns input {
+    height: 50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .illustration h1 {
+    font-size: 50px;
+  }
+  
+  .signUpContainer,
+  .signInContainer {
+    width: 95%;
+    padding: 15px;
+  }
+  
+  .input-group {
+    margin-bottom: 15px;
+  }
+  
+  .btns {
+    gap: 10px;
+  }
+}
+
+/* For very small screens */
+@media (max-width: 320px) {
+  .signUpContainer h2,
+  .signInContainer h2 {
+    font-size: 20px;
+  }
+  
+  .signUpContainer h3,
+  .signInContainer h3 {
+    font-size: 14px;
+  }
+  
+  .input {
+    height: 40px;
+    font-size: 14px;
+  }
+  
+  .btns input {
+    height: 45px;
+    font-size: 16px;
+  }
 }

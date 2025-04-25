@@ -7,49 +7,102 @@ if (!link) {
 }
 link.href = "../assets/Logo.ico"
 
+/**
+ * Base path for navigation - can be changed if site structure changes
+ * This allows for easy migration between development and production environments
+ */
+const basePath = "";
 
-// //navigation
-// function goSignIn() {
-//     location.href = "https://dorodoro-1234.web.app/pages/signIn.html";
-// };
+/**
+ * Navigate to a page with error handling and optional callback
+ * @param {string} path - The path to navigate to
+ * @param {Function} [callback] - Optional callback before navigation
+ * @returns {boolean} - Success status of navigation attempt
+ */
+function navigateTo(path, callback) {
+    try {
+        // Execute any pre-navigation logic if provided
+        if (callback && typeof callback === 'function') {
+            callback();
+        }
 
-// function goSignUp() {
-//     location.href = "https://dorodoro-1234.web.app/pages/signUp.html";
-// };
+        // Save current page to session storage for potential "back" functionality
+        sessionStorage.setItem('previousPage', window.location.href);
 
-// function goHome() {
-//     location.href = "https://dorodoro-1234.web.app/index.html"
-// }
-// function goStart() {
-//     location.href = "https://dorodoro-1234.web.app/pages/start.html"
-// }
-// function goSettings() {
-//     location.href = "https://dorodoro-1234.web.app/pages/settings.html"
-// }
+        // Navigate to the specified path
+        location.href = `${basePath}${path}`;
+        return true;
+    } catch (error) {
+        console.error(`Navigation error to ${path}:`, error);
+        // Provide user feedback about the error
+        alert("Navigation failed. Please try again or refresh the page.");
+        return false;
+    }
+}
 
-// function goStartHome() {
-//     location.href = "https://dorodoro-1234.web.app/pages/startSession.html"
-// }
-
-//navigation
+/**
+ * Enhanced navigation functions with consistent implementation
+ */
 function goSignIn() {
-    location.href = "/signIn.html";
-};
+    navigateTo("./signIn.html");
+}
 
 function goSignUp() {
-    location.href = "/signUp.html";
-};
+    navigateTo("./signUp.html");
+}
 
 function goHome() {
-    location.href = "/index.html"
+    navigateTo("./index.html");
 }
+
 function goStart() {
-    location.href = "/start.html"
+    navigateTo("./start.html");
 }
+
 function goSettings() {
-    location.href = "/settings.html"
+    navigateTo("./settings.html");
 }
 
 function goStartHome() {
-    location.href = "/startSession.html"
+    navigateTo("./startSession.html");
+}
+
+/**
+ * Go back to previous page if available
+ */
+function goBack() {
+    const previousPage = sessionStorage.getItem('previousPage');
+    if (previousPage) {
+        location.href = previousPage;
+    } else {
+        goHome();
+    }
+}
+
+/**
+ * Check if the current page requires authentication and redirect if needed
+ * @param {boolean} requiresAuth - Whether the current page requires authentication
+ */
+function checkAuthRequirement(requiresAuth = false) {
+    // This assumes you have a way to check if the user is logged in
+    const isLoggedIn = sessionStorage.getItem('userLoggedIn') === 'true' ||
+        localStorage.getItem('userLoggedIn') === 'true';
+
+    if (requiresAuth && !isLoggedIn) {
+        // Redirect to login if auth is required but user is not logged in
+        navigateTo("/signIn.html", () => {
+            // Store the intended destination for redirect after login
+            sessionStorage.setItem('intendedDestination', window.location.href);
+            console.log("Authentication required. Redirecting to login page.");
+        });
+    } else if (!requiresAuth && isLoggedIn) {
+        // Optional: Redirect logged-in users away from login/signup pages
+        // Uncomment if you want this behavior
+
+        if (window.location.pathname.includes("signIn.html") ||
+            window.location.pathname.includes("signUp.html")) {
+            navigateTo("/start.html");
+        }
+
+    }
 }

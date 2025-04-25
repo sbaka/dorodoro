@@ -56,6 +56,7 @@ header {
 
 /* Small screens (mobile phones) */
 @media screen and (max-width: 768px) {
+
   section {
     flex-direction: column;
     padding: 20px 5%;
@@ -166,11 +167,6 @@ header {
   }
 }
 
-/* Fix for footer positioning */
-body {
-  position: relative;
-  padding-bottom: 60px;
-}
 
 footer {
   position: absolute;

@@ -1,220 +1,383 @@
-section {
+:root {
+  --primary-color: #D92828;
+  --secondary-color: #4381A8;
+  --accent-color: #F5F387;
+  --success-color: #2ecc71;
+  --danger-color: #e74c3c;
+  --bg-light: #ffffff;
+  --bg-dark: #f5f5f5;
+  --text-dark: #333333;
+  --text-light: #ffffff;
+  --border-radius: 10px;
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+.settings-page {
   display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+  width: 100%;
+  min-height: calc(100vh - 140px);
 }
 
 .illustration {
   flex: 1;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
 }
 
-.illustration>img {
-  align-self: center;
-  width: 60%;
-  height: 60%;
+.illustration h1 {
+  font-family: "Bubblegum Sans", sans-serif;
+  font-size: 2.5rem;
+  color: var(--secondary-color);
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
-center>h1 {
-  font-size: 128px;
-  color: #f5f5f5;
-  -webkit-text-stroke: 0.5px #4381a8;
-  text-shadow: 24px 30px 28px rgba(0, 0, 0, 0.25);
+.illustration img {
+  max-width: 70%;
+  height: auto;
 }
 
 .settingsContainer {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  height: 75%;
+  background-color: var(--bg-light);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 2rem;
+  margin: 2rem;
+  min-width: 320px;
 }
 
 .title {
   display: flex;
-  flex-direction: row;
   align-items: center;
+  margin-bottom: 2rem;
 }
 
-.title>h2 {
-  font-size: 64px;
-  color: #d92828;
-  -webkit-text-stroke: 0.5px #f5f5f5;
+.title h2 {
+  font-family: "Bubblegum Sans", sans-serif;
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin-right: 1rem;
+}
+
+.title img {
+  width: 32px;
+  height: 32px;
 }
 
 .settingItems {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  height: 80%;
-  width: 90%;
+  gap: 1.5rem;
 }
 
 .settingItem {
   display: flex;
-  flex-direction: row;
-  width: 100%;
-  justify-content: space-evenly;
-  align-items: center;
+  flex-direction: column;
+  background-color: var(--bg-dark);
+  padding: 1.25rem;
+  border-radius: var(--border-radius);
+  transition: var(--transition);
 }
 
-.settingsContainer>button {
-  border: 5px solid #4381a8;
-  font-size: 40px;
-  color: #d92828;
-  background-color: #f5f5f5;
-  width: 172px;
-  height: 79px;
-  border-radius: 10px;
-  margin-top: 5%;
+.settingItem:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
-.settingItem>label {
-  font-size: 32px;
-  min-width: 270px;
+.settingItem label {
+  font-family: "Bubblegum Sans", sans-serif;
+  font-size: 1.2rem;
+  color: var(--secondary-color);
+  margin-bottom: 0.75rem;
 }
 
-/* styling the div that shows the range */
-.range {
+.range-container {
   display: flex;
-  flex-direction: column-reverse;
   align-items: center;
-  justify-content: space-around;
-  height: 80px;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.range-value-min, .range-value-max {
+  color: var(--text-dark);
+  font-size: 0.9rem;
+  opacity: 0.7;
+  width: 25px;
+  text-align: center;
+}
+
+.range {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
   width: 100%;
+  height: 8px;
+  background: #e0e0e0;
+  outline: none;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: var(--secondary-color);
+  cursor: pointer;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: var(--transition);
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  background: var(--primary-color);
+  transform: scale(1.1);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: var(--secondary-color);
+  cursor: pointer;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  border: none;
+  transition: var(--transition);
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+  background: var(--primary-color);
+  transform: scale(1.1);
+}
+
+input[type="range"]:focus {
+  box-shadow: 0 0 0 2px rgba(67, 129, 168, 0.3);
 }
 
 input[type="text"] {
   border: none;
-  background-color: transparent;
-  color: #d92828;
-  font-size: 26px;
+  background: transparent;
+  font-family: "Bubblegum Sans", sans-serif;
+  font-size: 1rem;
+  color: var(--primary-color);
+  text-align: center;
+  width: 80px;
+}
+
+.setting-description {
+  color: var(--text-dark);
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin: 0;
+}
+
+.settings-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+.primary-button, .secondary-button, .danger-button {
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius);
+  font-family: "Bubblegum Sans", sans-serif;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: var(--transition);
+  border: none;
+}
+
+.primary-button {
+  background-color: var(--secondary-color);
+  color: var(--text-light);
+}
+
+.primary-button:hover {
+  background-color: #326d94;
+  transform: translateY(-2px);
+}
+
+.secondary-button {
+  background-color: #e0e0e0;
+  color: var(--text-dark);
+}
+
+.secondary-button:hover {
+  background-color: #d0d0d0;
+  transform: translateY(-2px);
+}
+
+.danger-button {
+  background-color: var(--danger-color);
+  color: var(--text-light);
+}
+
+.danger-button:hover {
+  background-color: #c0392b;
+  transform: translateY(-2px);
+}
+
+/* Dialog/Modal styles */
+.dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  background: var(--bg-light);
+  border-radius: var(--border-radius);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  padding: 2rem;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  min-width: 300px;
+  max-width: 90%;
   text-align: center;
 }
 
-
-/* styling the range input */
-input[type=range] {
-  /* Hides the slider so that custom slider can be made */
-  -webkit-appearance: none;
-  appearance: none;
-  /* Specific width is required for Firefox. */
-  width: 40%;
-  /* Otherwise white in Chrome */
-  background: transparent;
+.dialog.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
 }
 
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
+.dialog h2 {
+  font-family: "Bubblegum Sans", sans-serif;
+  color: var(--primary-color);
+  margin-top: 0;
+  margin-bottom: 1.5rem;
 }
 
-input[type=range]:focus {
+.form-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  font-family: "Bubblegum Sans", sans-serif;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: var(--secondary-color);
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e0e0e0;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  transition: var(--transition);
+}
+
+.form-group input:focus {
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 2px rgba(67, 129, 168, 0.2);
   outline: none;
-  /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
 }
 
-input[type=range]::-ms-track {
-  width: 20%;
-  cursor: pointer;
-
-  /* Hides the slider so custom styles can be added */
-  background: transparent;
-  border-color: transparent;
-  color: transparent;
+.helper-text {
+  display: block;
+  font-size: 0.8rem;
+  color: #777;
+  margin-top: 0.25rem;
 }
 
-/* Special styling for WebKit/Blink */
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  border: 1px solid #000000;
-  height: 36px;
-  width: 16px;
-  border-radius: 3px;
-  background: #ffffff;
-  cursor: pointer;
-  margin-top: -14px;
-  /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-  /* Add cool effects to your sliders! */
+.dialog-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
 }
 
-/* All the same stuff for Firefox */
-input[type=range]::-moz-range-thumb {
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-  border: 1px solid #000000;
-  height: 36px;
-  width: 16px;
-  border-radius: 3px;
-  background: #ffffff;
-  cursor: pointer;
+.profile-image {
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  font-size: 24px;
+  margin: 0 auto 1.5rem;
 }
 
-/* All the same stuff for IE */
-input[type=range]::-ms-thumb {
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-  border: 1px solid #000000;
-  height: 36px;
-  width: 16px;
-  border-radius: 3px;
-  background: #ffffff;
-  cursor: pointer;
+#logout_btns {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
-input[type=range]::-webkit-slider-runnable-track {
-  width: 20%;
-  height: 8.4px;
-  cursor: pointer;
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-  background: #3071a9;
-  border-radius: 1.3px;
-  border: 0.2px solid #010101;
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  z-index: 999;
+  transition: var(--transition);
 }
 
-input[type=range]:focus::-webkit-slider-runnable-track {
-  background: #367ebd;
+.overlay.show {
+  opacity: 1;
+  visibility: visible;
 }
 
-input[type=range]::-moz-range-track {
-  width: 100%;
-  height: 8.4px;
-  cursor: pointer;
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-  background: #3071a9;
-  border-radius: 1.3px;
-  border: 0.2px solid #010101;
+/* Responsive styles */
+@media (max-width: 768px) {
+  .settings-page {
+    flex-direction: column;
+  }
+  
+  .settingsContainer {
+    margin: 1rem;
+  }
+  
+  .illustration {
+    padding: 1rem;
+  }
+  
+  .illustration h1 {
+    font-size: 2rem;
+  }
+  
+  .title h2 {
+    font-size: 1.75rem;
+  }
+  
+  .settings-actions {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .primary-button, .secondary-button, .danger-button {
+    width: 100%;
+  }
 }
 
-input[type=range]::-ms-track {
-  width: 100%;
-  height: 8.4px;
-  cursor: pointer;
-  background: transparent;
-  border-color: transparent;
-  border-width: 16px 0;
-  color: transparent;
+/* Accessibility focus styles */
+button:focus, input:focus {
+  outline: 2px solid var(--secondary-color);
+  outline-offset: 2px;
 }
 
-input[type=range]::-ms-fill-lower {
-  background: #2a6495;
-  border: 0.2px solid #010101;
-  border-radius: 2.6px;
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-}
-
-input[type=range]:focus::-ms-fill-lower {
-  background: #3071a9;
-}
-
-input[type=range]::-ms-fill-upper {
-  background: #3071a9;
-  border: 0.2px solid #010101;
-  border-radius: 2.6px;
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-}
-
-input[type=range]:focus::-ms-fill-upper {
-  background: #367ebd;
+/* For users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
