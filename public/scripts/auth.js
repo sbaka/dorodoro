@@ -154,8 +154,8 @@ function showError(message) {
 }
 
 /**
- * Handles the form submission event
- * @param {Event} event - The submission event
+ * Handles the sign up form submission
+ * @param {Event} event - The form submission event
  */
 async function handleSignUp(event) {
   event.preventDefault();
@@ -224,6 +224,68 @@ async function handleSignUp(event) {
 }
 
 /**
+ * Handles the sign in form submission
+ * @param {Event} event - The form submission event
+ */
+async function handleSignIn(event) {
+  event.preventDefault();
+  
+  const emailField = document.getElementById('email');
+  const passwordField = document.getElementById('pwd');
+  
+  if (!emailField.value || !passwordField.value) {
+    showError('Email and password are required');
+    return;
+  }
+  
+  // Show loading state
+  const submitButton = document.getElementById('sign_in_submit');
+  const originalText = submitButton.value;
+  submitButton.value = 'Signing in...';
+  submitButton.disabled = true;
+  
+  try {
+    // Sign in with Firebase Authentication
+    const auth = firebase.auth();
+    await auth.signInWithEmailAndPassword(emailField.value, passwordField.value);
+    
+    // Set user logged in session and redirect
+    sessionStorage.setItem('userLoggedIn', 'true');
+    goHome();
+  } catch (error) {
+    // Handle specific error cases
+    let errorMessage = 'Failed to sign in. Please check your credentials.';
+    
+    switch (error.code) {
+      case 'auth/user-not-found':
+        errorMessage = 'No account found with this email. Please sign up first.';
+        break;
+      case 'auth/wrong-password':
+        errorMessage = 'Incorrect password. Please try again.';
+        break;
+      case 'auth/invalid-email':
+        errorMessage = 'Invalid email format.';
+        break;
+      case 'auth/user-disabled':
+        errorMessage = 'This account has been disabled.';
+        break;
+      case 'auth/too-many-requests':
+        errorMessage = 'Too many failed attempts. Please try again later.';
+        break;
+      case 'auth/network-request-failed':
+        errorMessage = 'Network error. Please check your connection.';
+        break;
+    }
+    
+    showError(errorMessage);
+    
+    // Reset button state
+    submitButton.value = originalText;
+    submitButton.disabled = false;
+  }
+}
+
+/**
  * Handles Google sign-in
  */
 function signInWithGoogle() {
@@ -250,6 +312,24 @@ function signInWithGoogle() {
 // Initialize the page
 document.addEventListener('DOMContentLoaded', function() {
   // Add event listeners
+  const signInButton = document.getElementById('sign_in_submit');
+  if (signInButton) {
+    // The form's onsubmit handles this, but we're being extra careful
+    signInButton.addEventListener('click', function(e) {
+      if (e.target.form) e.preventDefault();
+      handleSignIn(e);
+    });
+  }
+  
+  const signUpButton = document.getElementById('sign_up_submit');
+  if (signUpButton) {
+    // The form's onsubmit handles this, but we're being extra careful
+    signUpButton.addEventListener('click', function(e) {
+      if (e.target.form) e.preventDefault();
+      handleSignUp(e);
+    });
+  }
+  
   const googleButton = document.getElementById('sign_with_google');
   if (googleButton) {
     googleButton.addEventListener('click', signInWithGoogle);
@@ -262,9 +342,15 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Initialize form validation state
   if (nameField && emailField && passwordField) {
-    validateField(nameField, namePattern);
-    validateField(emailField, emailPattern);
-    validateField(passwordField, passwordPattern);
+    if (nameField) validateField(nameField, namePattern);
+    if (emailField) validateField(emailField, emailPattern);
+    if (passwordField) validateField(passwordField, passwordPattern);
+  }
+  
+  // Initialize password toggle functionality
+  const passwordToggle = document.querySelector('.toggle-password');
+  if (passwordToggle && passwordField) {
+    passwordToggle.addEventListener('click', togglePasswordVisibility);
   }
 });
 

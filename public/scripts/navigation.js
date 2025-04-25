@@ -44,11 +44,11 @@ function navigateTo(path, callback) {
  * Enhanced navigation functions with consistent implementation
  */
 function goSignIn() {
-    navigateTo("./signIn.html");
+    navigateTo("./login.html");
 }
 
 function goSignUp() {
-    navigateTo("./signUp.html");
+    navigateTo("./sign-up.html");
 }
 
 function goHome() {
@@ -64,7 +64,7 @@ function goSettings() {
 }
 
 function goStartHome() {
-    navigateTo("./startSession.html");
+    navigateTo("./home.html");
 }
 
 /**

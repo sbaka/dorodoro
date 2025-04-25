@@ -176,3 +176,198 @@ function setParams(userPreference) {
         }
     }
 }
+
+/**
+ * DoroDoro User Profile Database Handler
+ * Manages user profile data in Firebase Realtime Database
+ */
+
+/**
+ * Updates user profile information
+ * @param {string} userId - The user's ID
+ * @param {object} profileData - The data to update (username, settings, etc.)
+ * @returns {Promise} - A promise that resolves when the update is complete
+ */
+function updateUserProfile(userId, profileData) {
+  return db.ref('users/' + userId).update(profileData);
+}
+
+/**
+ * Gets user profile data
+ * @param {string} userId - The user's ID
+ * @returns {Promise} - A promise that resolves with the user data
+ */
+function getUserProfile(userId) {
+  return db.ref('users/' + userId).once('value').then(snapshot => {
+    return snapshot.val();
+  });
+}
+
+/**
+ * Saves user timer settings
+ * @param {string} userId - The user's ID
+ * @param {object} settings - Timer settings object
+ * @returns {Promise} - A promise that resolves when settings are saved
+ */
+function saveUserSettings(userId, settings) {
+  return db.ref('users/' + userId + '/settings').set(settings);
+}
+
+/**
+ * Gets user timer settings
+ * @param {string} userId - The user's ID
+ * @returns {Promise} - A promise that resolves with the settings object
+ */
+function getUserSettings(userId) {
+  return db.ref('users/' + userId + '/settings').once('value').then(snapshot => {
+    return snapshot.val();
+  });
+}
+
+/**
+ * Updates user profile when user edits their profile
+ * @param {string} username - New username
+ * @param {string} password - New password (optional)
+ * @returns {Promise} - A promise that resolves when update is complete
+ */
+async function updateProfile(username, password) {
+  const user = firebase.auth().currentUser;
+  
+  if (!user) {
+    throw new Error('No user is signed in');
+  }
+  
+  const updates = {};
+  
+  // Update username in Firebase Auth and database
+  if (username) {
+    await user.updateProfile({
+      displayName: username
+    });
+    updates.username = username;
+  }
+  
+  // Update password if provided
+  if (password) {
+    await user.updatePassword(password);
+  }
+  
+  // Update Realtime Database if we have data to update
+  if (Object.keys(updates).length > 0) {
+    return updateUserProfile(user.uid, updates);
+  }
+  
+  return Promise.resolve();
+}
+
+/**
+ * Initialize the default settings for a new user
+ * @param {string} userId - The user's ID
+ */
+function initializeUserSettings(userId) {
+  const defaultSettings = {
+    pomoDuration: 25,
+    shortBreakDuration: 5,
+    longBreakDuration: 20,
+    pomodoros: 4,
+    longBreakInterval: 2
+  };
+  
+  return saveUserSettings(userId, defaultSettings);
+}
+
+/**
+ * Handle the profile edit form submission
+ * @param {Event} event - The form submission event
+ */
+async function handleProfileUpdate(event) {
+  if (event) event.preventDefault();
+  
+  const usernameField = document.getElementById('edit-username');
+  const passwordField = document.getElementById('edit-password');
+  
+  if (!usernameField && !passwordField) {
+    return;
+  }
+  
+  const username = usernameField.value.trim();
+  const password = passwordField.value.trim();
+  
+  // Don't update if both fields are empty
+  if (!username && !password) {
+    return;
+  }
+  
+  try {
+    await updateProfile(username, password);
+    
+    // Update UI with new username
+    if (username) {
+      const profileCircle = document.getElementById('circle');
+      if (profileCircle) {
+        profileCircle.textContent = username.charAt(0).toUpperCase();
+      }
+    }
+    
+    // Close the popup
+    const popup = document.getElementById('edit-profile-popup');
+    const overlay = document.getElementById('overlay');
+    
+    if (popup) {
+      popup.style.display = 'none';
+    }
+    
+    if (overlay) {
+      overlay.style.display = 'none';
+    }
+    
+    // Reset form
+    if (usernameField) usernameField.value = '';
+    if (passwordField) passwordField.value = '';
+    
+    // Show success message
+    alert('Profile updated successfully!');
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    alert('Failed to update profile: ' + error.message);
+  }
+}
+
+/**
+ * Initialize the profile edit form
+ */
+function initializeProfileForm() {
+  const profileForm = document.getElementById('profile-edit-form');
+  
+  if (profileForm) {
+    profileForm.addEventListener('submit', handleProfileUpdate);
+  }
+  
+  // Set initial username in profile circle
+  const user = firebase.auth().currentUser;
+  if (user) {
+    const profileCircle = document.getElementById('circle');
+    if (profileCircle) {
+      profileCircle.textContent = user.displayName ? 
+        user.displayName.charAt(0).toUpperCase() : 
+        user.email.charAt(0).toUpperCase();
+    }
+  }
+}
+
+// Initialize when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+  // Only initialize if we're on a page with the profile edit form
+  firebase.auth().onAuthStateChanged(user => {
+    if (user) {
+      initializeProfileForm();
+      
+      // Initialize settings for new users
+      getUserSettings(user.uid).then(settings => {
+        if (!settings) {
+          initializeUserSettings(user.uid);
+        }
+      });
+    }
+  });
+});
