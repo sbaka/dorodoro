@@ -43,106 +43,105 @@
       </div>
     </div>
   </header>
-  
-  <main>
-    <section class="settings-page">
-      <div class="illustration">
-        <h1>Personalize Your Focus Time</h1>
-        <img src="./assets/cerise.png" alt="Decorative cherry illustration" />
-      </div>
-      
-      <div class="settingsContainer">
-        <div class="title">
-          <h2>Settings</h2>
-          <div>
-            <img src="./assets/settings.png" alt="Settings icon" />
-          </div>
+
+  <section class="settings-page">
+    <div class="illustration">
+      <h1>Personalize Your Focus Time</h1>
+      <img src="./assets/cerise.png" alt="Decorative cherry illustration" />
+    </div>
+
+    <div class="settings-container">
+      <div class="title">
+        <h2>Settings</h2>
+        <div>
+          <img src="./assets/settings.png" alt="Settings icon" />
         </div>
-        
-        <form id="settings-form" class="settingItems">
+      </div>
+
+      <form id="settings-form" class="settings-form" action="#" method="POST">
+        <div class="scrollable-items">
           <div class="settingItem">
             <label for="pomoDur">Pomodoro Duration</label>
             <div class="range-container">
               <span class="range-value-min">20</span>
               <div class="range">
-                <input type="range" name="pomoDur" id="pomoDur" min="20" max="50" value="25"
-                  aria-valuemin="20" aria-valuemax="50"
-                  oninput="{ this.nextElementSibling.value = this.value + ' min'}" />
-                <input type="text" name="minutes" disabled="disabled" aria-label="Selected pomodoro duration in minutes">
+                <input type="range" name="pomoDur" id="pomoDur" min="20" max="50" value="25" aria-valuemin="20"
+                  aria-valuemax="50" oninput="{ this.nextElementSibling.value = this.value + ' min'}" />
+                <input type="text" name="minutes" disabled="disabled"
+                  aria-label="Selected pomodoro duration in minutes">
               </div>
               <span class="range-value-max">50</span>
             </div>
             <p class="setting-description">Focus session length (recommended: 25-30 minutes)</p>
           </div>
-          
+
           <div class="settingItem">
             <label for="sBrDur">Short Break Duration</label>
             <div class="range-container">
               <span class="range-value-min">1</span>
               <div class="range">
-                <input type="range" name="sBrDur" id="sBrDur" min="1" value="5" max="10"
-                  aria-valuemin="1" aria-valuemax="10"
-                  oninput="{ this.nextElementSibling.value = this.value + ' min'}" />
-                <input type="text" name="minutes" disabled="disabled" aria-label="Selected short break duration in minutes">
+                <input type="range" name="sBrDur" id="sBrDur" min="1" value="5" max="10" aria-valuemin="1"
+                  aria-valuemax="10" oninput="{ this.nextElementSibling.value = this.value + ' min'}" />
+                <input type="text" name="minutes" disabled="disabled"
+                  aria-label="Selected short break duration in minutes">
               </div>
               <span class="range-value-max">10</span>
             </div>
             <p class="setting-description">Brief rest between focus sessions</p>
           </div>
-          
+
           <div class="settingItem">
             <label for="brDur">Long Break Duration</label>
             <div class="range-container">
               <span class="range-value-min">15</span>
               <div class="range">
-                <input type="range" name="brDur" id="brDur" min="15" value="20" max="30"
-                  aria-valuemin="15" aria-valuemax="30"
-                  oninput="{ this.nextElementSibling.value = this.value + ' min'}" />
-                <input type="text" name="minutes" disabled="disabled" aria-label="Selected long break duration in minutes">
+                <input type="range" name="brDur" id="brDur" min="15" value="20" max="30" aria-valuemin="15"
+                  aria-valuemax="30" oninput="{ this.nextElementSibling.value = this.value + ' min'}" />
+                <input type="text" name="minutes" disabled="disabled"
+                  aria-label="Selected long break duration in minutes">
               </div>
               <span class="range-value-max">30</span>
             </div>
             <p class="setting-description">Extended rest after completing multiple pomodoros</p>
           </div>
-          
+
           <div class="settingItem">
             <label for="noPomo">Number of Pomodoros</label>
             <div class="range-container">
               <span class="range-value-min">1</span>
               <div class="range">
-                <input type="range" name="noPomo" id="noPomo" min="1" value="4" max="10"
-                  aria-valuemin="1" aria-valuemax="10"
-                  oninput="{ this.nextElementSibling.value = this.value + ' pomos'}" />
+                <input type="range" name="noPomo" id="noPomo" min="1" value="4" max="10" aria-valuemin="1"
+                  aria-valuemax="10" oninput="{ this.nextElementSibling.value = this.value + ' pomos'}" />
                 <input type="text" name="nbrOfPomos" disabled="disabled" aria-label="Selected number of pomodoros">
               </div>
               <span class="range-value-max">10</span>
             </div>
             <p class="setting-description">Total focus sessions in one set</p>
           </div>
-          
+
           <div class="settingItem">
             <label for="lBrInter">Long Break Interval</label>
             <div class="range-container">
               <span class="range-value-min">1</span>
               <div class="range">
-                <input type="range" name="lBrInter" id="lBrInter" min="1" value="2" max="4"
-                  aria-valuemin="1" aria-valuemax="4"
-                  oninput="{ this.nextElementSibling.value = this.value + ' SBr'}" />
-                <input type="text" name="long_break_interval" disabled="disabled" aria-label="Selected long break interval">
+                <input type="range" name="lBrInter" id="lBrInter" min="1" value="2" max="4" aria-valuemin="1"
+                  aria-valuemax="4" oninput="{ this.nextElementSibling.value = this.value + ' SBr'}" />
+                <input type="text" name="long_break_interval" disabled="disabled"
+                  aria-label="Selected long break interval">
               </div>
               <span class="range-value-max">4</span>
             </div>
             <p class="setting-description">How many short breaks before a long break</p>
           </div>
-          
-          <div class="settings-actions">
-            <button type="submit" id="submit_settings" class="primary-button">Save Settings</button>
-            <button type="button" onclick="{goStart()}" class="secondary-button">Cancel</button>
-          </div>
-        </form>
-      </div>
-    </section>
-  </main>
+        </div>
+
+        <div class="settings-actions">
+          <button type="submit" id="submit_settings" class="primary-button">Save Settings</button>
+          <button type="button" onclick="{goStart()}" class="secondary-button">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </section>
 
   <!-- Dialogs/Modals -->
   <div class="log_out dialog" id="logout_popup" role="dialog" aria-labelledby="logout-title" aria-modal="true">
@@ -174,7 +173,7 @@
       </div>
     </form>
   </div>
-  
+
   <div class="overlay" id="overlay"></div>
 
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -200,4 +199,5 @@
   <script src="./scripts/redirect.js"></script>
   <script src="./scripts/dbAccess.js"></script>
 </body>
+
 </html>

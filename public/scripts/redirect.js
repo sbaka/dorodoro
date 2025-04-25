@@ -1,5 +1,5 @@
-const notLoggedPages = ["pages/signIn.html", "pages/signUp.html", "index.html"]
-const loggedInPages = ["start.html", "startSession.html", "settings.html"]
+const notLoggedPages = ["./signIn.html", "./signUp.html", "./index.html"]
+const loggedInPages = ["./start.html", "./startSession.html", "./settings.html"]
 
 const isInNotLogPages = notLoggedPages.some(page => window.location.href.includes(page))
 const isInLoggedPages = loggedInPages.some(page => window.location.href.includes(page))
@@ -7,12 +7,14 @@ const isInLoggedPages = loggedInPages.some(page => window.location.href.includes
 
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
+        // User is logged in
         if (isInNotLogPages) {
-            goStartHome()
+            goStart()
         }
     } else {
+        // User is not logged in
         if (isInLoggedPages) {
-            goHome()
+            goSignUp()
         }
     }
 });

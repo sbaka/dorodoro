@@ -17,10 +17,11 @@
   display: flex;
   width: 100%;
   min-height: calc(100vh - 140px);
+  padding: 0;
 }
 
 .illustration {
-  flex: 1;
+  flex: 2;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -41,20 +42,22 @@
   height: auto;
 }
 
-.settingsContainer {
-  flex: 1;
+.settings-container {
+  flex: 3;
   background-color: var(--bg-light);
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
   padding: 2rem;
-  margin: 2rem;
-  min-width: 320px;
+  margin: 1rem;
+  height: 80%;
 }
 
 .title {
   display: flex;
   align-items: center;
   margin-bottom: 2rem;
+  position: sticky;
+  top: 0%;
 }
 
 .title h2 {
@@ -62,6 +65,7 @@
   font-size: 2rem;
   color: var(--primary-color);
   margin-right: 1rem;
+
 }
 
 .title img {
@@ -69,10 +73,20 @@
   height: 32px;
 }
 
-.settingItems {
+.settings-form {
   display: flex;
   flex-direction: column;
+  
+  max-height: 90%;
+}
+.scrollable-items {
+  display: flex;
+  flex-grow: 1;
   gap: 1.5rem;
+  overflow-y: scroll;
+  flex-direction: column;
+  height: 100%;
+  padding: 1rem 2rem;
 }
 
 .settingItem {
@@ -340,7 +354,7 @@ input[type="text"] {
     flex-direction: column;
   }
   
-  .settingsContainer {
+  .settings-container {
     margin: 1rem;
   }
   
