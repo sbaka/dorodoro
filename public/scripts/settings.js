@@ -142,7 +142,7 @@ if (settingsForm) {
   });
 }
 
-// Get settings from form inputs
+// Get settings from form edit-form-inputs
 function getSettingsFromForm() {
   return {
     "Pomo Duration": document.getElementById("pomoDur").value,

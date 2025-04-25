@@ -117,7 +117,7 @@ function updatePasswordStrength(password) {
   // Complexity checks
   if (/[A-Z]/.test(password)) strength += 20; // Uppercase
   if (/[a-z]/.test(password)) strength += 10; // Lowercase
-  if (/[0-9]/.test(password)) strength += 20; // Numbers
+  if (/\d/.test(password)) strength += 20; // Numbers
   if (/[^A-Za-z0-9]/.test(password)) strength += 20; // Special chars
   
   // Update UI
@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded', function() {
     googleButton.addEventListener('click', signInWithGoogle);
   }
   
-  // Add validation to all inputs on page load
+  // Add validation to all edit-form-inputs on page load
   const nameField = document.getElementById('userName');
   const emailField = document.getElementById('email');
   const passwordField = document.getElementById('pwd');

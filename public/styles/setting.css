@@ -179,7 +179,7 @@ input[type="range"]:focus {
   box-shadow: 0 0 0 2px rgba(67, 129, 168, 0.3);
 }
 
-input[type="text"] {
+.range-input {
   border: none;
   background: transparent;
   font-family: "Bubblegum Sans", sans-serif;
@@ -202,15 +202,7 @@ input[type="text"] {
   margin-top: 2rem;
 }
 
-.primary-button, .secondary-button, .danger-button {
-  padding: 0.75rem 1.5rem;
-  border-radius: var(--border-radius);
-  font-family: "Bubblegum Sans", sans-serif;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: var(--transition);
-  border: none;
-}
+
 
 .primary-button {
   background-color: var(--secondary-color);
@@ -243,110 +235,6 @@ input[type="text"] {
 }
 
 /* Dialog/Modal styles */
-.dialog {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.95);
-  background: var(--bg-light);
-  border-radius: var(--border-radius);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  padding: 2rem;
-  z-index: 1000;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  min-width: 300px;
-  max-width: 90%;
-  text-align: center;
-}
-
-.dialog.show {
-  opacity: 1;
-  visibility: visible;
-  transform: translate(-50%, -50%) scale(1);
-}
-
-.dialog h2 {
-  font-family: "Bubblegum Sans", sans-serif;
-  color: var(--primary-color);
-  margin-top: 0;
-  margin-bottom: 1.5rem;
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
-  text-align: left;
-}
-
-.form-group label {
-  display: block;
-  font-family: "Bubblegum Sans", sans-serif;
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
-  color: var(--secondary-color);
-}
-
-.form-group input {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #e0e0e0;
-  border-radius: var(--border-radius);
-  font-size: 1rem;
-  transition: var(--transition);
-}
-
-.form-group input:focus {
-  border-color: var(--secondary-color);
-  box-shadow: 0 0 0 2px rgba(67, 129, 168, 0.2);
-  outline: none;
-}
-
-.helper-text {
-  display: block;
-  font-size: 0.8rem;
-  color: #777;
-  margin-top: 0.25rem;
-}
-
-.dialog-actions {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.profile-image {
-  width: 60px;
-  height: 60px;
-  line-height: 60px;
-  font-size: 24px;
-  margin: 0 auto 1.5rem;
-}
-
-#logout_btns {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  opacity: 0;
-  visibility: hidden;
-  z-index: 999;
-  transition: var(--transition);
-}
-
-.overlay.show {
-  opacity: 1;
-  visibility: visible;
-}
 
 /* Responsive styles */
 @media (max-width: 768px) {

@@ -1,8 +1,8 @@
 //show user iteractions to edit acc and loggout
 let popupShown = false
 let popup = document.getElementById("menu-popup");
-let logoutPopUp = document.getElementById("logout_popup")
-let editProfilPopUp = document.getElementById("profile-edit_popup")
+let logoutPopUp = document.getElementById("logout-popup")
+let editProfilPopUp = document.getElementById("edit-profile-popup")
 let overlay = document.getElementById("overlay")
 
 document.getElementById("circle").onclick = () => {

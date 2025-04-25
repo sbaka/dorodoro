@@ -18,14 +18,14 @@
 
 <body>
   <header>
-    <div id="header-left" onclick="{goStartHome()}" aria-label="Go to home page">
+    <button id="header-left" onclick="{goStartHome()}">
       <img src="./assets/Logo.png" alt="DoroDoro Logo" />
       <h4>DoroDoro</h4>
-    </div>
+    </button>
     <div id="header-right">
       <button onclick="{goSettings()}" aria-label="Go to settings page" class="primary-button">Settings</button>
       <div id="profil">
-        <div class="circle" id="circle" aria-label="Profile menu" role="button" tabindex="0">A</div>
+        <div class="circle" id="circle" aria-label="Profile menu">A</div>
         <div class="popup-sign" id="menu-popup" role="menu">
           <button id="profile-edit" class="popup-menu-btn" aria-label="Edit your profile">
             <span class="material-symbols-outlined">
@@ -86,31 +86,31 @@
   </section>
   
   <!-- Modals/Dialogs -->
-  <div class="log_out dialog" id="logout_popup" role="dialog" aria-labelledby="logout-title" aria-modal="true">
+  <div class="logout-popup dialog" id="logout-popup" role="dialog" aria-labelledby="logout-title" aria-modal="true">
     <h2 id="logout-title">Are you sure you want to log out?</h2>
-    <div id="logout_btns">
+    <div id="logout-buttons">
       <button id="logout-yes" class="danger-button">Yes, Log Out</button>
       <button id="logout-no" class="secondary-button">Cancel</button>
     </div>
   </div>
 
-  <div id="profile-edit_popup" class="dialog" role="dialog" aria-labelledby="edit-profile-title" aria-modal="true">
+  <div id="edit-profile-popup" class="dialog" role="dialog" aria-labelledby="edit-profile-title" aria-modal="true">
     <h2 id="edit-profile-title">Edit Profile</h2>
     <div class="circle profile-image">A</div>
     <form id="profile-edit-form">
-      <div id="inputs">
+      <div id="edit-form-inputs">
         <div class="form-group">
-          <label for="edit_username">Username</label>
-          <input type="text" name="edit-username" id="edit_username" placeholder="Enter your new username">
+          <label for="edit-username">Username</label>
+          <input type="text" name="edit-username" id="edit-username" placeholder="Enter your new username">
         </div>
         <div class="form-group">
-          <label for="edit_pwd">Password</label>
-          <input type="password" name="edit-pwd" id="edit_pwd" placeholder="Enter your new password">
+          <label for="edit-password">Password</label>
+          <input type="password" name="edit-pwd" id="edit-password" placeholder="Enter your new password">
         </div>
       </div>
       <div class="dialog-actions">
         <button type="submit" id="submit-edit" class="primary-button">Save Changes</button>
-        <button type="button" id="cancel_edit" class="secondary-button">Cancel</button>
+        <button type="button" id="cancel-edit" class="secondary-button">Cancel</button>
       </div>
     </form>
   </div>

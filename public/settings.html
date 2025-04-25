@@ -67,7 +67,7 @@
               <div class="range">
                 <input type="range" name="pomoDur" id="pomoDur" min="20" max="50" value="25" aria-valuemin="20"
                   aria-valuemax="50" oninput="{ this.nextElementSibling.value = this.value + ' min'}" />
-                <input type="text" name="minutes" disabled="disabled"
+                <input type="text"  class="range-input"  name="minutes" disabled="disabled"
                   aria-label="Selected pomodoro duration in minutes">
               </div>
               <span class="range-value-max">50</span>
@@ -82,7 +82,7 @@
               <div class="range">
                 <input type="range" name="sBrDur" id="sBrDur" min="1" value="5" max="10" aria-valuemin="1"
                   aria-valuemax="10" oninput="{ this.nextElementSibling.value = this.value + ' min'}" />
-                <input type="text" name="minutes" disabled="disabled"
+                <input type="text"  class="range-input" name="minutes" disabled="disabled"
                   aria-label="Selected short break duration in minutes">
               </div>
               <span class="range-value-max">10</span>
@@ -97,7 +97,7 @@
               <div class="range">
                 <input type="range" name="brDur" id="brDur" min="15" value="20" max="30" aria-valuemin="15"
                   aria-valuemax="30" oninput="{ this.nextElementSibling.value = this.value + ' min'}" />
-                <input type="text" name="minutes" disabled="disabled"
+                <input type="text"  class="range-input" name="minutes" disabled="disabled"
                   aria-label="Selected long break duration in minutes">
               </div>
               <span class="range-value-max">30</span>
@@ -112,7 +112,7 @@
               <div class="range">
                 <input type="range" name="noPomo" id="noPomo" min="1" value="4" max="10" aria-valuemin="1"
                   aria-valuemax="10" oninput="{ this.nextElementSibling.value = this.value + ' pomos'}" />
-                <input type="text" name="nbrOfPomos" disabled="disabled" aria-label="Selected number of pomodoros">
+                <input type="text"  class="range-input" name="nbrOfPomos" disabled="disabled" aria-label="Selected number of pomodoros">
               </div>
               <span class="range-value-max">10</span>
             </div>
@@ -126,7 +126,7 @@
               <div class="range">
                 <input type="range" name="lBrInter" id="lBrInter" min="1" value="2" max="4" aria-valuemin="1"
                   aria-valuemax="4" oninput="{ this.nextElementSibling.value = this.value + ' SBr'}" />
-                <input type="text" name="long_break_interval" disabled="disabled"
+                <input type="text"  class="range-input"name="long_break_interval" disabled="disabled"
                   aria-label="Selected long break interval">
               </div>
               <span class="range-value-max">4</span>
@@ -144,35 +144,35 @@
   </section>
 
   <!-- Dialogs/Modals -->
-  <div class="log_out dialog" id="logout_popup" role="dialog" aria-labelledby="logout-title" aria-modal="true">
-    <h2 id="logout-title">Are you sure you want to log out?</h2>
-    <div id="logout_btns">
+  <dialog class="logout-popup dialog" id="logout-popup"  aria-labelledby="logout-title" aria-modal="true">
+    <h3 id="logout-title">Are you sure you want to log out?</h3>
+    <div id="logout-buttons">
       <button id="logout-yes" class="danger-button">Yes, Log Out</button>
       <button id="logout-no" class="secondary-button">Cancel</button>
     </div>
-  </div>
+  </dialog>
 
-  <div id="profile-edit_popup" class="dialog" role="dialog" aria-labelledby="edit-profile-title" aria-modal="true">
+  <dialog id="edit-profile-popup" class="dialog" aria-labelledby="edit-profile-title" aria-modal="true">
     <h2 id="edit-profile-title">Edit Profile</h2>
     <div class="circle profile-image">A</div>
     <form id="profile-edit-form">
-      <div id="inputs">
+      <div id="edit-form-inputs">
         <div class="form-group">
-          <label for="edit_username">Username</label>
-          <input type="text" name="edit-username" id="edit_username" placeholder="Enter your new username">
+          <label for="edit-username">Username</label>
+          <input type="text" name="edit-username" id="edit-username" placeholder="Enter your new username">
         </div>
         <div class="form-group">
-          <label for="edit_pwd">Password</label>
-          <input type="password" name="edit-pwd" id="edit_pwd" placeholder="Enter your new password">
+          <label for="edit-password">Password</label>
+          <input type="password" name="edit-pwd" id="edit-password" placeholder="Enter your new password">
           <small class="helper-text">Leave blank if you don't want to change your password</small>
         </div>
       </div>
       <div class="dialog-actions">
         <button type="submit" id="submit-edit" class="primary-button">Save Changes</button>
-        <button type="button" id="cancel_edit" class="secondary-button">Cancel</button>
+        <button type="button" id="cancel-edit" class="secondary-button">Cancel</button>
       </div>
     </form>
-  </div>
+  </dialog>
 
   <div class="overlay" id="overlay"></div>
 
@@ -195,9 +195,9 @@
 
   <script type="text/javascript" src="./scripts/navigation.js"></script>
   <script type="text/javascript" src="./scripts/popups.js"></script>
-  <script type="text/javascript" src="./scripts/pomoSettings.js"></script>
+  <script type="text/javascript" src="./scripts/settings.js"></script>
   <script src="./scripts/redirect.js"></script>
-  <script src="./scripts/dbAccess.js"></script>
+  <script src="./scripts/firebase-db.js"></script>
 </body>
 
 </html>
