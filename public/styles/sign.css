@@ -18,7 +18,7 @@ section {
 }
 
 .illustration h1 {
-  font-family: "Bubblegum Sans";
+   
   font-style: normal;
   font-weight: 400;
   font-size: clamp(60px, 10vw, 120px);
@@ -106,7 +106,7 @@ section {
   width: 100%;
   border: 2px solid #1762a7;
   border-radius: 10px;
-  font-family: "Bubblegum Sans";
+   
   font-weight: 400;
   font-size: 18px;
   transition: all 0.3s ease;
@@ -155,7 +155,7 @@ section {
   height: 60px;
   border: none;
   border-radius: 10px;
-  font-family: "Bubblegum Sans";
+   
   font-weight: 400;
   font-size: clamp(18px, 4vw, 24px);
   cursor: pointer;

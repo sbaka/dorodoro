@@ -18,22 +18,22 @@
 
 <body>
   <header>
-    <div id="HeaderLeft" onclick="{goStartHome()}" aria-label="Go to home page">
+    <div id="header-left" onclick="{goStartHome()}" aria-label="Go to home page">
       <img src="./assets/Logo.png" alt="DoroDoro Logo" />
       <h4>DoroDoro</h4>
     </div>
-    <div id="HeaderRight">
+    <div id="header-right">
       <button onclick="{goSettings()}" aria-label="Go to settings page" class="primary-button">Settings</button>
       <div id="profil">
         <div class="circle" id="circle" aria-label="Profile menu" role="button" tabindex="0">A</div>
-        <div class="popup_sign" id="my_popup" role="menu">
-          <button id="edit_profile" aria-label="Edit your profile">
+        <div class="popup-sign" id="menu-popup" role="menu">
+          <button id="profile-edit" class="popup-menu-btn" aria-label="Edit your profile">
             <span class="material-symbols-outlined">
               edit
             </span>
             Edit my profile
           </button>
-          <button id="logout" aria-label="Sign out from your account">
+          <button id="logout" class="popup-menu-btn"  aria-label="Sign out from your account">
             <span class="material-symbols-outlined">
               logout
             </span>
@@ -44,67 +44,57 @@
     </div>
   </header>
   
-  <main>
-    <section class="timer-container">
-      <div class="illustration">
-        <h1>Focus Time</h1>
-        <img src="./assets/Strong_pepper.png" alt="Strong pepper illustration" />
+  <section class="timer-container">
+    <div class="illustration">
+      <h1>Focus Time</h1>
+      <img src="./assets/Strong_pepper.png" alt="Strong pepper illustration" />
+    </div>
+    
+    <div class="timer-wrapper">
+      <div id="timer-display">
+        <div id="count" aria-live="polite">1 out of 4</div>
+        <div id="pomo-type" aria-live="polite">Time to focus</div>
       </div>
       
-      <div class="timer-wrapper">
-        <div id="timer_display">
-          <div id="count" aria-live="polite">1 out of 4</div>
-          <div id="pomo-type" aria-live="polite">Time to focus</div>
-        </div>
-        
-        <div id="countdown" aria-live="assertive">
-          <div id="timer-circle">
-            <svg>
-              <circle id="ring" r="150" cx="200" cy="200" fill="transparent" stroke="#4381A8" stroke-width="15"
-                stroke-linecap="round" stroke-dasharray="940" />
-            </svg>
-            <div id="countdown-number">25:00</div>
-          </div>
-        </div>
-        
-        <div class="controls">
-          <button id="restart" class="circle-button" aria-label="Restart timer" disabled>
-            <span class="material-symbols-outlined">replay</span>
-          </button>
-          <button id="start" class="start-button" aria-label="Start timer">Start</button>
-          <button id="skip" class="circle-button" aria-label="Skip to next session">
-            <span class="material-symbols-outlined">skip_next</span>
-          </button>
-        </div>
-        
-        <div class="timer-actions">
-          <button id="settigns" onclick="{goSettingsPage()}" class="secondary-button">
-            <span class="material-symbols-outlined">settings</span>
-            Settings
-          </button>
+      <div id="countdown" aria-live="assertive">
+        <div id="timer-circle">
+          <svg>
+            <circle id="ring" r="150" cx="160" cy="160" fill="transparent" stroke="#4381A8" stroke-width="15"
+              stroke-linecap="round" stroke-dasharray="940" />
+          </svg>
+          <div id="countdown-number">25:00</div>
         </div>
       </div>
-    </section>
-  </main>
-  
-  <!-- Progress Bar - New Feature -->
-  <div class="session-progress">
-    <div class="progress-text">Session Progress</div>
-    <div class="progress-container">
-      <div class="progress-bar" id="session-progress-bar"></div>
+      
+      <div class="controls">
+        <button id="restart" class="circle-button" aria-label="Restart timer" disabled>
+          <span class="material-symbols-outlined">replay</span>
+        </button>
+        <button id="start" class="start-button" aria-label="Start timer">Start</button>
+        <button id="skip" class="circle-button" aria-label="Skip to next session">
+          <span class="material-symbols-outlined">skip_next</span>
+        </button>
+      </div>
+      
+      <div class="timer-actions">
+        <button id="settigns" onclick="{goSettingsPage()}" class="secondary-button">
+          <span class="material-symbols-outlined">settings</span>
+          Settings
+        </button>
+      </div>
     </div>
-  </div>
+  </section>
   
   <!-- Modals/Dialogs -->
   <div class="log_out dialog" id="logout_popup" role="dialog" aria-labelledby="logout-title" aria-modal="true">
     <h2 id="logout-title">Are you sure you want to log out?</h2>
     <div id="logout_btns">
-      <button id="logout_yes" class="danger-button">Yes, Log Out</button>
-      <button id="logout_no" class="secondary-button">Cancel</button>
+      <button id="logout-yes" class="danger-button">Yes, Log Out</button>
+      <button id="logout-no" class="secondary-button">Cancel</button>
     </div>
   </div>
 
-  <div id="edit_profile_popup" class="dialog" role="dialog" aria-labelledby="edit-profile-title" aria-modal="true">
+  <div id="profile-edit_popup" class="dialog" role="dialog" aria-labelledby="edit-profile-title" aria-modal="true">
     <h2 id="edit-profile-title">Edit Profile</h2>
     <div class="circle profile-image">A</div>
     <form id="profile-edit-form">
@@ -119,32 +109,13 @@
         </div>
       </div>
       <div class="dialog-actions">
-        <button type="submit" id="submit_edit" class="primary-button">Save Changes</button>
+        <button type="submit" id="submit-edit" class="primary-button">Save Changes</button>
         <button type="button" id="cancel_edit" class="secondary-button">Cancel</button>
       </div>
     </form>
   </div>
 
-  <!-- Quick Task Input - New Feature -->
-  <div class="task-input-container">
-    <input type="text" id="current-task" placeholder="What are you working on?" aria-label="Enter current task">
-    <button id="save-task" class="primary-button">Save</button>
-  </div>
-
-  <!-- Activity Stats Card - New Feature -->
-  <div class="stats-card">
-    <h3>Today's Progress</h3>
-    <div class="stats-content">
-      <div class="stat-item">
-        <span class="stat-value" id="completed-pomos">0</span>
-        <span class="stat-label">Pomodoros</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-value" id="focus-minutes">0</span>
-        <span class="stat-label">Minutes</span>
-      </div>
-    </div>
-  </div>
+ 
   
   <div class="overlay" id="overlay"></div>
 

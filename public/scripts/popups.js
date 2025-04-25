@@ -1,9 +1,9 @@
 //show user iteractions to edit acc and loggout
-var popupShown = false
-var popup = document.getElementById("my_popup");
-var logoutPopUp = document.getElementById("logout_popup")
-var editProfilPopUp = document.getElementById("edit_profile_popup")
-var overlay = document.getElementById("overlay")
+let popupShown = false
+let popup = document.getElementById("menu-popup");
+let logoutPopUp = document.getElementById("logout_popup")
+let editProfilPopUp = document.getElementById("profile-edit_popup")
+let overlay = document.getElementById("overlay")
 
 document.getElementById("circle").onclick = () => {
     if (popupShown) { remove(popup); popupShown = false }
@@ -14,11 +14,11 @@ document.getElementById("logout").onclick = () => {
     show(logoutPopUp, "block")
     show(overlay, "block")
 }
-document.getElementById("logout_no").onclick = () => {
+document.getElementById("logout-no").onclick = () => {
     remove(logoutPopUp)
     remove(overlay)
 }
-document.getElementById("logout_yes").onclick = () => {
+document.getElementById("logout-yes").onclick = () => {
     remove(logoutPopUp)
     remove(overlay)
     firebase.auth().signOut().then(function () {
@@ -32,11 +32,11 @@ document.getElementById("logout_yes").onclick = () => {
 }
 
 //edit profile popup
-document.getElementById("edit_profile").onclick = () => {
+document.getElementById("profile-edit").onclick = () => {
     show(editProfilPopUp)
     show(overlay, "block")
 }
-document.getElementById("submit_edit").onclick = () => {
+document.getElementById("submit-edit").onclick = () => {
     remove(editProfilPopUp)
     remove(overlay)
 }
@@ -51,8 +51,11 @@ document.getElementsByTagName("section")[0].onclick = () => {
 function remove(element) {
     element.style.display = "none"
     element.style.visibility = "hidden";
+    element.style.opacity = "0"
 }
 function show(element, display = "flex") {
     element.style.visibility = "visible"
     element.style.display = display
+    element.style.opacity = "1"
+    element.style.transition = "opacity 0.5s ease-in-out"
 }

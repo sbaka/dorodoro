@@ -18,6 +18,7 @@
   display: flex;
   width: 100%;
   min-height: 65vh;
+
 }
 
 .illustration {
@@ -52,7 +53,7 @@
 }
 
 /* Timer display */
-#timer_display {
+#timer-display {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -65,7 +66,7 @@
   font-family: "Bubblegum Sans", sans-serif;
   font-size: 1.25rem;
   color: var(--text-dark);
-  opacity: 0.8;
+  opacity: 1;
 }
 
 #pomo-type {

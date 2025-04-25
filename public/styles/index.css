@@ -41,7 +41,7 @@ section {
 }
 
 .textSection > h2 {
-  font-family: "Bubblegum Sans";
+   
   font-style: normal;
   font-weight: 400;
   font-size: clamp(40px, 7vw, 100px);
@@ -52,7 +52,7 @@ section {
 }
 
 .textSection > h5 {
-  font-family: "Bubblegum Sans";
+   
   font-size: clamp(18px, 3vw, 30px);
   font-weight: 400;
   color: #4381a8;
@@ -62,7 +62,7 @@ section {
 }
 
 .ContentSection > button {
-  font-family: "Bubblegum Sans";
+   
   font-style: normal;
   font-weight: 400;
   font-size: clamp(24px, 4vw, 40px);

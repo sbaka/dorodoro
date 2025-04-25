@@ -18,16 +18,16 @@
 
 <body>
   <header>
-    <div id="HeaderLeft" onclick="{goStartHome()}" aria-label="Go to home page">
+    <div id="header-left" onclick="{goStartHome()}" aria-label="Go to home page">
       <img src="./assets/Logo.png" alt="DoroDoro Logo" />
       <h4>DoroDoro</h4>
     </div>
-    <div id="HeaderRight">
+    <div id="header-right">
       <button onclick="{goStart()}" aria-label="Go to start page" class="primary-button">Start Timer</button>
       <div id="profil">
         <div class="circle" id="circle" aria-label="Profile menu" role="button" tabindex="0">A</div>
-        <div class="popup_sign" id="my_popup" role="menu">
-          <button id="edit_profile" aria-label="Edit your profile">
+        <div class="popup-sign" id="menu-popup" role="menu">
+          <button id="profile-edit" aria-label="Edit your profile">
             <span class="material-symbols-outlined">
               edit
             </span>
@@ -147,12 +147,12 @@
   <div class="log_out dialog" id="logout_popup" role="dialog" aria-labelledby="logout-title" aria-modal="true">
     <h2 id="logout-title">Are you sure you want to log out?</h2>
     <div id="logout_btns">
-      <button id="logout_yes" class="danger-button">Yes, Log Out</button>
-      <button id="logout_no" class="secondary-button">Cancel</button>
+      <button id="logout-yes" class="danger-button">Yes, Log Out</button>
+      <button id="logout-no" class="secondary-button">Cancel</button>
     </div>
   </div>
 
-  <div id="edit_profile_popup" class="dialog" role="dialog" aria-labelledby="edit-profile-title" aria-modal="true">
+  <div id="profile-edit_popup" class="dialog" role="dialog" aria-labelledby="edit-profile-title" aria-modal="true">
     <h2 id="edit-profile-title">Edit Profile</h2>
     <div class="circle profile-image">A</div>
     <form id="profile-edit-form">
@@ -168,7 +168,7 @@
         </div>
       </div>
       <div class="dialog-actions">
-        <button type="submit" id="submit_edit" class="primary-button">Save Changes</button>
+        <button type="submit" id="submit-edit" class="primary-button">Save Changes</button>
         <button type="button" id="cancel_edit" class="secondary-button">Cancel</button>
       </div>
     </form>

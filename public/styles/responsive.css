@@ -37,7 +37,7 @@ header {
     padding: 15px;
   }
   
-  #HeaderRight > button {
+  #header-right > button {
     font-size: 24px;
   }
   
@@ -101,20 +101,20 @@ header {
     margin: 20px 0;
   }
   
-  #HeaderLeft > h4 {
+  #header-left > h4 {
     font-size: 24px;
   }
   
-  #HeaderLeft > img {
+  #header-left > img {
     height: 40px;
     width: auto;
   }
   
-  #HeaderRight {
+  #header-right {
     margin-right: 0;
   }
   
-  #HeaderRight > button {
+  #header-right > button {
     margin: 5px;
     font-size: 18px;
   }
@@ -141,7 +141,7 @@ header {
     margin: 5px;
   }
   
-  #HeaderRight {
+  #header-right {
     margin-top: 10px;
   }
   

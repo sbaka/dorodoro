@@ -1,9 +1,23 @@
 @import url("https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap");
+:root {
+  --primary-color: #D92828;
+  --secondary-color: #4381A8;
+  --accent-color: #F5F387;
+  --success-color: #2ecc71;
+  --danger-color: #e74c3c;
+  --bg-light: #ffffff;
+  --bg-dark: #f5f5f5;
+  --text-dark: #333333;
+  --text-light: #ffffff;
+  --border-radius: 10px;
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
 
 * {
   margin: 0;
   padding: 0;
-  font-family: "Bubblegum Sans";
+  font-family: "Bubblegum Sans", sans-serif;
 }
 
 html,
@@ -13,6 +27,7 @@ body {
 
 button {
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 header {
@@ -20,54 +35,66 @@ header {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
-  margin: 0;
+  position: sticky;
+  top: 0px;
+  background-color: var(--accent-color);
+  z-index: 1000;
 }
 
-#HeaderLeft {
+#header-left {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 10px;
-  width: fit-content;
   cursor: pointer;
   background: transparent;
   border: none;
+  margin-left: 8px;
+  gap: 1rem;
 }
 
-#HeaderLeft > img {
+#header-left > img {
   height: 50px;
   width: auto;
 }
 
-#HeaderLeft > h4 {
-  font-size: 24px;
+#header-left > h4 {
+  font-size: 2em;
   color: #4381a8;
 }
 
-#HeaderRight {
+#header-right {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 15px;
+  gap: 1rem;
 }
 
-#HeaderRight > button {
-  margin: 0;
+#header-right > button {
   padding: 8px 15px;
   transition: all 0.3s ease;
   border-radius: 5px;
 }
 
-#HeaderRight > button:hover {
+#header-right > button:hover {
   background-color: rgba(67, 129, 168, 0.1);
 }
 
 #profil {
   position: relative;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
-
+.circle :hover {
+  background-color: rgba(67, 129, 168, 0.8);
+  transition: all 0.3s ease;
+}
+.popup-menu-btn:hover {
+  background-color: rgba(67, 129, 168, 0.1);
+  transition: all 0.3s ease;
+}
+.popup-menu-btn{
+  outline: none;
+}
 .circle {
   border-radius: 100%;
   background-color: #4381a8;
@@ -76,18 +103,18 @@ header {
   font-size: 45px;
   color: #ffffff;
   display: flex;
-  font-family: "Bubblegum Sans";
+  font-family: "Bubblegum Sans" , sans-serif;
   align-items: center;
   justify-content: center;
   margin: 15px;
 }
 
-.popup_sign {
+.popup-sign {
   visibility: hidden;
   position: absolute;
   z-index: 1;
-  right: 0%;
-  top: 90%;
+  right: 15%;
+  top: 95%;
   width: 200px;
   height: 100px;
   /* display */
@@ -96,28 +123,28 @@ header {
   align-items: stretch;
   /*sytle*/
   background-color: white;
-  border: 1px solid black;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12);
 }
 
 
-.popup_sign button {
-  border: none;
+.popup-sign button {
   display: flex;
-  justify-content: center;
+  border: none;
+  justify-content: start;
+  gap: 1rem;
+  padding-left:1rem ;
   align-items: center;
-  background-color: white;
+  background-color: transparent;
   height: 50%;
   cursor: pointer;
   font-size: 20px;
 }
 
-.popup_sign button:hover {
-  background-color: #d9d9d9;
-}
 
 header>div>button {
   background-color: transparent;
-  font-family: "Bubblegum Sans";
   color: #4381a8;
   font-weight: 400;
   font-size: 30px;
@@ -145,13 +172,7 @@ img {
   object-fit: contain;
 }
 
-button {
-  transition: all 0.3s ease;
-}
 
-button:hover {
-  transform: scale(1.05);
-}
 
 .button {
   position: relative;
@@ -237,7 +258,7 @@ footer {
 
 footer > div > button {
   background-color: transparent;
-  font-family: "Bubblegum Sans";
+   
   color: #ffffff;
   font-weight: 400;
   font-size: clamp(18px, 3vw, 30px);
@@ -295,7 +316,7 @@ footer > div > button:hover {
 }
 
 #logout_btns>button {
-  font-family: "Bubblegum Sans";
+   
   font-style: normal;
   font-weight: 400;
   font-size: 28px;
@@ -308,7 +329,7 @@ footer > div > button:hover {
 }
 
 /* edit profil  */
-#edit_profile_popup {
+#profile-edit_popup {
   /* hide it until it is clicked */
   visibility: hidden;
   /* positioning */
@@ -329,14 +350,14 @@ footer > div > button:hover {
   z-index: 999999;
 }
 
-#edit_profile_popup h3 {
+#profile-edit_popup h3 {
   cursor: pointer;
   padding: 5px 25px;
   color: rgb(21, 21, 21);
   transition: ease .2s;
 }
 
-#edit_profile_popup h3:hover {
+#profile-edit_popup h3:hover {
   border-radius: 15px;
   background-color: #efefef;
   transition: ease .2s;
@@ -359,7 +380,7 @@ footer > div > button:hover {
   font-size: 24px;
 }
 
-#submit_edit {
+#submit-edit {
   border: 2px solid #4381a8;
   background-color: #fff;
   color: #d92828;
@@ -374,7 +395,7 @@ footer > div > button:hover {
 /* footer */
 footer>div>button {
   background-color: transparent;
-  font-family: "Bubblegum Sans";
+   
   color: #ffffff;
   font-weight: 400;
   font-size: clamp(18px, 3vw, 30px);
