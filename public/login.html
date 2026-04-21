@@ -28,19 +28,42 @@
       <button onclick="{goSignUp()}">Sign up</button>
     </div>
   </header>
-  <section>
-    <div class="illustration">
-      <h1>Welcome <b>Back.</b></h1>
-      <img src="./assets/joinUS.png" alt="DoroDoro mascot welcoming users" />
-    </div>
+  <section class="auth-page sign-in-page">
+    <div class="auth-page-shell">
+      <div class="illustration auth-hero">
+        <div class="auth-hero-copy">
+          <p class="auth-eyebrow">Welcome back</p>
+          <h1>Pick up your next focus block without losing momentum.</h1>
+          <p class="auth-lead">
+            Get back to your timer, your study rhythm, and the work you already started.
+            DoroDoro keeps the session simple so your attention can stay on the task.
+          </p>
+        </div>
+        <div class="auth-hero-highlights" aria-label="Why students use DoroDoro">
+          <div class="auth-highlight-card">
+            <strong>Short sessions</strong>
+            <span>Less pressure to start difficult work.</span>
+          </div>
+          <div class="auth-highlight-card">
+            <strong>Planned breaks</strong>
+            <span>More consistent energy through the day.</span>
+          </div>
+        </div>
+        <div class="auth-visual-card">
+          <img src="./assets/joinUS.png" alt="DoroDoro mascot welcoming users" />
+        </div>
+      </div>
 
-    <div class="signInContainer">
-      <h2>Sign in to your account</h2>
-      <h3>Don't have an account? <a href="#" onclick="{goSignUp(); return false;}" aria-label="Go to sign up page">Sign Up</a></h3>
-      
-      <form id="form" onsubmit="handleSignIn(event)">
+      <div class="signInContainer auth-card">
+        <div class="form-head">
+          <p class="form-tag">Sign in</p>
+          <h2>Continue your study flow.</h2>
+        </div>
+
+        <form id="form" onsubmit="handleSignIn(event)">
         <div class="input-group">
           <label for="email" class="sr-only">Email</label>
+          <span class="field-label">Email</span>
           <input type="email" class="input" name="email" id="email" 
                  placeholder="Email" aria-required="true" autocomplete="email" />
           <span class="validation-message" id="email-validation"></span>
@@ -48,6 +71,7 @@
         
         <div class="input-group">
           <label for="pwd" class="sr-only">Password</label>
+          <span class="field-label">Password</span>
           <div class="password-container">
             <input type="password" class="input" name="pwd" id="pwd" 
                    placeholder="Password" aria-required="true"
@@ -66,9 +90,16 @@
         
         <div class="btns">
           <input type="submit" class="button" value="Sign in" id="sign-in-submit" />
-          <input type="button" class="button" id="sign-with-google" value="Continue with Google" />
+          <button type="button" class="button google-button" id="sign-with-google">
+            <img src="./assets/googleLogo.png" alt="" aria-hidden="true" />
+            <span class="google-button-label">Continue with Google</span>
+          </button>
         </div>
+
+        <p class="form-note">Use your account to sync your sessions and keep your progress in one place.</p>
+        <h3 class="form-switch">Don't have an account? <a href="#" onclick="{goSignUp(); return false;}" aria-label="Go to sign up page">Create one</a></h3>
       </form>
+      </div>
     </div>
   </section>
 

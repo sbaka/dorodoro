@@ -26,23 +26,110 @@
       <button onclick="{goSignUp()}">Sign up</button>
     </div>
   </header>
-  <section>
-    <div class="empty"></div>
-    <div class="happyImg">
-      <img src="./assets/Happy tomato.png" alt="Happy Tomato - Pomodoro Technique" />
-    </div>
-    <div class="empty"></div>
-    <div class="ContentSection">
-      <div class="textSection">
-        <h2>Enjoy Studying with Pomodoro Technique</h2>
-        <h5>
-          DoroDoro makes studying with the famous Pomodoro technique fun and effective.
-        </h5>
+  <section class="home-page">
+    <div class="home-shell">
+      <div class="hero-panel">
+        <div class="ContentSection">
+          <p class="eyebrow">A calmer way to study</p>
+          <div class="textSection">
+            <h1>Pomodoro helps you focus without trying to grind for hours.</h1>
+            <p>
+              DoroDoro breaks study time into short sessions with real pauses in between.
+              You get a clear start point, a simple rhythm, and a better chance of staying
+              focused until the work is done.
+            </p>
+          </div>
+          <div class="hero-actions">
+            <button id="start_btn" onclick="goSignUp()">Start free</button>
+            <a href="#pomodoro-guide" class="secondary-link">What is Pomodoro?</a>
+          </div>
+          <div class="hero-highlights" aria-label="Pomodoro quick facts">
+            <div class="highlight-card">
+              <span class="highlight-value">25 min</span>
+              <span class="highlight-label">Work on one task</span>
+            </div>
+            <div class="highlight-card">
+              <span class="highlight-value">5 min</span>
+              <span class="highlight-label">Take a short break</span>
+            </div>
+            <div class="highlight-card">
+              <span class="highlight-value">Repeat</span>
+              <span class="highlight-label">Build momentum without burning out</span>
+            </div>
+          </div>
+        </div>
+        <div class="happyImg hero-visual">
+          <div class="hero-mascot-card">
+            <img src="./assets/Happy tomato.png" alt="Happy Tomato - Pomodoro Technique" />
+          </div>
+          <div class="hero-note hero-note-top">
+            <strong>Start sooner</strong>
+            <span>A short timer makes difficult work feel easier to begin.</span>
+          </div>
+          <div class="hero-note hero-note-bottom">
+            <strong>Stay sharper</strong>
+            <span>Planned breaks help you come back before your attention fades.</span>
+          </div>
+        </div>
       </div>
 
-      <button onclick="{goSignUp()}">Sign up now</button>
+      <div class="info-grid" id="pomodoro-guide">
+        <article class="info-card intro-card">
+          <p class="card-label">What is the Pomodoro technique?</p>
+          <h2>A simple cycle of focused work and short breaks.</h2>
+          <p>
+            You choose one task, set a timer, work until it rings, then step away for a few minutes.
+            After a few rounds, you take a longer break. It is a straightforward system, but it works
+            because it gives your brain a clear structure instead of an open-ended study session.
+          </p>
+        </article>
+
+        <article class="info-card">
+          <p class="card-label">How it can help</p>
+          <h3>It makes big tasks feel smaller.</h3>
+          <p>
+            When the goal is only one short session, it is easier to begin. That matters on days when
+            studying feels heavy or you keep putting the first step off.
+          </p>
+        </article>
+
+        <article class="info-card">
+          <p class="card-label">What students usually notice</p>
+          <h3>Less drifting and better consistency.</h3>
+          <p>
+            You spend less time bouncing between tabs or staring at a task without moving. The timer gives
+            each session a clear boundary, which helps attention stay on the work in front of you.
+          </p>
+        </article>
+
+        <article class="info-card wide-card">
+          <p class="card-label">How to try it</p>
+          <div class="steps-list" aria-label="How to use the Pomodoro method">
+            <div class="step-item">
+              <span class="step-number">1</span>
+              <div>
+                <h3>Pick one task</h3>
+                <p>Keep it specific, like reading ten pages or finishing one problem set.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <span class="step-number">2</span>
+              <div>
+                <h3>Work until the timer ends</h3>
+                <p>Ignore everything that is not part of the current session.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <span class="step-number">3</span>
+              <div>
+                <h3>Take the break, then repeat</h3>
+                <p>Stand up, stretch, drink water, and come back ready for the next round.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
     </div>
-    <div class="empty"></div>
   </section>
 
 </body>

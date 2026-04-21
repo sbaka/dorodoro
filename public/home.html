@@ -19,12 +19,12 @@
 
 <body>
     <header>
-        <div id="header-left" role="button" onclick="{goStartHome()}">
+        <div id="header-left" role="button" tabindex="0" onclick="goStartHome()">
             <img src="./assets/Logo.png" alt="logo.png" />
             <h4>DoroDoro</h4>
         </div>
         <div id="header-right">
-            <button onclick="{goSettings()}">Settings</button>
+            <button onclick="goSettings()">Settings</button>
             <div id="profil">
                 <div class="circle" id="circle">A</div>
                 <div class="popup-sign" id="menu-popup">
@@ -44,25 +44,106 @@
             </div>
         </div>
     </header>
-    </header>
-    </header>
-    <section>
-        <div class="empty"></div>
-        <div class="happyImg">
-            <img src="./assets/Strong_pepper.png" alt="Happy tomato.png" />
-        </div>
-        <div class="empty"></div>
-        <div class="ContentSection">
-            <div class="textSection">
-                <h2>Enjoy Studying</h2>
-                <h5>
-                    With our new website, studying with the famous pomodoro technique is
-                    much fun.
-                </h5>
+    <section class="home-page">
+        <div class="home-shell">
+            <div class="hero-panel">
+                <div class="ContentSection">
+                    <p class="eyebrow">Study with a rhythm that keeps you moving</p>
+                    <div class="textSection">
+                        <h1>Pomodoro turns big tasks into one focused session at a time.</h1>
+                        <p>
+                            Work for a short block, step away for a real break, then come
+                            back before your energy drops. DoroDoro gives you a simple place
+                            to keep that rhythm going.
+                        </p>
+                    </div>
+                    <div class="hero-actions">
+                        <button id="start_btn" onclick="goStart()">Start Session</button>
+                        <a href="#pomodoro-guide" class="secondary-link">See how it works</a>
+                    </div>
+                    <div class="hero-highlights" aria-label="Pomodoro quick facts">
+                        <div class="highlight-card">
+                            <span class="highlight-value">25 min</span>
+                            <span class="highlight-label">Focus on one task</span>
+                        </div>
+                        <div class="highlight-card">
+                            <span class="highlight-value">5 min</span>
+                            <span class="highlight-label">Reset with a short break</span>
+                        </div>
+                        <div class="highlight-card">
+                            <span class="highlight-value">4 rounds</span>
+                            <span class="highlight-label">Then take a longer pause</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="happyImg hero-visual">
+                    <div class="hero-mascot-card">
+                        <img src="./assets/Strong_pepper.png" alt="DoroDoro pepper mascot" />
+                    </div>
+                    <div class="hero-note hero-note-top">
+                        <strong>Less burnout</strong>
+                        <span>Breaks stop long study sessions from turning into low-quality time.</span>
+                    </div>
+                    <div class="hero-note hero-note-bottom">
+                        <strong>Clearer progress</strong>
+                        <span>One session is small enough to start and easy to finish.</span>
+                    </div>
+                </div>
             </div>
-            <button id="start_btn" onclick="{goStart()}">Start Session</button>
+            <div class="info-grid" id="pomodoro-guide">
+                <article class="info-card intro-card">
+                    <p class="card-label">What is the Pomodoro technique?</p>
+                    <h2>A study method built around focused sprints and planned breaks.</h2>
+                    <p>
+                        You pick one task, set a timer, work until it rings, then take a short
+                        break. After a few rounds, you take a longer one. That pattern helps you
+                        stay present instead of trying to push through hours without stopping.
+                    </p>
+                </article>
+                <article class="info-card">
+                    <p class="card-label">Why it helps</p>
+                    <h3>It lowers the pressure to start.</h3>
+                    <p>
+                        A single 25 minute block feels manageable. That makes it easier to begin
+                        reading, writing, revising, or solving problems even when the task feels heavy.
+                    </p>
+                </article>
+                <article class="info-card">
+                    <p class="card-label">What changes</p>
+                    <h3>You keep your attention longer.</h3>
+                    <p>
+                        Short breaks give your brain a reset before your focus drops too far. Over time,
+                        that usually means better concentration and less drift between tabs, notes, and distractions.
+                    </p>
+                </article>
+                <article class="info-card wide-card">
+                    <p class="card-label">A simple way to use it</p>
+                    <div class="steps-list" aria-label="How to use the Pomodoro method">
+                        <div class="step-item">
+                            <span class="step-number">1</span>
+                            <div>
+                                <h3>Choose one goal</h3>
+                                <p>Write a clear target for the session, like finishing one chapter or one exercise set.</p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <span class="step-number">2</span>
+                            <div>
+                                <h3>Work until the timer ends</h3>
+                                <p>Keep the task narrow and avoid switching context unless it is necessary.</p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <span class="step-number">3</span>
+                            <div>
+                                <h3>Take the break seriously</h3>
+                                <p>Stand up, stretch, drink water, then come back for the next round with fresh attention.</p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
         </div>
-        <div class="empty"></div>
         <div class="logout-popup" id="logout-popup">
             <h1>Are you sure you want to log out ?</h1>
             <div id="logout-buttons">
@@ -79,10 +160,16 @@
                 Edit my profile picture
             </h3>
             <div id="edit-form-inputs">
-                <input type="text" name="edit-username" id="edit-username" placeholder="Enter your new username">
-                <input type="text" name="edit-pwd" id="edit-password" placeholder="Enter your new passweord">
+                <div class="form-group">
+                    <label for="edit-username">Username</label>
+                    <input type="text" name="edit-username" id="edit-username" placeholder="Enter your new username">
+                </div>
+                <div class="form-group">
+                    <label for="edit-password">Password</label>
+                    <input type="password" name="edit-pwd" id="edit-password" placeholder="Enter your new password">
+                </div>
             </div>
-            <button type="submit" id="submit-edit">done</button>
+            <button type="button" id="submit-edit">Done</button>
         </div>
     </section>
 
@@ -109,4 +196,4 @@
 <script src="./scripts/redirect.js"></script>
 <script src="./scripts/dbAccess.js"></script>
 
-</html>
+</html> 

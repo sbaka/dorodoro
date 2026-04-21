@@ -17,13 +17,15 @@
 .timer-container {
   display: flex;
   width: 100%;
-  min-height: 65vh;
-
+  min-height: auto;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 0 1rem 2rem;
 }
 
 .illustration {
   flex: 1;
-  display: flex;
+  display: none;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -44,12 +46,12 @@
 }
 
 .timer-wrapper {
-  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  width: 100%;
+  padding: 0;
 }
 
 /* Timer display */
@@ -84,13 +86,13 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 350px;
+  min-height: clamp(240px, 70vw, 350px);
 }
 
 #timer-circle {
   position: relative;
-  width: 320px;
-  height: 320px;
+  width: clamp(220px, 78vw, 320px);
+  height: clamp(220px, 78vw, 320px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -110,7 +112,7 @@ svg {
 #countdown-number {
   position: relative;
   font-family: "Bubblegum Sans", sans-serif;
-  font-size: 5rem;
+  font-size: clamp(3rem, 14vw, 5rem);
   color: var(--primary-color);
   z-index: 1;
 }
@@ -120,8 +122,10 @@ svg {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1.5rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
   margin: 1.5rem 0;
+  width: 100%;
 }
 
 .start-button {
@@ -129,9 +133,10 @@ svg {
   color: var(--text-light);
   border: none;
   border-radius: 50px;
-  padding: 1rem 3rem;
+  width: min(100%, 18rem);
+  padding: 1rem 2rem;
   font-family: "Bubblegum Sans", sans-serif;
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 6vw, 2rem);
   cursor: pointer;
   transition: var(--transition);
   box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3);
@@ -151,8 +156,8 @@ svg {
   background-color: var(--bg-dark);
   border: none;
   border-radius: 50%;
-  width: 60px;
-  height: 60px;
+  width: 52px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -187,12 +192,14 @@ svg {
 .secondary-button {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   background-color: var(--bg-dark);
   color: var(--secondary-color);
   border: none;
   border-radius: var(--border-radius);
   padding: 0.75rem 1.5rem;
+  width: min(100%, 18rem);
   font-family: "Bubblegum Sans", sans-serif;
   font-size: 1.1rem;
   cursor: pointer;
@@ -210,7 +217,7 @@ svg {
 
 /* Session progress bar */
 .session-progress {
-  width: 80%;
+  width: 100%;
   max-width: 700px;
   margin: 0 auto;
   padding: 1rem;
@@ -242,10 +249,11 @@ svg {
 
 /* Task input container */
 .task-input-container {
-  width: 80%;
+  width: 100%;
   max-width: 700px;
   margin: 1.5rem auto;
   display: flex;
+  flex-direction: column;
   gap: 0.75rem;
 }
 
@@ -266,7 +274,7 @@ svg {
 
 /* Stats card */
 .stats-card {
-  width: 80%;
+  width: 100%;
   max-width: 700px;
   margin: 1.5rem auto;
   padding: 1.5rem;
@@ -284,6 +292,7 @@ svg {
 
 .stats-content {
   display: flex;
+  flex-direction: column;
   justify-content: space-around;
   gap: 1rem;
 }
@@ -454,39 +463,35 @@ svg {
 }
 
 /* Responsive styles */
-@media (max-width: 768px) {
+@media (min-width: 768px) {
+  .task-input-container {
+    flex-direction: row;
+  }
+
+  .stats-content {
+    flex-direction: row;
+  }
+
+  .secondary-button {
+    width: auto;
+  }
+}
+
+@media (min-width: 992px) {
   .timer-container {
-    flex-direction: column;
-    min-height: auto;
-    margin: 0;
+    flex-direction: row;
+    min-height: 65vh;
+    gap: 0;
     padding: 0;
   }
 
-  #timer-display {
-    margin-bottom: 1rem;
+  .illustration {
+    display: flex;
   }
 
-  .controls {
-    flex-direction: row;
-    gap: 1rem;
-  }
-  .illustration{
-    display: none;
-  }
-
-  .start-button {
-    width: 100%;
-    padding: 1rem;
-    font-size: 1.5rem;
-  }
-
-  .circle-button {
-    width: 50px;
-    height: 50px;
-  }
-
-  #countdown-number {
-    font-size: 4rem;
+  .timer-wrapper {
+    flex: 1;
+    padding: 2rem;
   }
 }
 

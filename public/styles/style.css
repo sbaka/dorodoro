@@ -17,6 +17,7 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
   font-family: "Bubblegum Sans", sans-serif;
 }
 
@@ -35,12 +36,19 @@ header {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
   position: sticky;
   top: 0px;
   margin-top: 1rem;
   margin-left: 1rem;
   margin-right: 1rem;
-  background-color: var(--accent-color);
+  padding: 0.75rem 1rem;
+  background: rgba(255, 252, 232, 0.76);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 10px 24px rgba(67, 129, 168, 0.12);
+  backdrop-filter: blur(14px);
+  border-radius: 24px;
   z-index: 1000;
 }
 
@@ -69,11 +77,14 @@ header {
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
   gap: 1rem;
 }
 
 #header-right > button {
   padding: 8px 15px;
+  min-height: 44px;
   transition: all 0.3s ease;
   border-radius: 5px;
 }
@@ -87,7 +98,11 @@ header {
   cursor: pointer;
   transition: all 0.3s ease;
 }
-.circle :hover {
+#profil .circle {
+  margin: 0;
+}
+
+.circle:hover {
   background-color: rgba(67, 129, 168, 0.8);
   transition: all 0.3s ease;
 }
@@ -101,24 +116,23 @@ header {
 .circle {
   border-radius: 100%;
   background-color: #4381a8;
-  width: 70px;
-  height: 70px;
-  font-size: 45px;
+  width: clamp(44px, 12vw, 70px);
+  height: clamp(44px, 12vw, 70px);
+  font-size: clamp(1.25rem, 7vw, 2.8125rem);
   color: #ffffff;
   display: flex;
   font-family: "Bubblegum Sans" , sans-serif;
   align-items: center;
   justify-content: center;
-  margin: 15px;
 }
 
 .popup-sign {
   visibility: hidden;
   position: absolute;
   z-index: 1;
-  right: 15%;
+  right: 0;
   top: 95%;
-  width: 200px;
+  width: min(220px, calc(100vw - 2rem));
   height: 100px;
   /* display */
   display: flex;
@@ -140,6 +154,7 @@ header {
   padding-left:1rem ;
   align-items: center;
   background-color: transparent;
+  min-height: 44px;
   height: 50%;
   cursor: pointer;
   font-size: 20px;
@@ -160,7 +175,17 @@ body {
   display: flex;
   flex-direction: column;
   background-color: #f5f387;
+  background-image:
+    radial-gradient(circle at 12% 16%, rgba(255, 255, 255, 0.55) 0 34px, rgba(255, 255, 255, 0.18) 35px 68px, transparent 69px),
+    radial-gradient(circle at 82% 14%, rgba(67, 129, 168, 0.18) 0 40px, rgba(67, 129, 168, 0.08) 41px 78px, transparent 79px),
+    radial-gradient(circle at 88% 76%, rgba(217, 40, 40, 0.14) 0 52px, rgba(217, 40, 40, 0.06) 53px 96px, transparent 97px),
+    radial-gradient(circle at 18% 82%, rgba(67, 129, 168, 0.12) 0 30px, rgba(67, 129, 168, 0.05) 31px 60px, transparent 61px),
+    radial-gradient(circle at 58% 48%, rgba(255, 255, 255, 0.3) 0 18px, rgba(255, 255, 255, 0.08) 19px 34px, transparent 35px),
+    radial-gradient(circle at 40% 28%, rgba(255, 255, 255, 0.24) 0 14px, rgba(255, 255, 255, 0.06) 15px 28px, transparent 29px),
+    linear-gradient(180deg, #fffce7 0%, #f8f0aa 44%, #ecde87 100%);
+  background-attachment: fixed;
   position: relative;
+  overflow-x: hidden;
 }
 
 section {
@@ -306,7 +331,7 @@ footer > div > button:hover {
   border: 2px solid #4381a8;
   text-align: center;
   padding: 20px;
-  width: 35%;
+  width: min(35rem, calc(100vw - 2rem));
   z-index: 99999;
 }
 
@@ -356,7 +381,7 @@ footer > div > button:hover {
   border: 2px solid #4381a8;
   border-radius: 5px;
   background-color: #fff;
-  width: 35%;
+  width: min(35rem, calc(100vw - 2rem));
   z-index: 999999;
 }
 

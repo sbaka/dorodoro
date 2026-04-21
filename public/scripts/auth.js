@@ -21,22 +21,33 @@ let formValid = {
   email: false,
   password: false
 };
+const touchedFields = new Set();
 
 /**
  * Validates an input field against a pattern
  * @param {HTMLInputElement} field - The input field to validate
  * @param {RegExp} pattern - The validation pattern
  */
-function validateField(field, pattern) {
+function validateField(field, pattern, options = {}) {
   const value = field.value;
   const fieldId = field.id;
   const validationMessage = document.getElementById(`${fieldId}-validation`);
   let isValid = pattern.test(value);
+  const shouldShowMessage = options.force || touchedFields.has(fieldId);
+
+  if (!validationMessage) {
+    return isValid;
+  }
+
+  touchedFields.add(fieldId);
+  validationMessage.classList.remove('error', 'success');
   
   // Special handling for empty fields
   if (value.length === 0) {
-    validationMessage.textContent = 'This field is required';
-    validationMessage.classList.add('error');
+    validationMessage.textContent = shouldShowMessage ? 'This field is required' : '';
+    if (shouldShowMessage) {
+      validationMessage.classList.add('error');
+    }
     isValid = false;
   } else if (!isValid) {
     // Field-specific error messages
@@ -55,9 +66,7 @@ function validateField(field, pattern) {
     }
     validationMessage.classList.add('error');
   } else {
-    validationMessage.textContent = '✓';
-    validationMessage.classList.remove('error');
-    validationMessage.classList.add('success');
+    validationMessage.textContent = '';
   }
   
   // Update form validity state
@@ -104,8 +113,19 @@ function togglePasswordVisibility() {
 function updatePasswordStrength(password) {
   const strengthBar = document.getElementById('strength-bar');
   const strengthText = document.getElementById('strength-text');
+  const strengthWrapper = document.getElementById('password-strength');
   
-  if (!strengthBar || !strengthText) return;
+  if (!strengthBar || !strengthText || !strengthWrapper) return;
+
+  if (!password) {
+    strengthWrapper.style.display = 'none';
+    strengthBar.style.width = '0%';
+    strengthBar.style.backgroundColor = '#d7e1e8';
+    strengthText.textContent = 'Use at least 8 characters with letters and numbers';
+    return;
+  }
+
+  strengthWrapper.style.display = 'block';
   
   // Calculate password strength
   let strength = 0;
@@ -146,8 +166,10 @@ function showError(message) {
   
   if (errorDiv && errorMsg) {
     errorMsg.textContent = message;
+    errorDiv.style.display = 'flex';
     errorDiv.style.visibility = 'visible';
     setTimeout(() => {
+      errorDiv.style.display = 'none';
       errorDiv.style.visibility = 'hidden';
     }, 5000);
   }
@@ -165,9 +187,9 @@ async function handleSignUp(event) {
   const passwordField = document.getElementById('pwd');
   
   // Validate all fields on submission
-  const nameValid = validateField(nameField, namePattern);
-  const emailValid = validateField(emailField, emailPattern);
-  const passwordValid = validateField(passwordField, passwordPattern);
+  const nameValid = validateField(nameField, namePattern, { force: true });
+  const emailValid = validateField(emailField, emailPattern, { force: true });
+  const passwordValid = validateField(passwordField, passwordPattern, { force: true });
   
   if (!(nameValid && emailValid && passwordValid)) {
     showError('Please fix the errors before submitting');
@@ -290,7 +312,10 @@ async function handleSignIn(event) {
  */
 function signInWithGoogle() {
   const googleBtn = document.getElementById('sign-with-google');
-  googleBtn.value = 'Connecting...';
+  const googleBtnLabel = googleBtn ? googleBtn.querySelector('.google-button-label') : null;
+  if (googleBtnLabel) {
+    googleBtnLabel.textContent = 'Connecting...';
+  }
   googleBtn.disabled = true;
   
   const provider = new firebase.auth.GoogleAuthProvider();
@@ -304,7 +329,9 @@ function signInWithGoogle() {
     })
     .catch((error) => {
       showError('Google sign-in failed. Please try again.');
-      googleBtn.value = 'Continue with Google';
+      if (googleBtnLabel) {
+        googleBtnLabel.textContent = 'Continue with Google';
+      }
       googleBtn.disabled = false;
     });
 }
@@ -342,83 +369,8 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Initialize form validation state
   if (nameField && emailField && passwordField) {
-    if (nameField) validateField(nameField, namePattern);
-    if (emailField) validateField(emailField, emailPattern);
-    if (passwordField) validateField(passwordField, passwordPattern);
+    updateSubmitButton();
+    updatePasswordStrength('');
   }
   
-  // Initialize password toggle functionality
-  const passwordToggle = document.querySelector('.toggle-password');
-  if (passwordToggle && passwordField) {
-    passwordToggle.addEventListener('click', togglePasswordVisibility);
-  }
-});
-
-// Styles for validation messages
-document.addEventListener('DOMContentLoaded', function() {
-  const style = document.createElement('style');
-  style.textContent = `
-    .validation-message {
-      display: block;
-      font-size: 0.8rem;
-      margin-top: 5px;
-      height: 1em;
-    }
-    .validation-message.error {
-      color: #ff4d4d;
-    }
-    .validation-message.success {
-      color: #4CAF50;
-    }
-    .password-strength {
-      margin-top: 5px;
-    }
-    .strength-meter {
-      height: 5px;
-      background-color: #e0e0e0;
-      border-radius: 3px;
-      overflow: hidden;
-    }
-    .strength-bar {
-      height: 100%;
-      width: 0;
-      transition: width 0.3s ease, background-color 0.3s ease;
-    }
-    #strength-text {
-      font-size: 0.8rem;
-      color: #777;
-    }
-    .password-container {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-    .toggle-password {
-      position: absolute;
-      right: 10px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #777;
-    }
-    .disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-    .input-group {
-      margin-bottom: 15px;
-    }
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-  `;
-  document.head.appendChild(style);
 });
