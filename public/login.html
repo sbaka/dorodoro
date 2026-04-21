@@ -65,7 +65,8 @@
           <label for="email" class="sr-only">Email</label>
           <span class="field-label">Email</span>
           <input type="email" class="input" name="email" id="email" 
-                 placeholder="Email" aria-required="true" autocomplete="email" />
+               placeholder="Email" aria-required="true" autocomplete="email"
+                 oninput="validateField(this, emailPattern)" />
           <span class="validation-message" id="email-validation"></span>
         </div>
         
@@ -82,6 +83,13 @@
             </button>
           </div>
         </div>
+
+        <div class="auth-inline-actions" aria-label="Other sign in options">
+          <button type="button" class="text-action" id="forgot-password-link">Forgot password?</button>
+          <button type="button" class="text-action" id="magic-link-button">Email me a magic link</button>
+        </div>
+
+        <p class="auth-inline-note">You can sign in without your password by sending a one-time email link.</p>
         
         <div id="error" aria-live="polite">
           <span class="material-symbols-outlined"> error </span>

@@ -268,6 +268,46 @@
   background: rgba(67, 129, 168, 0.14);
 }
 
+.auth-inline-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.text-action {
+  min-height: 2.75rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #2f6788;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+}
+
+.text-action:hover,
+.text-action:focus-visible {
+  color: #214d69;
+  text-decoration: underline;
+}
+
+.text-action:disabled {
+  color: #7f9aaa;
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
+.auth-inline-note {
+  margin-top: 0.35rem;
+  color: #5b7888;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
 .btns {
   display: flex;
   flex-direction: column;
@@ -373,15 +413,41 @@
   border-radius: 1rem;
 }
 
+#error.is-success {
+  background-color: #edf9f0;
+  border-color: #bde4c5;
+}
+
+#error.is-info {
+  background-color: #eef6fb;
+  border-color: #c5deee;
+}
+
 #error p {
   flex: 1;
   color: #c12626;
   font-size: 0.95rem;
 }
 
+#error.is-success p {
+  color: #217a3c;
+}
+
+#error.is-info p {
+  color: #2f6788;
+}
+
 #error .material-symbols-outlined {
   color: #c12626;
   margin-right: 0;
+}
+
+#error.is-success .material-symbols-outlined {
+  color: #217a3c;
+}
+
+#error.is-info .material-symbols-outlined {
+  color: #2f6788;
 }
 
 .validation-message {

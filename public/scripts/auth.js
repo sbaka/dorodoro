@@ -1,4 +1,5 @@
 const auth = firebase.auth()
+const EMAIL_LINK_STORAGE_KEY = 'dorodoro.emailForSignIn'
 
 const signInBtn = document.getElementById("sign-in-submit")
 const signUpBtn = document.getElementById("sign-up-submit")
@@ -16,6 +17,7 @@ const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
 
 // DOM Elements and UI State
 let passwordVisible = false;
+let messageTimeoutId = null;
 let formValid = {
   name: false,
   email: false,
@@ -157,21 +159,263 @@ function updatePasswordStrength(password) {
 }
 
 /**
+ * Hides the current message banner
+ */
+function hideMessage() {
+  const messageBox = document.getElementById('error');
+  if (!messageBox) {
+    return;
+  }
+
+  if (messageTimeoutId) {
+    clearTimeout(messageTimeoutId);
+    messageTimeoutId = null;
+  }
+
+  messageBox.style.display = 'none';
+  messageBox.style.visibility = 'hidden';
+  messageBox.classList.remove('is-error', 'is-success', 'is-info');
+}
+
+/**
+ * Displays a message in the shared banner
+ * @param {string} message - The message to display
+ * @param {'error' | 'success' | 'info'} type - The message type
+ */
+function showMessage(message, type = 'error') {
+  const messageBox = document.getElementById('error');
+  const messageText = document.getElementById('error-msg-container');
+  const messageIcon = messageBox ? messageBox.querySelector('.material-symbols-outlined') : null;
+
+  if (!messageBox || !messageText) {
+    return;
+  }
+
+  hideMessage();
+
+  messageText.textContent = message;
+  messageBox.classList.add(`is-${type}`);
+  messageBox.style.display = 'flex';
+  messageBox.style.visibility = 'visible';
+
+  if (messageIcon) {
+    if (type === 'success') {
+      messageIcon.textContent = 'check_circle';
+    } else if (type === 'info') {
+      messageIcon.textContent = 'info';
+    } else {
+      messageIcon.textContent = 'error';
+    }
+  }
+
+  messageTimeoutId = window.setTimeout(hideMessage, type === 'error' ? 5000 : 6500);
+}
+
+/**
  * Displays an error message
  * @param {string} message - The error message to display
  */
 function showError(message) {
-  const errorDiv = document.getElementById('error');
-  const errorMsg = document.getElementById('error-msg-container');
-  
-  if (errorDiv && errorMsg) {
-    errorMsg.textContent = message;
-    errorDiv.style.display = 'flex';
-    errorDiv.style.visibility = 'visible';
-    setTimeout(() => {
-      errorDiv.style.display = 'none';
-      errorDiv.style.visibility = 'hidden';
-    }, 5000);
+  showMessage(message, 'error');
+}
+
+/**
+ * Displays a success message
+ * @param {string} message - The success message to display
+ */
+function showSuccess(message) {
+  showMessage(message, 'success');
+}
+
+/**
+ * Builds the login URL used by Firebase email actions
+ * @returns {string}
+ */
+function getLoginActionUrl() {
+  const loginUrl = new URL('./login.html', window.location.href);
+  loginUrl.search = '';
+  loginUrl.hash = '';
+  return loginUrl.toString();
+}
+
+/**
+ * Returns Firebase action settings for magic-link sign-in
+ * @returns {{url: string, handleCodeInApp: boolean}}
+ */
+function getEmailActionSettings() {
+  return {
+    url: getLoginActionUrl(),
+    handleCodeInApp: true
+  };
+}
+
+/**
+ * Normalizes and validates the current email input
+ * @returns {string | null}
+ */
+function getValidatedEmail() {
+  const emailField = document.getElementById('email');
+  if (!emailField) {
+    return null;
+  }
+
+  emailField.value = emailField.value.trim();
+  const emailValue = emailField.value;
+  const emailIsValid = validateField(emailField, emailPattern, { force: true });
+
+  if (!emailValue) {
+    showError('Enter your email address first.');
+    emailField.focus();
+    return null;
+  }
+
+  if (!emailIsValid) {
+    showError('Use a valid email address to continue.');
+    emailField.focus();
+    return null;
+  }
+
+  return emailValue;
+}
+
+/**
+ * Sends a password reset email to the current address
+ * @param {Event} event - The click event
+ */
+async function sendPasswordReset(event) {
+  event.preventDefault();
+
+  const emailValue = getValidatedEmail();
+  if (!emailValue) {
+    return;
+  }
+
+  const resetButton = document.getElementById('forgot-password-link');
+  const originalLabel = resetButton ? resetButton.textContent : '';
+  if (resetButton) {
+    resetButton.disabled = true;
+    resetButton.textContent = 'Sending reset...';
+  }
+
+  try {
+    await auth.sendPasswordResetEmail(emailValue);
+    showSuccess('If that email has an account, a reset link is on its way. Check your inbox and spam folder.');
+  } catch (error) {
+    switch (error.code) {
+      case 'auth/invalid-email':
+        showError('Use a valid email address to reset your password.');
+        break;
+      case 'auth/network-request-failed':
+        showError('Network error. Check your connection and try again.');
+        break;
+      default:
+        showError('Could not send the reset email right now. Try again in a moment.');
+        break;
+    }
+  } finally {
+    if (resetButton) {
+      resetButton.disabled = false;
+      resetButton.textContent = originalLabel;
+    }
+  }
+}
+
+/**
+ * Sends a Firebase email sign-in link to the current address
+ * @param {Event} event - The click event
+ */
+async function sendMagicLink(event) {
+  event.preventDefault();
+
+  const emailValue = getValidatedEmail();
+  if (!emailValue) {
+    return;
+  }
+
+  const magicLinkButton = document.getElementById('magic-link-button');
+  const originalLabel = magicLinkButton ? magicLinkButton.textContent : '';
+  if (magicLinkButton) {
+    magicLinkButton.disabled = true;
+    magicLinkButton.textContent = 'Sending magic link...';
+  }
+
+  try {
+    await auth.sendSignInLinkToEmail(emailValue, getEmailActionSettings());
+    window.localStorage.setItem(EMAIL_LINK_STORAGE_KEY, emailValue);
+    showSuccess('Magic link sent. Open it from your email to finish signing in.');
+  } catch (error) {
+    switch (error.code) {
+      case 'auth/invalid-email':
+        showError('Use a valid email address to receive a magic link.');
+        break;
+      case 'auth/argument-error':
+        showError('Email-link sign-in needs to be enabled in Firebase Authentication before it can work here.');
+        break;
+      case 'auth/network-request-failed':
+        showError('Network error. Check your connection and try again.');
+        break;
+      default:
+        showError('Could not send the magic link right now. Try again in a moment.');
+        break;
+    }
+  } finally {
+    if (magicLinkButton) {
+      magicLinkButton.disabled = false;
+      magicLinkButton.textContent = originalLabel;
+    }
+  }
+}
+
+/**
+ * Completes Firebase email-link sign-in when the page is opened from a magic link
+ */
+async function completeMagicLinkSignIn() {
+  if (!auth.isSignInWithEmailLink(window.location.href)) {
+    return;
+  }
+
+  const emailField = document.getElementById('email');
+  let emailValue = window.localStorage.getItem(EMAIL_LINK_STORAGE_KEY);
+
+  if (!emailValue && emailField && emailField.value.trim()) {
+    emailValue = emailField.value.trim();
+  }
+
+  if (!emailValue) {
+    emailValue = window.prompt('Enter the email address you used for the sign-in link.');
+  }
+
+  if (!emailValue) {
+    showError('Enter the same email address you used for the magic link to finish signing in.');
+    return;
+  }
+
+  emailValue = emailValue.trim();
+  if (emailField) {
+    emailField.value = emailValue;
+  }
+
+  showMessage('Checking your magic link...', 'info');
+
+  try {
+    await auth.signInWithEmailLink(emailValue, window.location.href);
+    window.localStorage.removeItem(EMAIL_LINK_STORAGE_KEY);
+    sessionStorage.setItem('userLoggedIn', 'true');
+    showSuccess('Magic link accepted. Redirecting...');
+    goStartHome();
+  } catch (error) {
+    switch (error.code) {
+      case 'auth/invalid-email':
+        showError('That email does not match the one used for the magic link.');
+        break;
+      case 'auth/invalid-action-code':
+      case 'auth/expired-action-code':
+        showError('This magic link is no longer valid. Request a new one and try again.');
+        break;
+      default:
+        showError('Could not finish magic-link sign-in. Request a fresh link and try again.');
+        break;
+    }
   }
 }
 
@@ -254,8 +498,14 @@ async function handleSignIn(event) {
   
   const emailField = document.getElementById('email');
   const passwordField = document.getElementById('pwd');
+  emailField.value = emailField.value.trim();
   
-  if (!emailField.value || !passwordField.value) {
+  if (!validateField(emailField, emailPattern, { force: true })) {
+    showError('Use a valid email address to sign in.');
+    return;
+  }
+
+  if (!passwordField.value) {
     showError('Email and password are required');
     return;
   }
@@ -338,6 +588,8 @@ function signInWithGoogle() {
 
 // Initialize the page
 document.addEventListener('DOMContentLoaded', function() {
+  completeMagicLinkSignIn();
+
   // Add event listeners
   const signInButton = document.getElementById('sign-in-submit');
   if (signInButton) {
@@ -360,6 +612,16 @@ document.addEventListener('DOMContentLoaded', function() {
   const googleButton = document.getElementById('sign-with-google');
   if (googleButton) {
     googleButton.addEventListener('click', signInWithGoogle);
+  }
+
+  const forgotPasswordButton = document.getElementById('forgot-password-link');
+  if (forgotPasswordButton) {
+    forgotPasswordButton.addEventListener('click', sendPasswordReset);
+  }
+
+  const magicLinkButton = document.getElementById('magic-link-button');
+  if (magicLinkButton) {
+    magicLinkButton.addEventListener('click', sendMagicLink);
   }
   
   // Add validation to all edit-form-inputs on page load
