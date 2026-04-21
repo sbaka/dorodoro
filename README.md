@@ -49,6 +49,17 @@ I was free to use any technologies I wanted, but I wanted to fine-tune the basic
 - Getting the grasp over the Flexbox
 - Small transition here and there
 
+## GitHub Deployment
+
+GitHub Actions deploys this project to Firebase Hosting.
+
+- Pushes to `master` deploy the live site.
+- Pull requests deploy a Firebase preview channel and update it on each new commit.
+
+To make the workflows run in GitHub, add this repository secret:
+
+- `FIREBASE_SERVICE_ACCOUNT_DORODORO_1234`: JSON credentials for a Firebase service account with Hosting deploy access to the `dorodoro-1234` project.
+
 ## TODOS
 
 This project isn't 100% done actually its not even fully usable as of now (10/10/2023):

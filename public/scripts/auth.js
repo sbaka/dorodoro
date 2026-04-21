@@ -12,7 +12,7 @@ const errorContainer = document.getElementById("error-msg-container")
 // Validation patterns
 const namePattern = /^[A-Za-z\s]{3,30}$/;
 const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/;
+const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
 
 // DOM Elements and UI State
 let passwordVisible = false;
@@ -273,7 +273,7 @@ async function handleSignIn(event) {
     
     // Set user logged in session and redirect
     sessionStorage.setItem('userLoggedIn', 'true');
-    goHome();
+    goStartHome();
   } catch (error) {
     // Handle specific error cases
     let errorMessage = 'Failed to sign in. Please check your credentials.';
