@@ -93,6 +93,7 @@ let state = TIMER_STATES.POMO;
 let completedPomos = 0;
 let sessionStartTime = null;
 let lastNotificationTime = 0; // Prevent notification spam
+let timerEndsAtMs = null;
 
 // Per-segment analytics tracking (pomo / sbreak / lbreak)
 let segmentStartMs = null;
@@ -114,6 +115,88 @@ function currentSubject() {
   } catch (_) {
     return "";
   }
+}
+
+function updateCountdownDisplay() {
+  countdownNumberEl.innerHTML = secondsToMinutes(timeLeft);
+}
+
+function getStateMessage(timerState = state) {
+  if (timerState === TIMER_STATES.POMO) return "Time to focus";
+  if (timerState === TIMER_STATES.SBREAK) return "Relax a little";
+  if (timerState === TIMER_STATES.LBREAK) return "What about a fresh breeze?";
+  return "Looks like you finished all your pomodoros, well done champ!";
+}
+
+function getAnimationForState(timerState = state) {
+  if (timerState === TIMER_STATES.POMO) return animations.pomo;
+  if (timerState === TIMER_STATES.SBREAK) return animations.shortBreak;
+  if (timerState === TIMER_STATES.LBREAK) return animations.longBreak;
+  return animations.pomo;
+}
+
+function playAlertSound(sound) {
+  if (!notificationsEnabled || !sound) return;
+  sound.currentTime = 0;
+  sound.play().catch(error => console.log('Sound play prevented:', error));
+}
+
+function showBrowserNotification(title, body) {
+  if (!("Notification" in window) || Notification.permission !== "granted") return;
+
+  try {
+    new Notification(title, {
+      body,
+      icon: "./assets/Logo.png"
+    });
+  } catch (error) {
+    console.error("Notification error:", error);
+  }
+}
+
+function syncRunningTimer(now = Date.now()) {
+  if (!started || !timerEndsAtMs) return false;
+
+  const nextTimeLeft = Math.max(0, Math.ceil((timerEndsAtMs - now) / 1000));
+
+  if (nextTimeLeft !== timeLeft) {
+    timeLeft = nextTimeLeft;
+    updateCountdownDisplay();
+
+    if (timeLeft <= 5 && timeLeft >= 1 && notificationsEnabled && now - lastNotificationTime > 900) {
+      lastNotificationTime = now;
+      playAlertSound(audioNotifications.tick);
+    }
+  }
+
+  return timerEndsAtMs <= now;
+}
+
+function finalizeElapsedTimer() {
+  clearTimer();
+  timeLeft = 0;
+  updateCountdownDisplay();
+
+  if (state === TIMER_STATES.POMO) {
+    handlePomoComplete();
+    return;
+  }
+
+  if (state === TIMER_STATES.SBREAK || state === TIMER_STATES.LBREAK) {
+    handleBreakComplete();
+  }
+}
+
+function reconcileRecoveredTimer() {
+  if (!started || !timerEndsAtMs) return false;
+
+  if (syncRunningTimer()) {
+    finalizeElapsedTimer();
+    return true;
+  }
+
+  saveProgress();
+  return false;
 }
 
 function beginSegment() {
@@ -212,8 +295,9 @@ updateAnimations();
 // Initialize UI
 function resetUI() {
   restart.disabled = true;
-  countdownNumberEl.innerHTML = secondsToMinutes(POMO_DURATION);
-  pomoType.innerHTML = "Time to focus";
+  timeLeft = POMO_DURATION;
+  updateCountdownDisplay();
+  pomoType.innerHTML = getStateMessage(TIMER_STATES.POMO);
   countDisplay.innerHTML = `${count} out of ${REPETITION}`;
 }
 
@@ -283,17 +367,17 @@ start.onclick = () => {
   
   switch (state) {
     case TIMER_STATES.POMO:
-      startTimer(timeLeft, "Time to focus", animations.pomo);
+      startTimer(timeLeft, getStateMessage(TIMER_STATES.POMO), getAnimationForState(TIMER_STATES.POMO));
       break;
     case TIMER_STATES.SBREAK:
-      startTimer(timeLeft, "Relax a little", animations.shortBreak);
+      startTimer(timeLeft, getStateMessage(TIMER_STATES.SBREAK), getAnimationForState(TIMER_STATES.SBREAK));
       break;
     case TIMER_STATES.LBREAK:
-      startTimer(timeLeft, "What about a fresh breeze?", animations.longBreak);
+      startTimer(timeLeft, getStateMessage(TIMER_STATES.LBREAK), getAnimationForState(TIMER_STATES.LBREAK));
       break;
     case TIMER_STATES.FINISHED:
       resetEverything();
-      startTimer(POMO_DURATION, "Time to focus", animations.pomo);
+      startTimer(POMO_DURATION, getStateMessage(TIMER_STATES.POMO), getAnimationForState(TIMER_STATES.POMO));
       break;
   }
 };
@@ -308,15 +392,15 @@ restart.onclick = () => {
   switch (state) {
     case TIMER_STATES.POMO:
       timeLeft = POMO_DURATION;
-      startTimer(timeLeft, "Time to focus", animations.pomo);
+      startTimer(timeLeft, getStateMessage(TIMER_STATES.POMO), getAnimationForState(TIMER_STATES.POMO));
       break;
     case TIMER_STATES.SBREAK:
       timeLeft = SHORT_BREAK;
-      startTimer(timeLeft, "Relax a little", animations.shortBreak);
+      startTimer(timeLeft, getStateMessage(TIMER_STATES.SBREAK), getAnimationForState(TIMER_STATES.SBREAK));
       break;
     case TIMER_STATES.LBREAK:
       timeLeft = LONG_BREAK;
-      startTimer(timeLeft, "What about a fresh breeze?", animations.longBreak);
+      startTimer(timeLeft, getStateMessage(TIMER_STATES.LBREAK), getAnimationForState(TIMER_STATES.LBREAK));
       break;
   }
 };
@@ -347,8 +431,9 @@ skip.onclick = () => {
  */
 function startTimer(duration, message, animation) {
   timeLeft = duration;
+  timerEndsAtMs = Date.now() + timeLeft * 1000;
   pomoType.innerHTML = message;
-  countdownNumberEl.innerHTML = secondsToMinutes(timeLeft);
+  updateCountdownDisplay();
   
   // Performance optimization: reset animation if it exists
   if (currentAnimation) {
@@ -358,49 +443,12 @@ function startTimer(duration, message, animation) {
   currentAnimation = animation;
   currentAnimation.play();
   
-  let lastTimestamp = Date.now();
-  let accumulatedTime = 0;
-  
   const timerLoop = () => {
     if (!started) return; // Exit if timer is paused
-    
-    const now = Date.now();
-    const deltaTime = now - lastTimestamp;
-    lastTimestamp = now;
-    
-    accumulatedTime += deltaTime;
-    
-    // Only update once per second to avoid excessive DOM updates
-    if (accumulatedTime >= 1000) {
-      const secondsToRemove = Math.floor(accumulatedTime / 1000);
-      timeLeft -= secondsToRemove;
-      accumulatedTime -= secondsToRemove * 1000;
-      
-      countdownNumberEl.innerHTML = secondsToMinutes(timeLeft);
-      
-      // Play a tick sound at 5, 4, 3, 2, 1 seconds remaining with throttling
-      if (timeLeft <= 5 && timeLeft >= 1 && notificationsEnabled && now - lastNotificationTime > 900) {
-        lastNotificationTime = now;
-        audioNotifications.tick.currentTime = 0;
-        audioNotifications.tick.play().catch(e => console.log('Sound play prevented:', e));
-      }
-      
-      if (timeLeft < 1) {
-        clearTimer();
-        
-        if (state === TIMER_STATES.POMO) {
-          if (notificationsEnabled) {
-            audioNotifications.pomodoro.play().catch(e => console.log('Sound play prevented:', e));
-          }
-          handlePomoComplete();
-        } else if (state === TIMER_STATES.SBREAK || state === TIMER_STATES.LBREAK) {
-          if (notificationsEnabled) {
-            audioNotifications.break.play().catch(e => console.log('Sound play prevented:', e));
-          }
-          handleBreakComplete();
-        }
-        return;
-      }
+
+    if (syncRunningTimer()) {
+      finalizeElapsedTimer();
+      return;
     }
     
     // Use requestAnimationFrame for smoother timer
@@ -409,7 +457,8 @@ function startTimer(duration, message, animation) {
   
   // Start the timer loop
   started = true;
-  lastTimestamp = Date.now();
+  lastNotificationTime = 0;
+  saveProgress();
   currentTimerID = requestAnimationFrame(timerLoop);
 
   // Begin analytics segment only on a fresh segment (not on resume)
@@ -426,6 +475,7 @@ function startTimer(duration, message, animation) {
  * Pauses the current timer
  */
 function pauseTimer() {
+  syncRunningTimer();
   start.textContent = "Resume";
   start.style.backgroundColor = "#2ecc71";
   
@@ -434,6 +484,8 @@ function pauseTimer() {
   }
   
   started = false;
+  timerEndsAtMs = null;
+  saveProgress();
 }
 
 /**
@@ -451,6 +503,7 @@ function clearTimer() {
   }
   
   started = false;
+  timerEndsAtMs = null;
   start.textContent = "Start";
   start.style.backgroundColor = "#2ecc71";
 }
@@ -461,17 +514,6 @@ function clearTimer() {
 function handlePomoComplete() {
   recordCurrentSegment({ completed: true, skipped: false });
   completedPomos++;
-  
-  // Show browser notification if supported and permitted
-  if ("Notification" in window && Notification.permission === "granted") {
-    // Use setTimeout to prevent notification blocking
-    setTimeout(() => {
-      new Notification("Pomodoro Complete!", {
-        body: "Time for a break!",
-        icon: "./assets/Logo.png"
-      });
-    }, 0);
-  }
   
   if (count < REPETITION) {
     if (count % LONG_BREAK_INTERVAL === 0) {
@@ -485,6 +527,9 @@ function handlePomoComplete() {
       pomoType.innerHTML = "Relax a little";
       countdownNumberEl.innerHTML = secondsToMinutes(SHORT_BREAK);
     }
+
+    playAlertSound(audioNotifications.pomodoro);
+    showBrowserNotification("Pomodoro Complete!", "Time for a break!");
   } else {
     completeAllPomodoros();
   }
@@ -505,6 +550,9 @@ function handleBreakComplete() {
     timeLeft = POMO_DURATION;
     pomoType.innerHTML = "Time to focus";
     countdownNumberEl.innerHTML = secondsToMinutes(POMO_DURATION);
+
+    playAlertSound(audioNotifications.break);
+    showBrowserNotification("Break Complete!", "Time to focus again.");
   } else {
     completeAllPomodoros();
   }
@@ -566,10 +614,9 @@ function completeAllPomodoros() {
   state = TIMER_STATES.FINISHED;
   countdownNumberEl.innerHTML = "00:00";
   pomoType.innerHTML = "Looks like you finished all your pomodoros, well done champ!";
-  
-  if (notificationsEnabled) {
-    audioNotifications.complete.play().catch(e => console.log('Sound play prevented:', e));
-  }
+
+  playAlertSound(audioNotifications.complete);
+  showBrowserNotification("Session Complete!", "You finished all your pomodoros.");
   
   // Calculate session duration only if we have a valid start time
   if (sessionStartTime) {
@@ -692,6 +739,7 @@ function resetEverything() {
   skip.disabled = false;
   state = TIMER_STATES.POMO;
   timeLeft = POMO_DURATION;
+  timerEndsAtMs = null;
   clearProgress();
 }
 
@@ -719,6 +767,8 @@ function saveProgress() {
     state,
     timeLeft,
     completedPomos,
+    started,
+    timerEndsAtMs,
     sessionStartTime: sessionStartTime ? sessionStartTime.toISOString() : null,
     lastUpdated: new Date().toISOString()
   };
@@ -755,24 +805,29 @@ function recoverProgress() {
     state = progress.state;
     timeLeft = progress.timeLeft;
     completedPomos = progress.completedPomos;
+    started = !!progress.started;
+    timerEndsAtMs = typeof progress.timerEndsAtMs === 'number' ? progress.timerEndsAtMs : null;
     sessionStartTime = progress.sessionStartTime ? new Date(progress.sessionStartTime) : null;
     
     // Update UI based on recovered state
     countDisplay.innerHTML = `${count} out of ${REPETITION}`;
-    
-    switch (state) {
-      case TIMER_STATES.POMO:
-        pomoType.innerHTML = "Time to focus";
-        break;
-      case TIMER_STATES.SBREAK:
-        pomoType.innerHTML = "Relax a little";
-        break;
-      case TIMER_STATES.LBREAK:
-        pomoType.innerHTML = "What about a fresh breeze?";
-        break;
+
+    pomoType.innerHTML = getStateMessage(state);
+
+    if (started && timerEndsAtMs) {
+      if (timerEndsAtMs <= Date.now()) {
+        finalizeElapsedTimer();
+        return true;
+      }
+
+      timeLeft = Math.max(1, Math.ceil((timerEndsAtMs - Date.now()) / 1000));
+      startTimer(timeLeft, getStateMessage(state), getAnimationForState(state));
+      return true;
     }
-    
-    countdownNumberEl.innerHTML = secondsToMinutes(timeLeft);
+
+    started = false;
+    timerEndsAtMs = null;
+    updateCountdownDisplay();
     return true;
     
   } catch (e) {
@@ -839,6 +894,16 @@ if ("Notification" in window) {
 // Try to recover progress when page loads
 window.addEventListener('DOMContentLoaded', () => {
   recoverProgress();
+});
+
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) {
+    reconcileRecoveredTimer();
+  }
+});
+
+window.addEventListener('focus', () => {
+  reconcileRecoveredTimer();
 });
 
 // Clean up resources when page unloads to prevent memory leaks
