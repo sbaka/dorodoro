@@ -94,6 +94,57 @@ let completedPomos = 0;
 let sessionStartTime = null;
 let lastNotificationTime = 0; // Prevent notification spam
 
+// Per-segment analytics tracking (pomo / sbreak / lbreak)
+let segmentStartMs = null;
+let segmentPlannedSec = 0;
+let segmentType = "pomo";
+
+function typeForState(s) {
+  if (s === TIMER_STATES.POMO) return "pomo";
+  if (s === TIMER_STATES.SBREAK) return "sbreak";
+  if (s === TIMER_STATES.LBREAK) return "lbreak";
+  return "pomo";
+}
+
+function currentSubject() {
+  try {
+    const el = document.getElementById("subject-input");
+    if (el && typeof el.value === "string") return el.value.trim();
+    return (localStorage.getItem("currentSubject") || "").trim();
+  } catch (_) {
+    return "";
+  }
+}
+
+function beginSegment() {
+  segmentStartMs = Date.now();
+  segmentType = typeForState(state);
+  segmentPlannedSec = timeLeft;
+}
+
+function recordCurrentSegment({ completed, skipped }) {
+  if (!segmentStartMs || !window.Analytics) {
+    segmentStartMs = null;
+    return;
+  }
+  const endedAt = Date.now();
+  const actualSec = Math.max(
+    0,
+    Math.min(segmentPlannedSec, Math.round((endedAt - segmentStartMs) / 1000))
+  );
+  window.Analytics.recordSession({
+    startedAt: segmentStartMs,
+    endedAt,
+    plannedSec: segmentPlannedSec,
+    actualSec: completed ? segmentPlannedSec : actualSec,
+    type: segmentType,
+    completed: !!completed,
+    skipped: !!skipped,
+    subject: segmentType === "pomo" ? currentSubject() : null,
+  });
+  segmentStartMs = null;
+}
+
 // Audio notifications - lazy load when needed
 const audioNotifications = {
   _pomodoro: null,
@@ -198,6 +249,21 @@ function setupNotificationToggle() {
 }
 
 setupNotificationToggle();
+
+// Persist the optional subject across reloads
+(function setupSubjectPersistence() {
+  const el = document.getElementById("subject-input");
+  if (!el) return;
+  try {
+    const saved = localStorage.getItem("currentSubject");
+    if (saved) el.value = saved;
+  } catch (_) {}
+  el.addEventListener("input", () => {
+    try {
+      localStorage.setItem("currentSubject", el.value.trim());
+    } catch (_) {}
+  });
+})();
 
 /**
  * Start button click handler - Manages all timer states
@@ -345,7 +411,12 @@ function startTimer(duration, message, animation) {
   started = true;
   lastTimestamp = Date.now();
   currentTimerID = requestAnimationFrame(timerLoop);
-  
+
+  // Begin analytics segment only on a fresh segment (not on resume)
+  if (!segmentStartMs) {
+    beginSegment();
+  }
+
   // Update button appearance
   start.textContent = "Pause";
   start.style.backgroundColor = "#D92828";
@@ -388,6 +459,7 @@ function clearTimer() {
  * Handles what happens when a Pomodoro timer completes
  */
 function handlePomoComplete() {
+  recordCurrentSegment({ completed: true, skipped: false });
   completedPomos++;
   
   // Show browser notification if supported and permitted
@@ -425,6 +497,7 @@ function handlePomoComplete() {
  * Handles what happens when a break timer completes
  */
 function handleBreakComplete() {
+  recordCurrentSegment({ completed: true, skipped: false });
   if (count < REPETITION) {
     count++;
     countDisplay.innerHTML = `${count} out of ${REPETITION}`;
@@ -444,6 +517,7 @@ function handleBreakComplete() {
  * Handles skipping a Pomodoro timer
  */
 function handlePomoSkip() {
+  recordCurrentSegment({ completed: false, skipped: true });
   if (count < REPETITION) {
     if (count % LONG_BREAK_INTERVAL === 0) {
       state = TIMER_STATES.LBREAK;
@@ -468,6 +542,7 @@ function handlePomoSkip() {
  * Handles skipping a break timer
  */
 function handleBreakSkip() {
+  recordCurrentSegment({ completed: false, skipped: true });
   if (count < REPETITION) {
     count++;
     countDisplay.innerHTML = `${count} out of ${REPETITION}`;
@@ -768,6 +843,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // Clean up resources when page unloads to prevent memory leaks
 window.addEventListener('beforeunload', () => {
+  // Flush partial segment to analytics if a timer is actively running
+  if (started && segmentStartMs) {
+    recordCurrentSegment({ completed: false, skipped: false });
+  }
+
   // Clear animations
   if (currentAnimation) {
     currentAnimation.pause();

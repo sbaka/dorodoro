@@ -83,19 +83,32 @@ header {
 }
 
 #header-right > button {
-  padding: 8px 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1rem;
   min-height: 44px;
+  border: 1px solid rgba(67, 129, 168, 0.2);
+  border-radius: 999px;
+  background-color: rgba(255, 255, 255, 0.56);
+  color: #4381a8;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1;
+  white-space: nowrap;
   transition: all 0.3s ease;
-  border-radius: 5px;
 }
 
 #header-right > button:hover {
-  background-color: rgba(67, 129, 168, 0.1);
+  background-color: rgba(67, 129, 168, 0.12);
+  border-color: rgba(67, 129, 168, 0.32);
 }
 
 #profil {
   position: relative;
   cursor: pointer;
+  display: flex;
+  align-items: center;
   transition: all 0.3s ease;
 }
 #profil .circle {
@@ -116,9 +129,9 @@ header {
 .circle {
   border-radius: 100%;
   background-color: #4381a8;
-  width: clamp(44px, 12vw, 70px);
-  height: clamp(44px, 12vw, 70px);
-  font-size: clamp(1.25rem, 7vw, 2.8125rem);
+  width: clamp(44px, 4vw, 56px);
+  height: clamp(44px, 4vw, 56px);
+  font-size: clamp(1.1rem, 2vw, 1.65rem);
   color: #ffffff;
   display: flex;
   font-family: "Bubblegum Sans" , sans-serif;
@@ -131,9 +144,9 @@ header {
   position: absolute;
   z-index: 1;
   right: 0;
-  top: 95%;
+  top: calc(100% + 0.6rem);
   width: min(220px, calc(100vw - 2rem));
-  height: 100px;
+  min-height: 100px;
   /* display */
   display: flex;
   flex-direction: column;
@@ -158,15 +171,6 @@ header {
   height: 50%;
   cursor: pointer;
   font-size: 20px;
-}
-
-
-header>div>button {
-  background-color: transparent;
-  color: #4381a8;
-  font-weight: 400;
-  font-size: 30px;
-  border: none;
 }
 
 /* --------------------------------------Body-------------------------------------- */

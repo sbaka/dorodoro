@@ -133,6 +133,21 @@
             </div>
             <p class="setting-description">How many short breaks before a long break</p>
           </div>
+
+          <div class="settingItem">
+            <label for="dailyGoal">Daily Pomodoro Goal</label>
+            <div class="range-container">
+              <span class="range-value-min">1</span>
+              <div class="range">
+                <input type="range" name="dailyGoal" id="dailyGoal" min="1" value="4" max="16" aria-valuemin="1"
+                  aria-valuemax="16" oninput="{ this.nextElementSibling.value = this.value + ' pomos'}" />
+                <input type="text" class="range-input" name="daily_goal" disabled="disabled"
+                  aria-label="Selected daily pomodoro goal">
+              </div>
+              <span class="range-value-max">16</span>
+            </div>
+            <p class="setting-description">Target number of completed pomodoros per day (shown on your dashboard)</p>
+          </div>
         </div>
 
         <div class="settings-actions">

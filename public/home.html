@@ -12,6 +12,7 @@
     <title>DoroDoro - Pomodoro Study Timer</title>
     <link rel="stylesheet" href="./styles/style.css" />
     <link rel="stylesheet" href="./styles/index.css" />
+    <link rel="stylesheet" href="./styles/dashboard.css" />
     <!-- google fonts edit icon -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -45,104 +46,156 @@
         </div>
     </header>
     <section class="home-page">
-        <div class="home-shell">
-            <div class="hero-panel">
-                <div class="ContentSection">
-                    <p class="eyebrow">Study with a rhythm that keeps you moving</p>
-                    <div class="textSection">
-                        <h1>Pomodoro turns big tasks into one focused session at a time.</h1>
-                        <p>
-                            Work for a short block, step away for a real break, then come
-                            back before your energy drops. DoroDoro gives you a simple place
-                            to keep that rhythm going.
-                        </p>
-                    </div>
-                    <div class="hero-actions">
-                        <button id="start_btn" onclick="goStart()">Start Session</button>
-                        <a href="#pomodoro-guide" class="secondary-link">See how it works</a>
-                    </div>
-                    <div class="hero-highlights" aria-label="Pomodoro quick facts">
-                        <div class="highlight-card">
-                            <span class="highlight-value">25 min</span>
-                            <span class="highlight-label">Focus on one task</span>
-                        </div>
-                        <div class="highlight-card">
-                            <span class="highlight-value">5 min</span>
-                            <span class="highlight-label">Reset with a short break</span>
-                        </div>
-                        <div class="highlight-card">
-                            <span class="highlight-value">4 rounds</span>
-                            <span class="highlight-label">Then take a longer pause</span>
-                        </div>
-                    </div>
+        <div class="dashboard-shell" id="user-dashboard" hidden>
+            <div class="dash-greeting">
+                <div>
+                    <p class="dash-eyebrow">Your focus dashboard</p>
+                    <h1 id="dash-hello">Welcome back</h1>
+                    <p class="dash-subtitle" id="dash-date"></p>
                 </div>
-                <div class="happyImg hero-visual">
-                    <div class="hero-mascot-card">
-                        <img src="./assets/Strong_pepper.png" alt="DoroDoro pepper mascot" />
-                    </div>
-                    <div class="hero-note hero-note-top">
-                        <strong>Less burnout</strong>
-                        <span>Breaks stop long study sessions from turning into low-quality time.</span>
-                    </div>
-                    <div class="hero-note hero-note-bottom">
-                        <strong>Clearer progress</strong>
-                        <span>One session is small enough to start and easy to finish.</span>
-                    </div>
-                </div>
+                <button class="dash-cta" onclick="goStart()" type="button">
+                    <span class="material-symbols-outlined">play_arrow</span>
+                    Start session
+                </button>
             </div>
-            <div class="info-grid" id="pomodoro-guide">
-                <article class="info-card intro-card">
-                    <p class="card-label">What is the Pomodoro technique?</p>
-                    <h2>A study method built around focused sprints and planned breaks.</h2>
-                    <p>
-                        You pick one task, set a timer, work until it rings, then take a short
-                        break. After a few rounds, you take a longer one. That pattern helps you
-                        stay present instead of trying to push through hours without stopping.
-                    </p>
-                </article>
-                <article class="info-card">
-                    <p class="card-label">Why it helps</p>
-                    <h3>It lowers the pressure to start.</h3>
-                    <p>
-                        A single 25 minute block feels manageable. That makes it easier to begin
-                        reading, writing, revising, or solving problems even when the task feels heavy.
-                    </p>
-                </article>
-                <article class="info-card">
-                    <p class="card-label">What changes</p>
-                    <h3>You keep your attention longer.</h3>
-                    <p>
-                        Short breaks give your brain a reset before your focus drops too far. Over time,
-                        that usually means better concentration and less drift between tabs, notes, and distractions.
-                    </p>
-                </article>
-                <article class="info-card wide-card">
-                    <p class="card-label">A simple way to use it</p>
-                    <div class="steps-list" aria-label="How to use the Pomodoro method">
-                        <div class="step-item">
-                            <span class="step-number">1</span>
-                            <div>
-                                <h3>Choose one goal</h3>
-                                <p>Write a clear target for the session, like finishing one chapter or one exercise set.</p>
-                            </div>
-                        </div>
-                        <div class="step-item">
-                            <span class="step-number">2</span>
-                            <div>
-                                <h3>Work until the timer ends</h3>
-                                <p>Keep the task narrow and avoid switching context unless it is necessary.</p>
-                            </div>
-                        </div>
-                        <div class="step-item">
-                            <span class="step-number">3</span>
-                            <div>
-                                <h3>Take the break seriously</h3>
-                                <p>Stand up, stretch, drink water, then come back for the next round with fresh attention.</p>
-                            </div>
+
+            <section class="dash-empty-hero" id="dash-empty-hero" hidden>
+                <div class="dash-empty-visual" aria-hidden="true">
+                    <img src="./assets/Strong_pepper.png" alt="" />
+                </div>
+                <div class="dash-empty-text">
+                    <p class="dash-eyebrow">No data yet</p>
+                    <h2>Let's log your first pomodoro.</h2>
+                    <p>Once you finish a focus session, your stats, streaks, and weekly chart will start filling in here.</p>
+                    <ul class="dash-empty-list">
+                        <li><span class="material-symbols-outlined">timer</span> Pick one task and a 25-minute block</li>
+                        <li><span class="material-symbols-outlined">coffee</span> Take the break when the timer rings</li>
+                        <li><span class="material-symbols-outlined">insights</span> Come back here to see your progress</li>
+                    </ul>
+                    <button class="dash-cta" onclick="goStart()" type="button">
+                        <span class="material-symbols-outlined">play_arrow</span>
+                        Start your first session
+                    </button>
+                </div>
+            </section>
+
+            <div class="kpi-grid" id="kpi-grid">
+                <article class="kpi-card kpi-goal">
+                    <div class="kpi-ring" aria-hidden="true">
+                        <svg viewBox="0 0 120 120">
+                            <circle class="kpi-ring-track" cx="60" cy="60" r="52" />
+                            <circle class="kpi-ring-progress" id="goal-ring" cx="60" cy="60" r="52" />
+                        </svg>
+                        <div class="kpi-ring-label">
+                            <span id="goal-count">0</span>
+                            <small>of <span id="goal-target">4</span></small>
                         </div>
                     </div>
+                    <div class="kpi-body">
+                        <p class="kpi-label">Today's goal</p>
+                        <h3 id="goal-headline">0 / 4 pomodoros</h3>
+                        <p class="kpi-sub" id="goal-sub">Start your first session of the day.</p>
+                    </div>
+                </article>
+
+                <article class="kpi-card">
+                    <p class="kpi-label">Today focus time</p>
+                    <h2 class="kpi-value" id="today-focus">0m</h2>
+                    <p class="kpi-sub" id="today-pomos-sub">0 pomodoros completed</p>
+                </article>
+
+                <article class="kpi-card">
+                    <p class="kpi-label">This week</p>
+                    <h2 class="kpi-value" id="week-focus">0m</h2>
+                    <p class="kpi-sub" id="week-pomos-sub">0 pomodoros this week</p>
+                </article>
+
+                <article class="kpi-card kpi-streak">
+                    <p class="kpi-label">Current streak</p>
+                    <h2 class="kpi-value">
+                        <span id="streak-flame">🔥</span>
+                        <span id="current-streak">0</span>
+                        <small>days</small>
+                    </h2>
+                    <p class="kpi-sub">Longest: <span id="longest-streak">0</span> days</p>
                 </article>
             </div>
+
+            <div class="dash-columns" id="dash-columns">
+                <section class="dash-chart-card">
+                    <header class="dash-card-header">
+                        <h3>Focus time, last 7 days</h3>
+                        <p>Minutes spent in completed pomodoros per day.</p>
+                    </header>
+                    <div class="chart-wrap" id="chart-wrap">
+                        <canvas id="weekly-chart" aria-label="Focus minutes per day chart"></canvas>
+                        <div class="chart-empty" id="chart-empty" hidden>
+                            <span class="material-symbols-outlined">bar_chart</span>
+                            <p>No focus time yet this week.</p>
+                            <small>Complete a pomodoro to start the chart.</small>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="dash-stats-card">
+                    <header class="dash-card-header">
+                        <h3>At a glance</h3>
+                    </header>
+                    <ul class="mini-stats">
+                        <li>
+                            <span class="mini-label">Avg session</span>
+                            <span class="mini-value" id="avg-session">—</span>
+                        </li>
+                        <li>
+                            <span class="mini-label">Completion rate</span>
+                            <span class="mini-value" id="completion-rate">—</span>
+                        </li>
+                        <li>
+                            <span class="mini-label">Best focus hour</span>
+                            <span class="mini-value" id="best-hour">—</span>
+                        </li>
+                        <li>
+                            <span class="mini-label">All-time focus</span>
+                            <span class="mini-value" id="all-time-focus">0m</span>
+                        </li>
+                        <li>
+                            <span class="mini-label">All-time pomos</span>
+                            <span class="mini-value" id="all-time-pomos">0</span>
+                        </li>
+                    </ul>
+                </section>
+            </div>
+
+            <section class="dash-heatmap-card" id="dash-heatmap-card">
+                <header class="dash-card-header">
+                    <h3>When you focus best</h3>
+                    <p>Completed pomodoros by hour of day, last 30 days.</p>
+                </header>
+                <div class="heatmap" id="hour-heatmap" aria-label="Focus by hour of day"></div>
+                <div class="heatmap-empty" id="heatmap-empty" hidden>
+                    <span class="material-symbols-outlined">schedule</span>
+                    <p>Your peak focus hours will appear once you complete a few pomodoros.</p>
+                </div>
+                <div class="heatmap-legend" id="heatmap-legend" aria-hidden="true">
+                    <span>Less</span>
+                    <span class="legend-cell l0"></span>
+                    <span class="legend-cell l1"></span>
+                    <span class="legend-cell l2"></span>
+                    <span class="legend-cell l3"></span>
+                    <span class="legend-cell l4"></span>
+                    <span>More</span>
+                </div>
+            </section>
+
+            <section class="dash-recent-card">
+                <header class="dash-card-header">
+                    <h3>Recent sessions</h3>
+                    <p>Your last 10 timed blocks.</p>
+                </header>
+                <ul class="recent-list" id="recent-sessions">
+                    <li class="recent-empty">No sessions yet — hit <strong>Start session</strong> to log your first pomodoro.</li>
+                </ul>
+            </section>
         </div>
         <div class="logout-popup" id="logout-popup">
             <h1>Are you sure you want to log out ?</h1>
@@ -195,5 +248,27 @@
 </script>
 <script src="./scripts/redirect.js"></script>
 <script src="./scripts/dbAccess.js"></script>
+<script src="./scripts/analytics.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="./scripts/dashboard.js"></script>
+<script>
+    // Gate guest hero vs. signed-in dashboard
+    (function () {
+        const guest = document.getElementById("guest-home");
+        const dash = document.getElementById("user-dashboard");
+        firebase.auth().onAuthStateChanged(function (user) {
+            if (user) {
+                if (guest) guest.hidden = true;
+                if (dash) dash.hidden = false;
+                if (window.Dashboard && typeof window.Dashboard.init === "function") {
+                    window.Dashboard.init(user);
+                }
+            } else {
+                if (dash) dash.hidden = true;
+                if (guest) guest.hidden = false;
+            }
+        });
+    })();
+</script>
 
 </html> 

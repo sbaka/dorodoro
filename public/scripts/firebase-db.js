@@ -5,6 +5,7 @@ const sBrDur = document.getElementById("sBrDur");
 const brDur = document.getElementById("brDur");
 const noPomo = document.getElementById("noPomo");
 const lBrInter = document.getElementById("lBrInter");
+const dailyGoal = document.getElementById("dailyGoal");
 
 // Default settings to use if no saved settings exist
 const DEFAULT_SETTINGS = {
@@ -12,7 +13,8 @@ const DEFAULT_SETTINGS = {
     "Short Break Duration": "5",
     "Long Break Duration": "20",
     "Number Of Pomos": "4", 
-    "Long Break Interval": "2"
+    "Long Break Interval": "2",
+    "Daily Goal": "4"
 };
 
 // Add loading indicator in settings page
@@ -118,7 +120,8 @@ function setupSaveHandler(userId) {
             "Short Break Duration": sBrDur.value,
             "Long Break Duration": brDur.value,
             "Number Of Pomos": noPomo.value,
-            "Long Break Interval": lBrInter.value
+            "Long Break Interval": lBrInter.value,
+            "Daily Goal": dailyGoal ? dailyGoal.value : "4"
         };
         
         // Save to database
@@ -168,6 +171,15 @@ function setParams(userPreference) {
         // Long Break Interval
         lBrInter.value = settings["Long Break Interval"];
         lBrInter.nextElementSibling.value = settings["Long Break Interval"] + " SBr";
+
+        // Daily Goal (new field - may be missing on older accounts)
+        if (dailyGoal) {
+            const goal = settings["Daily Goal"] || DEFAULT_SETTINGS["Daily Goal"];
+            dailyGoal.value = goal;
+            if (dailyGoal.nextElementSibling) {
+                dailyGoal.nextElementSibling.value = goal + " pomos";
+            }
+        }
     } catch (error) {
         console.error("Error setting parameters:", error);
         // If there's an error, try again with default settings

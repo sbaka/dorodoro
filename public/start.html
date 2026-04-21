@@ -46,41 +46,65 @@
   
   <section class="timer-container">
     <div class="illustration">
-      <h1>Focus Time</h1>
-      <img src="./assets/Strong_pepper.png" alt="Strong pepper illustration" />
+      <div class="illustration-card">
+        <span class="illustration-chip">Pomodoro</span>
+        <h1>Focus Time</h1>
+        <p class="illustration-tagline">Small sprints. Big wins.</p>
+        <img src="./assets/Strong_pepper.png" alt="Strong pepper illustration" />
+      </div>
     </div>
-    
+
     <div class="timer-wrapper">
-      <div id="timer-display">
-        <div id="count" aria-live="polite">1 out of 4</div>
-        <div id="pomo-type" aria-live="polite">Time to focus</div>
-      </div>
-      
-      <div id="countdown" aria-live="assertive">
-        <div id="timer-circle">
-          <svg>
-            <circle id="ring" r="150" cx="160" cy="160" fill="transparent" stroke="#4381A8" stroke-width="15"
-              stroke-linecap="round" stroke-dasharray="940" />
-          </svg>
-          <div id="countdown-number">25:00</div>
+      <div class="timer-card">
+        <div class="subject-field">
+          <label for="subject-input" class="subject-label">What are you working on? <span class="subject-optional">(optional)</span></label>
+          <input
+            type="text"
+            id="subject-input"
+            placeholder="e.g. Calculus chapter 4, essay draft, flashcards"
+            maxlength="60"
+            autocomplete="off"
+          />
         </div>
-      </div>
-      
-      <div class="controls">
-        <button id="restart" class="circle-button" aria-label="Restart timer" disabled>
-          <span class="material-symbols-outlined">replay</span>
-        </button>
-        <button id="start" class="start-button" aria-label="Start timer">Start</button>
-        <button id="skip" class="circle-button" aria-label="Skip to next session">
-          <span class="material-symbols-outlined">skip_next</span>
-        </button>
-      </div>
-      
-      <div class="timer-actions">
-        <button id="settigns" onclick="{goSettingsPage()}" class="secondary-button">
-          <span class="material-symbols-outlined">settings</span>
-          Settings
-        </button>
+
+        <div id="timer-display">
+          <div id="pomo-type" aria-live="polite">Time to focus</div>
+          <div id="count" aria-live="polite">1 out of 4</div>
+          <div class="session-dots" id="session-dots" aria-hidden="true">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+        </div>
+
+        <div id="countdown" aria-live="assertive">
+          <div id="timer-circle">
+            <svg>
+              <circle class="ring-track" r="150" cx="160" cy="160" fill="transparent" stroke-width="15" />
+              <circle id="ring" r="150" cx="160" cy="160" fill="transparent" stroke="#4381A8" stroke-width="15"
+                stroke-linecap="round" stroke-dasharray="940" />
+            </svg>
+            <div id="countdown-number">25:00</div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <button id="restart" class="circle-button" aria-label="Restart timer" disabled>
+            <span class="material-symbols-outlined">replay</span>
+          </button>
+          <button id="start" class="start-button" aria-label="Start timer">Start</button>
+          <button id="skip" class="circle-button" aria-label="Skip to next session">
+            <span class="material-symbols-outlined">skip_next</span>
+          </button>
+        </div>
+
+        <div class="timer-actions">
+          <button id="settigns" onclick="{goSettingsPage()}" class="secondary-button">
+            <span class="material-symbols-outlined">settings</span>
+            Settings
+          </button>
+        </div>
       </div>
     </div>
   </section>
@@ -140,6 +164,7 @@
   <script type="text/javascript" src="./scripts/navigation.js"></script>
   <script type="text/javascript" src="./scripts/popups.js"></script>
   <script type="text/javascript" src="./scripts/redirect.js"></script>
+  <script type="text/javascript" src="./scripts/analytics.js"></script>
   <script type="text/javascript" src="./scripts/timer.js"></script>
 </body>
 </html>
