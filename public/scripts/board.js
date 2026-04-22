@@ -8,18 +8,24 @@
   const EMPTY_DELTA = { ops: [{ insert: "\n" }] };
   const boardColumnsEl = document.getElementById("focus-board-columns");
   const boardEmptyEl = document.getElementById("focus-board-empty");
+  const focusLayoutEl = document.querySelector(".focus-layout");
   const focusSidePanelEl = document.getElementById("focus-side-panel");
   const focusBoardEl = document.getElementById("focus-board");
   const focusOverviewEl = document.getElementById("focus-overview-card");
+  const timerWrapperEl = document.getElementById("timer-wrapper");
   const addColumnButton = document.getElementById("add-column-button");
   const emptyAddColumnButton = document.getElementById("empty-add-column-button");
-  const toggleWorkspaceButton = document.getElementById("toggle-workspace-button");
+  const workspaceToggleButtons = Array.from(document.querySelectorAll("[data-workspace-toggle]"));
+  const mobilePanelSwitcherEl = document.getElementById("mobile-panel-switcher");
   const dialogEl = document.getElementById("board-column-dialog");
   const dialogForm = document.getElementById("board-column-form");
   const dialogTitleInput = document.getElementById("board-column-title");
   const dialogTypeInput = document.getElementById("board-column-type");
   const dialogCancelButton = document.getElementById("board-column-cancel");
   const overlayEl = document.getElementById("overlay");
+  const mobileViewButtons = mobilePanelSwitcherEl
+    ? Array.from(mobilePanelSwitcherEl.querySelectorAll(".mobile-panel-button"))
+    : [];
 
   if (!boardColumnsEl || !boardEmptyEl || !dialogEl || !dialogForm || !dialogTitleInput || !dialogTypeInput) {
     return;
@@ -39,6 +45,7 @@
     uiState = readCachedUiState();
     syncUiState();
     applyWorkspaceMode();
+    applyMobileView();
     renderBoard();
     bindEvents();
     attachAuthSync();
@@ -53,8 +60,12 @@
       emptyAddColumnButton.addEventListener("click", openDialog);
     }
 
-    if (toggleWorkspaceButton) {
-      toggleWorkspaceButton.addEventListener("click", toggleWorkspaceMode);
+    workspaceToggleButtons.forEach((button) => {
+      button.addEventListener("click", toggleWorkspaceMode);
+    });
+
+    if (mobilePanelSwitcherEl) {
+      mobilePanelSwitcherEl.addEventListener("click", handleMobilePanelSwitch);
     }
 
     dialogForm.addEventListener("submit", handleCreateColumn);
@@ -77,6 +88,8 @@
     boardColumnsEl.addEventListener("submit", handleBoardSubmit);
     boardColumnsEl.addEventListener("input", handleBoardInput);
     boardColumnsEl.addEventListener("change", handleBoardChange);
+    boardColumnsEl.addEventListener("keydown", handleBoardKeydown);
+    boardColumnsEl.addEventListener("focusout", handleBoardFocusOut);
 
     window.addEventListener("storage", (event) => {
       if (event.key !== CACHE_KEY || !event.newValue) {
@@ -101,6 +114,7 @@
         uiState = normalizeUiState(JSON.parse(event.newValue));
         syncUiState();
         applyWorkspaceMode();
+        applyMobileView();
         renderBoard();
       } catch (error) {
         console.warn("board: failed to parse UI state update", error);
@@ -160,6 +174,7 @@
   function createDefaultUiState() {
     return {
       activeColumnId: "",
+      mobileView: "workspace",
       workspaceHidden: false,
     };
   }
@@ -215,7 +230,6 @@
       id: typeof base.id === "string" && base.id ? base.id : createId("todo"),
       text: typeof base.text === "string" ? base.text.slice(0, 160) : "",
       done: !!base.done,
-      dueDate: typeof base.dueDate === "string" ? base.dueDate : "",
       priority: normalizePriority(base.priority),
       order: Number.isFinite(base.order) ? Number(base.order) : index || 0,
     };
@@ -255,6 +269,7 @@
     const base = raw && typeof raw === "object" ? raw : {};
     return {
       activeColumnId: typeof base.activeColumnId === "string" ? base.activeColumnId : "",
+      mobileView: base.mobileView === "timer" ? "timer" : "workspace",
       workspaceHidden: !!base.workspaceHidden,
     };
   }
@@ -428,6 +443,11 @@
       return;
     }
 
+    if (action === "edit-column-title") {
+      beginColumnTitleEdit(columnId);
+      return;
+    }
+
     if (action === "delete-todo") {
       deleteTodo(columnId, itemId);
       return;
@@ -461,20 +481,6 @@
   }
 
   function handleBoardInput(event) {
-    const titleInput = event.target.closest(".column-title-input");
-    if (titleInput) {
-      const column = findColumn(titleInput.getAttribute("data-column-id"));
-      if (!column) {
-        return;
-      }
-      column.title = sanitizeTitle(titleInput.value, column.type);
-      column.updatedAt = Date.now();
-      syncTabTitle(column.id, column.title);
-      touchBoard();
-      persistBoard();
-      return;
-    }
-
     const todoTextInput = event.target.closest(".todo-item-text");
     if (todoTextInput) {
       const item = findTodo(todoTextInput.getAttribute("data-column-id"), todoTextInput.getAttribute("data-item-id"));
@@ -485,6 +491,38 @@
       touchBoard();
       persistBoard();
     }
+  }
+
+  function handleBoardKeydown(event) {
+    const titleInput = event.target.closest(".column-title-input");
+    if (!titleInput) {
+      return;
+    }
+
+    if (event.key === "Enter") {
+      event.preventDefault();
+      finishColumnTitleEdit(titleInput);
+      return;
+    }
+
+    if (event.key === "Escape") {
+      event.preventDefault();
+      finishColumnTitleEdit(titleInput, { cancel: true });
+    }
+  }
+
+  function handleBoardFocusOut(event) {
+    const titleInput = event.target.closest(".column-title-input");
+    if (!titleInput) {
+      return;
+    }
+
+    const panel = titleInput.closest(".board-column");
+    if (!panel || !panel.classList.contains("is-editing-title")) {
+      return;
+    }
+
+    finishColumnTitleEdit(titleInput);
   }
 
   function handleBoardChange(event) {
@@ -504,18 +542,6 @@
       return;
     }
 
-    const dateInput = event.target.closest(".todo-item-date");
-    if (dateInput) {
-      const item = findTodo(dateInput.getAttribute("data-column-id"), dateInput.getAttribute("data-item-id"));
-      if (!item) {
-        return;
-      }
-      item.dueDate = dateInput.value;
-      touchBoard();
-      persistBoard();
-      return;
-    }
-
     const priorityInput = event.target.closest(".todo-item-priority");
     if (priorityInput) {
       const item = findTodo(priorityInput.getAttribute("data-column-id"), priorityInput.getAttribute("data-item-id"));
@@ -523,6 +549,13 @@
         return;
       }
       item.priority = normalizePriority(priorityInput.value);
+      priorityInput.value = item.priority;
+
+      const todoRow = priorityInput.closest(".todo-item");
+      if (todoRow) {
+        syncTodoPriorityClass(todoRow, item.priority);
+      }
+
       touchBoard();
       persistBoard();
     }
@@ -590,7 +623,6 @@
       id: createId("todo"),
       text: text.slice(0, 160),
       done: false,
-      dueDate: "",
       priority: "medium",
       order: column.items.length,
     });
@@ -652,6 +684,86 @@
       return null;
     }
     return column.items.find((item) => item.id === itemId) || null;
+  }
+
+  function syncTodoPriorityClass(todoRow, priority) {
+    todoRow.classList.remove("todo-item-priority-low", "todo-item-priority-medium", "todo-item-priority-high");
+    todoRow.classList.add(`todo-item-priority-${priority}`);
+  }
+
+  function getColumnPanel(columnId) {
+    return boardColumnsEl.querySelector(`.board-column[data-column-id="${columnId}"]`);
+  }
+
+  function beginColumnTitleEdit(columnId) {
+    const column = findColumn(columnId);
+    const panel = getColumnPanel(columnId);
+    if (!column || !panel) {
+      return;
+    }
+
+    const input = panel.querySelector(".column-title-input");
+    if (!input) {
+      return;
+    }
+
+    panel.classList.add("is-editing-title");
+    input.value = column.title;
+    input.dataset.initialValue = column.title;
+
+    requestAnimationFrame(() => {
+      input.focus();
+      input.select();
+    });
+  }
+
+  function finishColumnTitleEdit(input, options = {}) {
+    const columnId = input.getAttribute("data-column-id");
+    const column = findColumn(columnId);
+    if (!column) {
+      endColumnTitleEdit(columnId);
+      return;
+    }
+
+    const initialValue = input.dataset.initialValue || column.title;
+    const nextTitle = options.cancel ? initialValue : sanitizeTitle(input.value, column.type);
+    const hasChanged = nextTitle !== column.title;
+
+    input.value = nextTitle;
+    syncColumnTitleDisplay(columnId, nextTitle);
+    syncTabTitle(columnId, nextTitle);
+
+    if (hasChanged) {
+      column.title = nextTitle;
+      column.updatedAt = Date.now();
+      touchBoard();
+      persistBoard();
+    }
+
+    endColumnTitleEdit(columnId, options.cancel);
+  }
+
+  function endColumnTitleEdit(columnId, focusDisplay = false) {
+    const panel = getColumnPanel(columnId);
+    if (!panel) {
+      return;
+    }
+
+    panel.classList.remove("is-editing-title");
+
+    const input = panel.querySelector(".column-title-input");
+    if (input) {
+      input.dataset.initialValue = "";
+    }
+
+    if (!focusDisplay) {
+      return;
+    }
+
+    const displayButton = panel.querySelector(".column-title-display");
+    if (displayButton) {
+      displayButton.focus();
+    }
   }
 
   function normalizeColumnOrder() {
@@ -727,6 +839,11 @@
     const columns = boardState.columns.slice().sort((left, right) => left.order - right.order);
     const hasActiveColumn = columns.some((column) => column.id === uiState.activeColumnId);
 
+    if (uiState.mobileView !== "timer" && uiState.mobileView !== "workspace") {
+      uiState.mobileView = "workspace";
+      cacheUiState();
+    }
+
     if (!columns.length) {
       uiState.activeColumnId = "";
       uiState.workspaceHidden = false;
@@ -741,7 +858,7 @@
   }
 
   function applyWorkspaceMode() {
-    if (!focusSidePanelEl || !focusBoardEl || !focusOverviewEl || !toggleWorkspaceButton) {
+    if (!focusSidePanelEl || !focusBoardEl || !focusOverviewEl) {
       return;
     }
 
@@ -750,16 +867,71 @@
     focusSidePanelEl.setAttribute("data-mode", isHidden ? "overview" : "workspace");
     focusBoardEl.hidden = isHidden;
     focusOverviewEl.hidden = !isHidden;
-    toggleWorkspaceButton.setAttribute("aria-pressed", String(isHidden));
-    toggleWorkspaceButton.innerHTML = isHidden
-      ? '<i class="fa-solid fa-eye button-icon" aria-hidden="true"></i> Show workspace'
-      : '<i class="fa-solid fa-eye-slash button-icon" aria-hidden="true"></i> Hide workspace';
+
+    workspaceToggleButtons.forEach((button) => {
+      button.setAttribute("aria-pressed", String(isHidden));
+      button.innerHTML = isHidden
+        ? '<i class="fa-solid fa-eye button-icon" aria-hidden="true"></i> Show workspace'
+        : '<i class="fa-solid fa-eye-slash button-icon" aria-hidden="true"></i> Hide workspace';
+    });
+  }
+
+  function applyMobileView() {
+    const mobileView = uiState.mobileView === "timer" ? "timer" : "workspace";
+
+    if (focusLayoutEl) {
+      focusLayoutEl.setAttribute("data-mobile-view", mobileView);
+    }
+
+    if (focusSidePanelEl) {
+      focusSidePanelEl.setAttribute("data-mobile-visible", String(mobileView === "workspace"));
+    }
+
+    if (timerWrapperEl) {
+      timerWrapperEl.setAttribute("data-mobile-visible", String(mobileView === "timer"));
+    }
+
+    mobileViewButtons.forEach((button) => {
+      const isActive = button.getAttribute("data-mobile-view") === mobileView;
+      button.classList.toggle("is-active", isActive);
+      button.setAttribute("aria-pressed", String(isActive));
+    });
+  }
+
+  function handleMobilePanelSwitch(event) {
+    const button = event.target.closest(".mobile-panel-button");
+    if (!button) {
+      return;
+    }
+
+    setMobileView(button.getAttribute("data-mobile-view"));
+  }
+
+  function setMobileView(nextView) {
+    const mobileView = nextView === "timer" ? "timer" : "workspace";
+    if (uiState.mobileView === mobileView) {
+      return;
+    }
+
+    uiState.mobileView = mobileView;
+    cacheUiState();
+    applyMobileView();
+  }
+
+  function isCompactViewport() {
+    return typeof window !== "undefined" && window.matchMedia("(max-width: 991px)").matches;
   }
 
   function toggleWorkspaceMode() {
     uiState.workspaceHidden = !uiState.workspaceHidden;
+
+    if (isCompactViewport()) {
+      uiState.mobileView = uiState.workspaceHidden ? "timer" : "workspace";
+    }
+
     cacheUiState();
     applyWorkspaceMode();
+    applyMobileView();
   }
 
   function renderBoard() {
@@ -816,8 +988,13 @@
     return `<article class="board-column board-column-${escapeHtml(column.type)}" id="workspace-panel-${escapeHtml(column.id)}" data-column-id="${escapeHtml(column.id)}" role="tabpanel" aria-labelledby="workspace-tab-${escapeHtml(column.id)}">
       <div class="board-column-header">
         <div class="board-column-meta">
-          <span class="column-type-badge ${escapeHtml(column.type)}">${column.type === "todos" ? "Todo tab" : "Notes tab"}</span>
-          <input class="column-title-input" type="text" data-column-id="${escapeHtml(column.id)}" value="${escapeAttribute(column.title)}" maxlength="40" aria-label="Tab title">
+          <div class="column-title-shell">
+            <button class="column-title-display" type="button" data-action="edit-column-title" data-column-id="${escapeHtml(column.id)}" aria-label="Rename tab ${escapeAttribute(column.title)}">
+              <span class="column-title-label" data-column-title-for="${escapeHtml(column.id)}">${escapeHtml(column.title)}</span>
+              <span class="column-title-edit-icon" aria-hidden="true"><i class="fa-solid fa-pen"></i></span>
+            </button>
+            <input class="column-title-input" type="text" data-column-id="${escapeHtml(column.id)}" value="${escapeAttribute(column.title)}" maxlength="40" aria-label="Tab title">
+          </div>
         </div>
         <div class="board-column-actions">
           <button class="column-icon-button" type="button" data-action="move-column-left" data-column-id="${escapeHtml(column.id)}" aria-label="Move tab left" ${index === 0 ? "disabled" : ""}>
@@ -871,38 +1048,41 @@
   function renderTodoColumn(column) {
     const items = column.items.slice().sort((left, right) => left.order - right.order);
     return `<div class="todo-column-shell">
+      <div class="todo-column-content">
+        <ul class="todo-list">
+          ${items.length ? items.map((item) => renderTodoItem(column.id, item, item.order, items.length)).join("") : '<li class="todo-empty">No tasks yet. Add one to get started.</li>'}
+        </ul>
+      </div>
       <form class="todo-add-form" data-column-id="${escapeHtml(column.id)}">
         <input class="todo-add-input" type="text" maxlength="160" placeholder="Add a task" aria-label="Add a task">
         <button class="todo-add-button" type="submit">Add</button>
       </form>
-      <ul class="todo-list">
-        ${items.length ? items.map((item, index) => renderTodoItem(column.id, item, index, items.length)).join("") : '<li class="todo-empty">No tasks yet. Add one to get started.</li>'}
-      </ul>
     </div>`;
   }
 
   function renderTodoItem(columnId, item, index, totalItems) {
-    return `<li class="todo-item ${item.done ? "is-done" : ""}">
-      <div class="todo-item-top">
-        <input class="todo-item-check" type="checkbox" data-column-id="${escapeHtml(columnId)}" data-item-id="${escapeHtml(item.id)}" ${item.done ? "checked" : ""} aria-label="Mark task complete">
-        <input class="todo-item-text" type="text" maxlength="160" data-column-id="${escapeHtml(columnId)}" data-item-id="${escapeHtml(item.id)}" value="${escapeAttribute(item.text)}" aria-label="Todo item text">
-        <div class="todo-item-controls">
-          <button class="column-icon-button" type="button" data-action="move-todo-up" data-column-id="${escapeHtml(columnId)}" data-item-id="${escapeHtml(item.id)}" aria-label="Move task up" ${index === 0 ? "disabled" : ""}>
-            <i class="fa-solid fa-arrow-up button-icon" aria-hidden="true"></i>
-          </button>
-          <button class="column-icon-button" type="button" data-action="move-todo-down" data-column-id="${escapeHtml(columnId)}" data-item-id="${escapeHtml(item.id)}" aria-label="Move task down" ${index === totalItems - 1 ? "disabled" : ""}>
-            <i class="fa-solid fa-arrow-down button-icon" aria-hidden="true"></i>
-          </button>
-          <button class="column-icon-button danger" type="button" data-action="delete-todo" data-column-id="${escapeHtml(columnId)}" data-item-id="${escapeHtml(item.id)}" aria-label="Delete task">
-            <i class="fa-solid fa-xmark button-icon" aria-hidden="true"></i>
-          </button>
+    return `<li class="todo-item todo-item-priority-${escapeHtml(item.priority)} ${item.done ? "is-done" : ""}">
+      <div class="todo-item-main">
+        <span class="todo-item-check-wrap">
+          <input class="todo-item-check" type="checkbox" data-column-id="${escapeHtml(columnId)}" data-item-id="${escapeHtml(item.id)}" ${item.done ? "checked" : ""} aria-label="Mark task complete">
+        </span>
+        <div class="todo-item-copy">
+          <input class="todo-item-text" type="text" maxlength="160" data-column-id="${escapeHtml(columnId)}" data-item-id="${escapeHtml(item.id)}" value="${escapeAttribute(item.text)}" aria-label="Todo item text">
         </div>
       </div>
-      <div class="todo-item-meta">
-        <input class="todo-item-date" type="date" data-column-id="${escapeHtml(columnId)}" data-item-id="${escapeHtml(item.id)}" value="${escapeAttribute(item.dueDate)}" aria-label="Todo due date">
-        <select class="todo-item-priority" data-column-id="${escapeHtml(columnId)}" data-item-id="${escapeHtml(item.id)}" aria-label="Todo priority">
+      <div class="todo-item-controls" role="group" aria-label="Task actions">
+        <select class="todo-item-priority" data-column-id="${escapeHtml(columnId)}" data-item-id="${escapeHtml(item.id)}" aria-label="Priority">
           ${renderPriorityOptions(item.priority)}
         </select>
+        <button class="column-icon-button" type="button" data-action="move-todo-up" data-column-id="${escapeHtml(columnId)}" data-item-id="${escapeHtml(item.id)}" aria-label="Move task up" ${index === 0 ? "disabled" : ""}>
+          <i class="fa-solid fa-arrow-up button-icon" aria-hidden="true"></i>
+        </button>
+        <button class="column-icon-button" type="button" data-action="move-todo-down" data-column-id="${escapeHtml(columnId)}" data-item-id="${escapeHtml(item.id)}" aria-label="Move task down" ${index === totalItems - 1 ? "disabled" : ""}>
+          <i class="fa-solid fa-arrow-down button-icon" aria-hidden="true"></i>
+        </button>
+        <button class="column-icon-button danger" type="button" data-action="delete-todo" data-column-id="${escapeHtml(columnId)}" data-item-id="${escapeHtml(item.id)}" aria-label="Delete task">
+          <i class="fa-solid fa-xmark button-icon" aria-hidden="true"></i>
+        </button>
       </div>
     </li>`;
   }
@@ -979,6 +1159,18 @@
     const tabTitleEl = boardColumnsEl.querySelector(`[data-tab-title-for="${columnId}"]`);
     if (tabTitleEl) {
       tabTitleEl.textContent = title;
+    }
+  }
+
+  function syncColumnTitleDisplay(columnId, title) {
+    const titleLabel = boardColumnsEl.querySelector(`[data-column-title-for="${columnId}"]`);
+    if (titleLabel) {
+      titleLabel.textContent = title;
+    }
+
+    const displayButton = boardColumnsEl.querySelector(`.column-title-display[data-column-id="${columnId}"]`);
+    if (displayButton) {
+      displayButton.setAttribute("aria-label", `Rename tab ${title}`);
     }
   }
 

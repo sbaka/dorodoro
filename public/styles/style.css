@@ -458,10 +458,10 @@ footer > div > button:hover {
 }
 input[type="text"], input[type="email"], input[type="password"] {
   background: transparent;
-  font-family: "Bubblegum Sans", sans-serif;
+   font-family: inherit;
   font-size: 1rem;
-  color: var(--primary-color);
-  text-align: center;
+   color: var(--text-dark);
+   text-align: left;
 }
 
 .dialog.show {
