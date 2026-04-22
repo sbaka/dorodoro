@@ -9,6 +9,11 @@ function buildSystemPreamble(context) {
   const parts = [];
   parts.push("You are DoroDoro's focus assistant. You help the user plan and run their current work session.");
   parts.push("Answer concisely. If asked for a plan, produce short actionable steps.");
+  parts.push("If the user explicitly asks you to create notes or todos in the workspace, you may do so by appending a hidden action payload at the very end of your reply.");
+  parts.push("When you need to create workspace items, append exactly one XML tag on its own line in this form:");
+  parts.push("<doro-action>{\"actions\":[...]}</doro-action>");
+  parts.push("Supported actions: create_note with {title, content}, and create_todo_list with {title, items:[{text, priority}]}. Priority must be low, medium, or high.");
+  parts.push("Only include the tag when the user clearly asked you to create something. Keep the normal user-facing answer outside the tag.");
   parts.push("");
   parts.push("[SESSION CONTEXT]");
   if (context.sessionTitle) parts.push(`Session title: ${context.sessionTitle}`);

@@ -10,6 +10,8 @@
 (function (global) {
   "use strict";
 
+  const ACTION_BLOCK_RE = /<doro-action>\s*[\s\S]*?<\/doro-action>/gi;
+
   // Update after `wrangler deploy`.
   const WORKER_URL = "https://dorodoro-ai.dorodoro.workers.dev";
 
@@ -31,15 +33,36 @@
 
   if (!panelEl || !fabEl || !listEl || !formEl || !inputEl) return;
 
+  listEl.addEventListener("click", handleListClick);
+
   // ---------- Panel open/close ----------
+  function emitPanelVisibilityChange() {
+    window.dispatchEvent(new CustomEvent("ai-chat:visibility-changed", {
+      detail: { open: !panelEl.hidden },
+    }));
+  }
+
   function openPanel() {
+    if (!panelEl.hidden) {
+      emitPanelVisibilityChange();
+      inputEl.focus();
+      return;
+    }
+
     panelEl.hidden = false;
     requestAnimationFrame(() => panelEl.classList.add("is-open"));
+    emitPanelVisibilityChange();
     inputEl.focus();
   }
 
   function closePanel() {
+    if (panelEl.hidden) {
+      emitPanelVisibilityChange();
+      return;
+    }
+
     panelEl.classList.remove("is-open");
+    emitPanelVisibilityChange();
     setTimeout(() => { panelEl.hidden = true; }, 220);
   }
 
@@ -51,7 +74,12 @@
 
   // ---------- Session wiring ----------
   function syncSession(sessionId) {
-    if (sessionId === currentSessionId) return;
+    if (sessionId === currentSessionId) {
+      if (currentUser && !messagesRef) {
+        attachMessagesListener();
+      }
+      return;
+    }
     currentSessionId = sessionId || "";
     messagesCache = [];
     optimisticMessages = [];
@@ -157,10 +185,14 @@
   function renderBubble(msg) {
     const role = msg.role === "assistant" ? "assistant" : "user";
     const content = role === "assistant"
-      ? renderMarkdown(msg.content || "")
+      ? renderMarkdown(stripActionMarkup(msg.content || ""))
       : escapeHtml(msg.content || "");
+    const actionLinks = role === "assistant"
+      ? renderActionLinks(msg.actionResult)
+      : "";
     return `<div class="ai-chat-bubble ai-chat-bubble-${role}" data-msg-id="${escapeAttr(msg.id || "")}">
       <div class="ai-chat-bubble-content">${content}</div>
+      ${actionLinks}
     </div>`;
   }
 
@@ -267,12 +299,16 @@
             const obj = JSON.parse(trimmed);
             if (obj.type === "delta" && obj.text) {
               streamed += obj.text;
-              streamTarget.innerHTML = renderMarkdown(streamed);
+              streamTarget.innerHTML = renderMarkdown(stripActionMarkup(streamed));
               listEl.scrollTop = listEl.scrollHeight;
             } else if (obj.type === "error") {
               setStatus(obj.message || "AI unavailable", "error");
             } else if (obj.type === "done") {
-              if (obj.quota) setStatus(formatQuota(obj.quota));
+              const actionOutcome = obj.action ? handleAiActions(obj.action) : null;
+              if (actionOutcome && actionOutcome.result && obj.messageId) {
+                persistActionResult(obj.messageId, actionOutcome.result);
+              }
+              updateStatusForDone(actionOutcome, obj.quota);
             }
           } catch (_) {}
         }
@@ -306,6 +342,119 @@
     };
   }
 
+  function handleListClick(event) {
+    const openButton = event.target.closest("[data-ai-open-column]");
+    if (!openButton) {
+      return;
+    }
+
+    const columnId = openButton.getAttribute("data-ai-open-column");
+    const board = global.FocusBoard;
+    if (!columnId || !board || typeof board.openColumnFromAssistant !== "function") {
+      return;
+    }
+
+    board.openColumnFromAssistant(columnId);
+  }
+
+  function handleAiActions(payload) {
+    const board = global.FocusBoard;
+    if (!board || !payload || !Array.isArray(payload.actions)) {
+      return null;
+    }
+
+    const notices = [];
+    const targets = [];
+    payload.actions.forEach((action) => {
+      if (!action || typeof action !== "object") {
+        return;
+      }
+
+      if (action.type === "create_note" && typeof board.createNoteFromAssistant === "function") {
+        const created = board.createNoteFromAssistant(action.title, action.content);
+        if (created) {
+          notices.push(`Created note: ${created.title}`);
+          targets.push({
+            columnId: created.id,
+            title: created.title,
+            type: created.type,
+          });
+        }
+        return;
+      }
+
+      if (action.type === "create_todo_list" && typeof board.createTodoListFromAssistant === "function") {
+        const created = board.createTodoListFromAssistant(action.title, action.items);
+        if (created) {
+          const itemCount = Array.isArray(created.items) ? created.items.length : 0;
+          notices.push(itemCount
+            ? `Created todo list: ${created.title} (${itemCount} items)`
+            : `Created todo list: ${created.title}`);
+          targets.push({
+            columnId: created.id,
+            title: created.title,
+            type: created.type,
+          });
+        }
+      }
+    });
+
+    if (!targets.length) {
+      return null;
+    }
+
+    return {
+      notices,
+      result: { targets },
+    };
+  }
+
+  async function persistActionResult(messageId, actionResult) {
+    if (!messageId || !actionResult || !currentUser || !currentSessionId) {
+      return;
+    }
+
+    try {
+      await firebase.database()
+        .ref(`users/${currentUser.uid}/sessions/${currentSessionId}/aiChat/messages/${messageId}/actionResult`)
+        .set(actionResult);
+    } catch (err) {
+      console.warn("ai-chat: failed to save action result", err);
+    }
+  }
+
+  function updateStatusForDone(actionOutcome, quota) {
+    const parts = [];
+    if (actionOutcome && Array.isArray(actionOutcome.notices) && actionOutcome.notices.length) {
+      parts.push(actionOutcome.notices.join(" · "));
+    }
+    if (quota) {
+      parts.push(formatQuota(quota));
+    }
+    setStatus(parts.join(" · "));
+  }
+
+  function renderActionLinks(actionResult) {
+    const targets = actionResult && Array.isArray(actionResult.targets)
+      ? actionResult.targets.filter((target) => target && target.columnId && target.title)
+      : [];
+    if (!targets.length) {
+      return "";
+    }
+
+    return `<div class="ai-chat-bubble-actions">
+      ${targets.map(renderActionLink).join("")}
+    </div>`;
+  }
+
+  function renderActionLink(target) {
+    const label = target.type === "todos" ? "Open todo list" : "Open note";
+    return `<button class="ai-chat-action-link" type="button" data-ai-open-column="${escapeAttr(target.columnId)}">
+      <span class="ai-chat-action-label">${escapeHtml(label)}</span>
+      <span class="ai-chat-action-title">${escapeHtml(target.title)}</span>
+    </button>`;
+  }
+
   function setStatus(text, level = "info") {
     if (!statusEl) return;
     statusEl.textContent = text || "";
@@ -325,6 +474,10 @@
       case "global_cap": return "Shared daily cap reached. Try again tomorrow.";
       default: return "Rate limited.";
     }
+  }
+
+  function stripActionMarkup(value) {
+    return String(value || "").replace(ACTION_BLOCK_RE, "").trim();
   }
 
   function renderMarkdown(value) {
@@ -451,6 +604,7 @@
   global.AIChat = {
     open: openPanel,
     close: closePanel,
+    isOpen: () => !panelEl.hidden,
     setWorkerUrl: () => {
       console.warn("ai-chat: edit WORKER_URL in ai-chat.js to configure");
     },

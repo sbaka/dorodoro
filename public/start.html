@@ -51,7 +51,7 @@
   <section class="timer-container">
     <span class="grow"></span>
     <div class="focus-layout" data-mobile-view="workspace">
-      <div class="mobile-panel-switcher" id="mobile-panel-switcher" aria-label="Switch between workspace and timer">
+      <div class="mobile-panel-switcher" id="mobile-panel-switcher" aria-label="Switch between workspace, timer, and AI assistant">
         <button class="mobile-panel-button is-active" type="button" data-mobile-view="workspace" aria-pressed="true">
           <i class="fa-solid fa-note-sticky button-icon" aria-hidden="true"></i>
           Workspace
@@ -59,6 +59,10 @@
         <button class="mobile-panel-button" type="button" data-mobile-view="timer" aria-pressed="false">
           <i class="fa-solid fa-stopwatch button-icon" aria-hidden="true"></i>
           Timer
+        </button>
+        <button class="mobile-panel-button" type="button" data-mobile-view="assistant" aria-pressed="false" aria-label="Open AI assistant">
+          <i class="fa-solid fa-wand-magic-sparkles button-icon" aria-hidden="true"></i>
+          Assistant
         </button>
       </div>
       <aside class="focus-side-panel" id="focus-side-panel" data-mode="workspace" aria-labelledby="focus-board-title">

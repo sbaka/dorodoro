@@ -49,6 +49,7 @@
   let currentUser = null;
   let syncReady = false;
   let saveTimer = null;
+  let isAssistantPanelOpen = false;
   const editors = new Map();
 
   boot();
@@ -171,6 +172,11 @@
       } catch (error) {
         console.warn("board: failed to parse UI state update", error);
       }
+    });
+
+    window.addEventListener("ai-chat:visibility-changed", (event) => {
+      isAssistantPanelOpen = !!(event && event.detail && event.detail.open);
+      applyMobileView();
     });
   }
 
@@ -445,8 +451,16 @@
   function handleCreateColumn(event) {
     event.preventDefault();
 
-    const title = sanitizeTitle(dialogTitleInput.value, dialogTypeInput.value);
-    const type = dialogTypeInput.value === "todos" ? "todos" : "notes";
+    createColumn({
+      title: dialogTitleInput.value,
+      type: dialogTypeInput.value,
+    });
+    closeDialog();
+  }
+
+  function createColumn(options) {
+    const type = options && options.type === "todos" ? "todos" : "notes";
+    const title = sanitizeTitle(options && options.title, type);
     const now = Date.now();
     const column = {
       id: createId(type === "todos" ? "todo-column" : "note-column"),
@@ -458,10 +472,10 @@
     };
 
     if (type === "notes") {
-      column.contentDelta = clone(EMPTY_DELTA);
-      column.textPreview = "";
+      column.contentDelta = normalizeDelta(options && options.contentDelta);
+      column.textPreview = extractPlainText(column.contentDelta);
     } else {
-      column.items = [];
+      column.items = normalizeSeedTodoItems(options && options.items);
     }
 
     syncEditorsIntoState();
@@ -470,9 +484,9 @@
     touchBoard();
     cacheBoard();
     cacheUiState();
-    closeDialog();
     renderBoard();
     persistBoard();
+    return clone(column);
   }
 
   function handleBoardClick(event) {
@@ -696,6 +710,22 @@
     persistBoard();
   }
 
+  function createNoteFromAssistant(title, content) {
+    return createColumn({
+      type: "notes",
+      title: title || "AI note",
+      contentDelta: textToDelta(content),
+    });
+  }
+
+  function createTodoListFromAssistant(title, items) {
+    return createColumn({
+      type: "todos",
+      title: title || "AI todo list",
+      items,
+    });
+  }
+
   function deleteTodo(columnId, itemId) {
     const column = findColumn(columnId);
     if (!column || column.type !== "todos") {
@@ -840,6 +870,45 @@
     });
   }
 
+  function normalizeSeedTodoItems(items) {
+    if (!Array.isArray(items)) {
+      return [];
+    }
+
+    return items
+      .map((item, index) => normalizeSeedTodoItem(item, index))
+      .filter(Boolean);
+  }
+
+  function normalizeSeedTodoItem(item, index) {
+    const base = item && typeof item === "object"
+      ? item
+      : { text: item };
+    const text = typeof base.text === "string" ? base.text.trim().slice(0, 160) : "";
+    if (!text) {
+      return null;
+    }
+
+    return {
+      id: createId("todo"),
+      text,
+      done: !!base.done,
+      priority: normalizePriority(base.priority),
+      order: index,
+    };
+  }
+
+  function textToDelta(value) {
+    const text = String(value || "").replace(/\r\n?/g, "\n").trim();
+    if (!text) {
+      return clone(EMPTY_DELTA);
+    }
+
+    return {
+      ops: [{ insert: text.endsWith("\n") ? text : `${text}\n` }],
+    };
+  }
+
   function touchBoard() {
     boardState.updatedAt = Date.now();
   }
@@ -952,7 +1021,10 @@
     }
 
     mobileViewButtons.forEach((button) => {
-      const isActive = button.getAttribute("data-mobile-view") === mobileView;
+      const buttonView = button.getAttribute("data-mobile-view");
+      const isActive = buttonView === "assistant"
+        ? isAssistantPanelOpen
+        : buttonView === mobileView;
       button.classList.toggle("is-active", isActive);
       button.setAttribute("aria-pressed", String(isActive));
     });
@@ -964,7 +1036,19 @@
       return;
     }
 
-    setMobileView(button.getAttribute("data-mobile-view"));
+    const nextView = button.getAttribute("data-mobile-view");
+    if (nextView === "assistant") {
+      if (global.AIChat && typeof global.AIChat.open === "function") {
+        global.AIChat.open();
+      }
+      return;
+    }
+
+    if (isAssistantPanelOpen && global.AIChat && typeof global.AIChat.close === "function") {
+      global.AIChat.close();
+    }
+
+    setMobileView(nextView);
   }
 
   function setMobileView(nextView) {
@@ -976,6 +1060,33 @@
     uiState.mobileView = mobileView;
     cacheUiState();
     applyMobileView();
+  }
+
+  function openColumnFromAssistant(columnId) {
+    const column = findColumn(columnId);
+    if (!column) {
+      return null;
+    }
+
+    uiState.workspaceHidden = false;
+    if (isCompactViewport()) {
+      uiState.mobileView = "workspace";
+    }
+    uiState.activeColumnId = columnId;
+
+    cacheUiState();
+    applyWorkspaceMode();
+    applyMobileView();
+    renderBoard();
+
+    requestAnimationFrame(() => {
+      const tabButton = boardColumnsEl.querySelector(`[data-action="activate-column"][data-column-id="${columnId}"]`);
+      if (tabButton) {
+        tabButton.focus();
+      }
+    });
+
+    return clone(column);
   }
 
   function isCompactViewport() {
@@ -1297,5 +1408,8 @@
     readCachedBoard,
     getNotesText,
     getTodos,
+    createNoteFromAssistant,
+    createTodoListFromAssistant,
+    openColumnFromAssistant,
   };
 })(window);
