@@ -192,7 +192,7 @@
       if (!currentUser) return;
 
       // Clean up any legacy v1 cache from before sessions.
-      try { localStorage.removeItem(LEGACY_CACHE_KEY); } catch (_) {}
+      try { localStorage.removeItem(LEGACY_CACHE_KEY); } catch (_) { }
 
       if (activeSessionId) loadRemoteBoard();
     });
@@ -280,11 +280,16 @@
     };
 
     if (type === "notes") {
-      const contentDelta = normalizeDelta(base.contentDelta || base.content || base.delta);
-      column.contentDelta = contentDelta;
+      const normalizedNote = normalizeNoteContent(base);
+      column.contentDelta = normalizedNote.contentDelta;
       column.textPreview = typeof base.textPreview === "string" && base.textPreview.trim()
         ? base.textPreview.trim()
-        : extractPlainText(contentDelta);
+        : normalizedNote.textPreview;
+
+      if (normalizedNote.contentMarkdown) {
+        column.contentMarkdown = normalizedNote.contentMarkdown;
+      }
+
       return column;
     }
 
@@ -308,6 +313,67 @@
       return clone(EMPTY_DELTA);
     }
     return clone(raw);
+  }
+
+  function normalizeNoteContent(base) {
+    const deltaSource = pickFirstDelta(
+      base && base.contentDelta,
+      base && base.delta,
+      base && base.content
+    );
+
+    if (deltaSource) {
+      const contentDelta = normalizeDelta(deltaSource);
+
+      if (isMarkdownishPlainTextDelta(contentDelta)) {
+        const contentMarkdown = fullPlainText(contentDelta);
+        return {
+          contentDelta: clone(EMPTY_DELTA),
+          textPreview: markdownToPlainText(contentMarkdown).slice(0, 160),
+          contentMarkdown,
+        };
+      }
+
+      return {
+        contentDelta,
+        textPreview: extractPlainText(contentDelta),
+        contentMarkdown: "",
+      };
+    }
+
+    const contentMarkdown = pickFirstString(
+      base && base.contentMarkdown,
+      base && base.content,
+      base && base.delta,
+      base && base.markdown,
+      base && base.text
+    );
+
+    return {
+      contentDelta: clone(EMPTY_DELTA),
+      textPreview: markdownToPlainText(contentMarkdown).slice(0, 160),
+      contentMarkdown,
+    };
+  }
+
+  function pickFirstDelta() {
+    for (let index = 0; index < arguments.length; index += 1) {
+      const value = arguments[index];
+      if (value && typeof value === "object" && Array.isArray(value.ops)) {
+        return value;
+      }
+    }
+    return null;
+  }
+
+  function pickFirstString() {
+    for (let index = 0; index < arguments.length; index += 1) {
+      const value = arguments[index];
+      if (typeof value === "string" && value.trim()) {
+        return value;
+      }
+    }
+    return "";
   }
 
   function sanitizeTitle(value, type) {
@@ -472,8 +538,16 @@
     };
 
     if (type === "notes") {
-      column.contentDelta = normalizeDelta(options && options.contentDelta);
-      column.textPreview = extractPlainText(column.contentDelta);
+      const contentMarkdown = pickFirstString(options && options.contentMarkdown, options && options.content);
+
+      if (contentMarkdown) {
+        column.contentDelta = clone(EMPTY_DELTA);
+        column.contentMarkdown = contentMarkdown;
+        column.textPreview = markdownToPlainText(contentMarkdown).slice(0, 160);
+      } else {
+        column.contentDelta = normalizeDelta(options && options.contentDelta);
+        column.textPreview = extractPlainText(column.contentDelta);
+      }
     } else {
       column.items = normalizeSeedTodoItems(options && options.items);
     }
@@ -714,7 +788,7 @@
     return createColumn({
       type: "notes",
       title: title || "AI note",
-      contentDelta: textToDelta(content),
+      contentMarkdown: content,
     });
   }
 
@@ -907,6 +981,190 @@
     return {
       ops: [{ insert: text.endsWith("\n") ? text : `${text}\n` }],
     };
+  }
+
+  function markdownToNoteDelta(value, editor) {
+    const markdown = String(value || "").trim();
+    if (!markdown) {
+      return clone(EMPTY_DELTA);
+    }
+
+    const html = renderMarkdownToHtml(markdown);
+    if (editor && editor.clipboard && typeof editor.clipboard.convert === "function") {
+      return editor.clipboard.convert(html);
+    }
+
+    return textToDelta(markdownToPlainText(markdown));
+  }
+
+  function isMarkdownishPlainTextDelta(delta) {
+    if (!delta || !Array.isArray(delta.ops) || !delta.ops.length) {
+      return false;
+    }
+
+    const hasRichContent = delta.ops.some((operation) => {
+      if (operation && operation.attributes && Object.keys(operation.attributes).length) {
+        return true;
+      }
+
+      return typeof operation.insert !== "string";
+    });
+
+    if (hasRichContent) {
+      return false;
+    }
+
+    const text = fullPlainText(delta);
+    if (!text) {
+      return false;
+    }
+
+    return /(^|\n)#{1,6}\s+\S/.test(text)
+      || /(^|\n)\d+\.\s+\S/.test(text)
+      || /(^|\n)[-*+]\s+\S/.test(text)
+      || /(^|\n)>\s+\S/.test(text)
+      || /\*\*[^*]+\*\*/.test(text)
+      || /__[^_]+__/.test(text)
+      || /(^|[\s(])\*(?!\s).+?(?<!\s)\*(?=[$\s).,!?:;])/.test(text)
+      || /(^|[\s(])_(?!\s).+?(?<!\s)_(?=[$\s).,!?:;])/.test(text)
+      || /`[^`]+`/.test(text)
+      || /\[[^\]]+\]\((https?:|mailto:)[^)]+\)/i.test(text);
+  }
+
+  function markdownToPlainText(value) {
+    const html = renderMarkdownToHtml(value);
+    const scratch = document.createElement("div");
+    scratch.innerHTML = html;
+    return (scratch.textContent || scratch.innerText || "")
+      .replace(/\u00a0/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function renderMarkdownToHtml(value) {
+    const lines = normalizeMarkdown(value).split("\n");
+    const blocks = [];
+
+    for (let index = 0; index < lines.length;) {
+      const line = lines[index].trim();
+
+      if (!line) {
+        index += 1;
+        continue;
+      }
+
+      const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
+      if (headingMatch) {
+        const level = Math.min(6, headingMatch[1].length);
+        blocks.push(`<h${level}>${renderInlineMarkdown(headingMatch[2])}</h${level}>`);
+        index += 1;
+        continue;
+      }
+
+      if (/^>\s+/.test(line)) {
+        const quoteLines = [];
+        while (index < lines.length) {
+          const quoteLine = lines[index].trim();
+          const match = quoteLine.match(/^>\s+(.+)$/);
+          if (!match) {
+            break;
+          }
+          quoteLines.push(renderInlineMarkdown(match[1]));
+          index += 1;
+        }
+        blocks.push(`<blockquote><p>${quoteLines.join("<br>")}</p></blockquote>`);
+        continue;
+      }
+
+      if (/^\d+\.\s+/.test(line)) {
+        const items = [];
+        while (index < lines.length) {
+          const listLine = lines[index].trim();
+          const match = listLine.match(/^\d+\.\s+(.+)$/);
+          if (!match) break;
+          items.push(`<li>${renderInlineMarkdown(match[1])}</li>`);
+          index += 1;
+        }
+        blocks.push(`<ol>${items.join("")}</ol>`);
+        continue;
+      }
+
+      if (/^[-*+]\s+/.test(line)) {
+        const items = [];
+        while (index < lines.length) {
+          const listLine = lines[index].trim();
+          const match = listLine.match(/^[-*+]\s+(.+)$/);
+          if (!match) break;
+          items.push(`<li>${renderInlineMarkdown(match[1])}</li>`);
+          index += 1;
+        }
+        blocks.push(`<ul>${items.join("")}</ul>`);
+        continue;
+      }
+
+      const paragraphLines = [];
+      while (index < lines.length) {
+        const paragraphLine = lines[index].trim();
+        if (!paragraphLine) {
+          index += 1;
+          break;
+        }
+        if (/^(#{1,6})\s+/.test(paragraphLine) || /^>\s+/.test(paragraphLine) || /^\d+\.\s+/.test(paragraphLine) || /^[-*+]\s+/.test(paragraphLine)) {
+          break;
+        }
+        paragraphLines.push(renderInlineMarkdown(paragraphLine));
+        index += 1;
+      }
+      blocks.push(`<p>${paragraphLines.join("<br>")}</p>`);
+    }
+
+    return blocks.join("") || `<p>${escapeHtml(value || "")}</p>`;
+  }
+
+  function normalizeMarkdown(value) {
+    return String(value || "")
+      .replace(/\r\n?/g, "\n")
+      .replace(/([:?!])\s+(\d+\.\s+)/g, "$1\n$2")
+      .replace(/([.!?])\s+(\d+\.\s+)/g, "$1\n$2")
+      .replace(/([.!?])\s+([-*+]\s+)/g, "$1\n$2");
+  }
+
+  function renderInlineMarkdown(value) {
+    const tokens = [];
+    let html = escapeHtml(value || "");
+
+    html = html.replace(/`([^`]+)`/g, (_, code) => storeMarkdownToken(tokens, `<code>${code}</code>`));
+    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, href) => {
+      const safeHref = sanitizeMarkdownUrl(href);
+      if (!safeHref) {
+        return label;
+      }
+      return storeMarkdownToken(tokens, `<a href="${escapeAttribute(safeHref)}" target="_blank" rel="noreferrer noopener">${label}</a>`);
+    });
+    html = html.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+    html = html.replace(/__(.+?)__/g, "<strong>$1</strong>");
+    html = html.replace(/(^|[\s(])\*(?!\s)(.+?)(?<!\s)\*(?=[$\s).,!?:;])/g, "$1<em>$2</em>");
+    html = html.replace(/(^|[\s(])_(?!\s)(.+?)(?<!\s)_(?=[$\s).,!?:;])/g, "$1<em>$2</em>");
+
+    return restoreMarkdownTokens(html, tokens);
+  }
+
+  function sanitizeMarkdownUrl(value) {
+    const trimmed = String(value || "").trim();
+    if (/^(https?:|mailto:)/i.test(trimmed)) {
+      return trimmed;
+    }
+    return "";
+  }
+
+  function storeMarkdownToken(tokens, html) {
+    const token = `__BOARD_MD_${tokens.length}__`;
+    tokens.push(html);
+    return token;
+  }
+
+  function restoreMarkdownTokens(value, tokens) {
+    return value.replace(/__BOARD_MD_(\d+)__/g, (_, index) => tokens[Number(index)] || "");
   }
 
   function touchBoard() {
@@ -1168,18 +1426,10 @@
               <span class="column-title-edit-icon" aria-hidden="true"><i class="fa-solid fa-pen"></i></span>
             </button>
             <input class="column-title-input" type="text" data-column-id="${escapeHtml(column.id)}" value="${escapeAttribute(column.title)}" maxlength="40" aria-label="Tab title">
-          </div>
-        </div>
-        <div class="board-column-actions">
-          <button class="column-icon-button" type="button" data-action="move-column-left" data-column-id="${escapeHtml(column.id)}" aria-label="Move tab left" ${index === 0 ? "disabled" : ""}>
-            <i class="fa-solid fa-arrow-left button-icon" aria-hidden="true"></i>
-          </button>
-          <button class="column-icon-button" type="button" data-action="move-column-right" data-column-id="${escapeHtml(column.id)}" aria-label="Move tab right" ${index === totalColumns - 1 ? "disabled" : ""}>
-            <i class="fa-solid fa-arrow-right button-icon" aria-hidden="true"></i>
-          </button>
-          <button class="column-icon-button danger" type="button" data-action="delete-column" data-column-id="${escapeHtml(column.id)}" aria-label="Delete tab">
+            <button class="column-icon-button danger" type="button" data-action="delete-column" data-column-id="${escapeHtml(column.id)}" aria-label="Delete tab">
             <i class="fa-solid fa-trash button-icon" aria-hidden="true"></i>
           </button>
+            </div>
         </div>
       </div>
       ${column.type === "todos" ? renderTodoColumn(column) : renderNotesColumn(column)}
@@ -1290,7 +1540,23 @@
         },
       });
 
-      editor.setContents(clone(column.contentDelta || EMPTY_DELTA));
+      const importedMarkdown = typeof column.contentMarkdown === "string" ? column.contentMarkdown : "";
+      const nextDelta = importedMarkdown
+        ? markdownToNoteDelta(importedMarkdown, editor)
+        : clone(column.contentDelta || EMPTY_DELTA);
+
+      editor.setContents(nextDelta);
+
+      if (importedMarkdown) {
+        column.contentDelta = clone(nextDelta);
+        column.textPreview = extractPlainText(column.contentDelta);
+        column.updatedAt = Date.now();
+        delete column.contentMarkdown;
+        touchBoard();
+        cacheBoard();
+        persistBoard();
+      }
+
       editor.on("text-change", () => {
         const currentColumn = findColumn(column.id);
         if (!currentColumn) {

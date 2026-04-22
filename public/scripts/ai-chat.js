@@ -28,14 +28,61 @@
   const formEl = panelEl ? panelEl.querySelector(".ai-chat-form") : null;
   const inputEl = panelEl ? panelEl.querySelector(".ai-chat-input") : null;
   const closeEl = panelEl ? panelEl.querySelector(".ai-chat-close") : null;
+  const newChatEl = panelEl ? panelEl.querySelector(".ai-chat-new") : null;
   const statusEl = panelEl ? panelEl.querySelector(".ai-chat-status") : null;
   const titleEl = panelEl ? panelEl.querySelector(".ai-chat-session-title") : null;
 
   if (!panelEl || !fabEl || !listEl || !formEl || !inputEl) return;
 
+  const STARTERS = [
+    {
+      prompt: "Help me plan what to tackle in this session.",
+      label: "Plan this focus session",
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>',
+    },
+    {
+      prompt: "Summarize my notes so I know where I left off.",
+      label: "Summarize my notes",
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h5"/></svg>',
+    },
+    {
+      prompt: "Break my current task into a short todo list.",
+      label: "Break a task into todos",
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></svg>',
+    },
+  ];
+
   listEl.addEventListener("click", handleListClick);
+  autosizeInput();
+  inputEl.addEventListener("input", autosizeInput);
+  inputEl.addEventListener("keydown", (ev) => {
+    if (ev.key === "Enter" && !ev.shiftKey) {
+      ev.preventDefault();
+      formEl.requestSubmit();
+    }
+  });
+  if (newChatEl) {
+    newChatEl.addEventListener("click", () => {
+      inputEl.value = "";
+      autosizeInput();
+      listEl.scrollTop = 0;
+      inputEl.focus();
+    });
+  }
+
+  function autosizeInput() {
+    inputEl.style.height = "auto";
+    inputEl.style.height = Math.min(inputEl.scrollHeight, 140) + "px";
+  }
 
   // ---------- Panel open/close ----------
+  // On compact viewports the chat behaves like a real route: opening pushes
+  // a history entry with #assistant, and the hardware/browser back button
+  // (as well as the in-panel back arrow) pops it off.
+  const ROUTE_HASH = "#assistant";
+  const isCompactViewport = () => window.matchMedia("(max-width: 991px)").matches;
+  const isRouteState = () => !!(history.state && history.state.aiChatRoute);
+
   function emitPanelVisibilityChange() {
     window.dispatchEvent(new CustomEvent("ai-chat:visibility-changed", {
       detail: { open: !panelEl.hidden },
@@ -47,6 +94,12 @@
       emitPanelVisibilityChange();
       inputEl.focus();
       return;
+    }
+
+    if (isCompactViewport() && !isRouteState()) {
+      try {
+        history.pushState({ aiChatRoute: true }, "", ROUTE_HASH);
+      } catch (_) {}
     }
 
     panelEl.hidden = false;
@@ -61,10 +114,50 @@
       return;
     }
 
+    // If we own a route entry, let history.back() drive the close so the
+    // URL and back-stack stay consistent. popstate will call hidePanel().
+    if (isRouteState()) {
+      history.back();
+      return;
+    }
+
+    hidePanel();
+  }
+
+  function hidePanel() {
+    if (panelEl.hidden) return;
     panelEl.classList.remove("is-open");
     emitPanelVisibilityChange();
     setTimeout(() => { panelEl.hidden = true; }, 220);
   }
+
+  // Browser/hardware back: if our route entry is gone but the panel is
+  // still showing, close it. If the user navigates forward back to
+  // #assistant, re-open.
+  window.addEventListener("popstate", () => {
+    if (isRouteState()) {
+      if (panelEl.hidden && isCompactViewport()) {
+        panelEl.hidden = false;
+        requestAnimationFrame(() => panelEl.classList.add("is-open"));
+        emitPanelVisibilityChange();
+      }
+    } else if (!panelEl.hidden) {
+      hidePanel();
+    }
+  });
+
+  // Deep link / refresh with #assistant opens the panel on mobile.
+  window.addEventListener("load", () => {
+    if (window.location.hash === ROUTE_HASH && isCompactViewport() && panelEl.hidden) {
+      // Ensure state is marked as our route so back still works.
+      if (!isRouteState()) {
+        try { history.replaceState({ aiChatRoute: true }, "", ROUTE_HASH); } catch (_) {}
+      }
+      panelEl.hidden = false;
+      requestAnimationFrame(() => panelEl.classList.add("is-open"));
+      emitPanelVisibilityChange();
+    }
+  });
 
   fabEl.addEventListener("click", openPanel);
   if (closeEl) closeEl.addEventListener("click", closePanel);
@@ -154,14 +247,29 @@
   function render() {
     const visibleMessages = getVisibleMessages();
     if (!visibleMessages.length) {
-      listEl.innerHTML = `
-        <div class="ai-chat-empty">
-          <p>Ask about your current session — plans, reviews, breakdowns.</p>
-        </div>`;
+      listEl.innerHTML = renderEmptyState();
       return;
     }
     listEl.innerHTML = visibleMessages.map(renderBubble).join("");
     listEl.scrollTop = listEl.scrollHeight;
+  }
+
+  function renderEmptyState() {
+    const sparkle = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4"/><path d="M12 17v4"/><path d="M3 12h4"/><path d="M17 12h4"/><path d="m5.6 5.6 2.8 2.8"/><path d="m15.6 15.6 2.8 2.8"/><path d="m5.6 18.4 2.8-2.8"/><path d="m15.6 8.4 2.8-2.8"/></svg>';
+    const starters = STARTERS.map((s) => `
+        <button type="button" class="ai-chat-starter" data-ai-starter="${escapeAttr(s.prompt)}">
+          <span class="ai-chat-starter-icon" aria-hidden="true">${s.icon}</span>
+          <span class="ai-chat-starter-text">${escapeHtml(s.label)}</span>
+        </button>`).join("");
+    return `
+      <div class="ai-chat-empty">
+        <div class="ai-chat-empty-hero">
+          <span class="ai-chat-empty-icon" aria-hidden="true">${sparkle}</span>
+          <h3 class="ai-chat-empty-title">What can I help with?</h3>
+          <p class="ai-chat-empty-subtitle">Ask about this session or pick a starter below.</p>
+        </div>
+        <div class="ai-chat-starters">${starters}</div>
+      </div>`;
   }
 
   function getVisibleMessages() {
@@ -184,25 +292,34 @@
 
   function renderBubble(msg) {
     const role = msg.role === "assistant" ? "assistant" : "user";
-    const content = role === "assistant"
-      ? renderMarkdown(stripActionMarkup(msg.content || ""))
-      : escapeHtml(msg.content || "");
-    const actionLinks = role === "assistant"
-      ? renderActionLinks(msg.actionResult)
-      : "";
-    return `<div class="ai-chat-bubble ai-chat-bubble-${role}" data-msg-id="${escapeAttr(msg.id || "")}">
+    if (role === "assistant") {
+      const content = renderMarkdown(stripActionMarkup(msg.content || ""));
+      const actionLinks = renderActionLinks(msg.actionResult);
+      return `<div class="ai-chat-assistant-row">
+        ${assistantAvatar()}
+        <div class="ai-chat-bubble ai-chat-bubble-assistant" data-msg-id="${escapeAttr(msg.id || "")}">
+          <div class="ai-chat-bubble-content">${content}</div>
+          ${actionLinks}
+        </div>
+      </div>`;
+    }
+    const content = escapeHtml(msg.content || "");
+    return `<div class="ai-chat-bubble ai-chat-bubble-user" data-msg-id="${escapeAttr(msg.id || "")}">
       <div class="ai-chat-bubble-content">${content}</div>
-      ${actionLinks}
     </div>`;
   }
 
+  function assistantAvatar() {
+    return '<span class="ai-chat-avatar" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2"/><path d="M12 19v2"/><path d="M5 12H3"/><path d="M21 12h-2"/><path d="m6.5 6.5-1.4-1.4"/><path d="m18.9 18.9-1.4-1.4"/><path d="m6.5 17.5-1.4 1.4"/><path d="m18.9 5.1-1.4 1.4"/><circle cx="12" cy="12" r="4"/></svg></span>';
+  }
+
   function appendStreamingBubble(text) {
-    const div = document.createElement("div");
-    div.className = "ai-chat-bubble ai-chat-bubble-assistant is-streaming";
-    div.innerHTML = `<div class="ai-chat-bubble-content"></div>`;
-    listEl.appendChild(div);
+    const row = document.createElement("div");
+    row.className = "ai-chat-assistant-row";
+    row.innerHTML = `${assistantAvatar()}<div class="ai-chat-bubble ai-chat-bubble-assistant is-streaming"><div class="ai-chat-bubble-content"></div></div>`;
+    listEl.appendChild(row);
     listEl.scrollTop = listEl.scrollHeight;
-    return div.querySelector(".ai-chat-bubble-content");
+    return row.querySelector(".ai-chat-bubble-content");
   }
 
   // ---------- Send ----------
@@ -225,6 +342,7 @@
     sending = true;
     setStatus("Thinking…");
     inputEl.value = "";
+    autosizeInput();
 
     const db = firebase.database();
     const now = Date.now();
@@ -343,6 +461,15 @@
   }
 
   function handleListClick(event) {
+    const starter = event.target.closest("[data-ai-starter]");
+    if (starter) {
+      const prompt = starter.getAttribute("data-ai-starter") || "";
+      inputEl.value = prompt;
+      autosizeInput();
+      inputEl.focus();
+      return;
+    }
+
     const openButton = event.target.closest("[data-ai-open-column]");
     if (!openButton) {
       return;

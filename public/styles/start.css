@@ -317,11 +317,16 @@ html {
 
 .board-tabs {
   display: flex;
+  flex-wrap: nowrap;
   align-items: flex-end;
-  gap: 0.2rem;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
+  overscroll-behavior-x: contain;
   padding: 0.22rem 0.35rem 0 var(--board-tabs-left-inset);
+  ;
   border-radius: 20px 20px 0 0;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 252, 232, 0.08) 100%);
   scrollbar-width: thin;
@@ -329,7 +334,8 @@ html {
 
 .board-tab-button {
   position: relative;
-  flex: 0 1 auto;
+  margin-left: 4px;
+  flex: 0 0 auto;
   width: min(12.5rem, 72vw);
   max-width: min(12.5rem, 72vw);
   min-height: 54px;
@@ -444,6 +450,7 @@ html {
   display: flex;
   min-height: 0;
   margin-top: -4px;
+  margin-bottom: 2rem;
 }
 
 .board-column {
@@ -479,6 +486,7 @@ html {
 
 .column-title-shell {
   min-width: 0;
+  display: flex;
 }
 
 .column-title-display {
@@ -1913,6 +1921,7 @@ html {
   .focus-layout[data-mobile-view="workspace"] .focus-board,
   .focus-layout[data-mobile-view="workspace"] .board-columns,
   .focus-layout[data-mobile-view="workspace"] .board-tabs-shell,
+  .focus-layout[data-mobile-view="workspace"] .board-tabs,
   .focus-layout[data-mobile-view="workspace"] .board-panel-stage,
   .focus-layout[data-mobile-view="workspace"] .board-column,
   .focus-layout[data-mobile-view="workspace"] .board-notes-editor-shell,
@@ -1921,6 +1930,9 @@ html {
   .focus-layout[data-mobile-view="workspace"] .todo-column-content,
   .focus-layout[data-mobile-view="workspace"] .todo-list {
     flex: 0 0 auto;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
     min-height: 0;
     height: auto;
   }
@@ -1989,15 +2001,10 @@ html {
     -webkit-backdrop-filter: blur(12px);
   }
 
-  /* When the AI assistant covers the page, the sticky switcher would
-     otherwise stay frozen at the scroll offset it had when the chat
-     opened. Promote it to fixed so it remains anchored to the top. */
+  /* When the AI assistant covers the page, hide the workspace switcher
+     entirely — the chat panel provides its own back button. */
   body:has(.ai-chat-panel.is-open) .mobile-panel-switcher {
-    position: fixed;
-    top: calc(var(--safe-area-top) + 0.35rem);
-    left: 50%;
-    transform: translateX(-50%);
-    width: min(calc(100vw - 1.5rem), 86rem);
+    display: none;
   }
 
   .mobile-panel-button {
