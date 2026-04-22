@@ -1732,7 +1732,9 @@ html {
 
 @media (max-width: 991px) {
   .timer-container {
+    min-height: calc(100dvh - 6.5rem);
     padding-top: 1rem;
+    padding-bottom: 1rem;
     gap: 1rem;
   }
 
@@ -1774,7 +1776,45 @@ html {
   }
 
   .focus-layout {
+    flex: 1 1 auto;
+    min-height: 100%;
     gap: 1rem;
+  }
+
+  .focus-layout[data-mobile-view="workspace"] {
+    min-height: calc(100dvh - 10rem);
+  }
+
+  .focus-layout[data-mobile-view="workspace"] .focus-side-panel {
+    flex: 1 1 auto;
+    min-height: calc(100dvh - 12rem);
+  }
+
+  .focus-layout[data-mobile-view="workspace"] .focus-board,
+  .focus-layout[data-mobile-view="workspace"] .board-columns,
+  .focus-layout[data-mobile-view="workspace"] .board-tabs-shell,
+  .focus-layout[data-mobile-view="workspace"] .board-panel-stage,
+  .focus-layout[data-mobile-view="workspace"] .board-column,
+  .focus-layout[data-mobile-view="workspace"] .board-notes-editor-shell,
+  .focus-layout[data-mobile-view="workspace"] .board-notes-editor,
+  .focus-layout[data-mobile-view="workspace"] .todo-column-shell,
+  .focus-layout[data-mobile-view="workspace"] .todo-column-content,
+  .focus-layout[data-mobile-view="workspace"] .todo-list {
+    min-height: 0;
+    flex: 1 1 auto;
+  }
+
+  .focus-layout[data-mobile-view="workspace"] .board-panel-stage,
+  .focus-layout[data-mobile-view="workspace"] .board-column,
+  .focus-layout[data-mobile-view="workspace"] .board-notes-editor-shell,
+  .focus-layout[data-mobile-view="workspace"] .board-notes-editor,
+  .focus-layout[data-mobile-view="workspace"] .todo-column-shell,
+  .focus-layout[data-mobile-view="workspace"] .todo-column-content {
+    height: 100%;
+  }
+
+  .focus-layout[data-mobile-view="workspace"] .board-column {
+    min-height: 100%;
   }
 
   .timer-card {
