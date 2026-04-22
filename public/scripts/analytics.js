@@ -21,6 +21,7 @@
  * RTDB paths:
  *   users/{uid}/events/{eventId}                    -> raw event
  *   users/{uid}/statsDaily/{YYYY-MM-DD}             -> { pomos, focusSec, completed, skipped }
+ *   users/{uid}/sessions/{sessionId}/stats          -> per-session roll-up
  */
 (function (global) {
   "use strict";
@@ -112,8 +113,26 @@
       completed: !!event.completed,
       skipped: !!event.skipped,
       subject: event.subject || null,
+      sessionId: event.sessionId || null,
     };
-    return ref.set(payload).then(() => ref.key);
+    const writes = [ref.set(payload)];
+    // Bump per-session pomo stats for attributed completed pomos.
+    if (event.sessionId && event.type === "pomo") {
+      const statsRef = db.ref(`users/${uid}/sessions/${event.sessionId}/stats`);
+      writes.push(
+        statsRef.transaction((cur) => {
+          const base = cur || { totalPomos: 0, totalFocusSec: 0, totalCompleted: 0, lastFocusAt: 0 };
+          base.totalFocusSec += event.actualSec || 0;
+          if (event.completed) {
+            base.totalPomos += 1;
+            base.totalCompleted += 1;
+          }
+          base.lastFocusAt = event.endedAt || Date.now();
+          return base;
+        })
+      );
+    }
+    return Promise.all(writes).then(() => ref.key);
   }
 
   function updateDailyAggregate(uid, event) {
@@ -135,6 +154,11 @@
   // ---------- Public API ----------
   function recordSession(partial) {
     const now = Date.now();
+    const sessionId = partial.sessionId
+      || (typeof window !== "undefined" && window.Sessions && window.Sessions.getActiveId
+        ? window.Sessions.getActiveId()
+        : "")
+      || null;
     const event = {
       id: `local-${now}-${Math.random().toString(36).slice(2, 8)}`,
       startedAt: partial.startedAt || now,
@@ -145,6 +169,7 @@
       completed: !!partial.completed,
       skipped: !!partial.skipped,
       subject: (partial.subject || "").trim() || null,
+      sessionId,
       synced: false,
     };
 

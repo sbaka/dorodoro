@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="./styles/style.css" />
     <link rel="stylesheet" href="./styles/index.css" />
     <link rel="stylesheet" href="./styles/dashboard.css" />
+    <link rel="stylesheet" href="./styles/ai-chat.css" />
     <!-- google fonts edit icon -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -227,6 +228,26 @@
     </section>
 
     <div class="overlay" id="overlay"></div>
+
+    <!-- AI chat -->
+    <button class="ai-fab" id="ai-chat-fab" type="button" aria-label="Open AI assistant" title="AI assistant">
+        <span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span>
+    </button>
+    <aside class="ai-chat-panel" id="ai-chat-panel" role="dialog" aria-labelledby="ai-chat-title" hidden>
+        <div class="ai-chat-header">
+            <div class="ai-chat-header-text">
+                <span class="ai-chat-title-eyebrow" id="ai-chat-title">Assistant</span>
+                <span class="ai-chat-session-title"></span>
+            </div>
+            <button type="button" class="ai-chat-close" aria-label="Close">×</button>
+        </div>
+        <div class="ai-chat-list" aria-live="polite"></div>
+        <div class="ai-chat-status" role="status"></div>
+        <form class="ai-chat-form">
+            <textarea class="ai-chat-input" placeholder="Ask about this session…" rows="1" required></textarea>
+            <button type="submit" class="ai-chat-send">Send</button>
+        </form>
+    </aside>
 </body>
 <script type="text/javascript" src="./scripts/navigation.js"></script>
 <script type="text/javascript" src="./scripts/popups.js"></script>
@@ -248,9 +269,11 @@
 </script>
 <script src="./scripts/redirect.js"></script>
 <script src="./scripts/firebase-db.js"></script>
+<script src="./scripts/sessions.js"></script>
 <script src="./scripts/analytics.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="./scripts/dashboard.js"></script>
+<script src="./scripts/ai-chat.js"></script>
 <script>
     // Gate guest hero vs. signed-in dashboard
     (function () {

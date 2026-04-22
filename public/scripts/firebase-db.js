@@ -6,6 +6,7 @@ const brDur = document.getElementById("brDur");
 const noPomo = document.getElementById("noPomo");
 const lBrInter = document.getElementById("lBrInter");
 const dailyGoal = document.getElementById("dailyGoal");
+const hasSettingsInputs = !!(pomoDur && sBrDur && brDur && noPomo && lBrInter);
 
 // Default settings to use if no saved settings exist
 const DEFAULT_SETTINGS = {
@@ -36,32 +37,35 @@ const removeLoadingIndicator = () => {
 // Initialize auth state listener
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-        // User is signed in
-        addLoadingIndicator();
-        
-        // Try to get settings from localStorage first (for quick loading)
-        const cachedSettings = getCachedSettings();
-        
-        if (cachedSettings) {
-            // We have cached settings, use them immediately
-            setParams(cachedSettings);
-            removeLoadingIndicator();
-            
-            // Still fetch from DB to ensure we have latest settings
-            fetchLatestSettings(user.uid);
-        } else {
-            // No cached settings, we need to wait for DB
-            fetchLatestSettings(user.uid, true);
-        }
+    if (hasSettingsInputs) {
+      addLoadingIndicator();
 
-        // Set up settings save handler
-        if (saveSetting) {
-            setupSaveHandler(user.uid);
+      // Try to get settings from localStorage first (for quick loading)
+      const cachedSettings = getCachedSettings();
+
+      if (cachedSettings) {
+        // We have cached settings, use them immediately
+        setParams(cachedSettings);
+        removeLoadingIndicator();
+
+        // Still fetch from DB to ensure we have latest settings
+        fetchLatestSettings(user.uid);
+      } else {
+        // No cached settings, we need to wait for DB
+        fetchLatestSettings(user.uid, true);
+      }
+
+      // Set up settings save handler
+      if (saveSetting) {
+        setupSaveHandler(user.uid);
+      }
         }
     } else {
-        // User is not signed in, use default settings
-        setParams(DEFAULT_SETTINGS);
-        removeLoadingIndicator();
+    if (hasSettingsInputs) {
+      // User is not signed in, use default settings
+      setParams(DEFAULT_SETTINGS);
+      removeLoadingIndicator();
+    }
     }
 });
 
@@ -148,6 +152,10 @@ function setupSaveHandler(userId) {
 
 // Set UI parameters from settings
 function setParams(userPreference) {
+  if (!hasSettingsInputs) {
+    return;
+  }
+
     // Ensure we have valid settings or use defaults
     const settings = userPreference || DEFAULT_SETTINGS;
     

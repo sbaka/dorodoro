@@ -1,10 +1,23 @@
 (function (global) {
   "use strict";
 
-  const CACHE_KEY = "focusBoard.cache.v1";
+  const CACHE_PREFIX = "focusBoard.cache.v2";
+  const LEGACY_CACHE_KEY = "focusBoard.cache.v1";
   const UI_CACHE_KEY = "focusBoard.ui.v1";
-  const REMOTE_KEY = "focusBoard";
   const SAVE_DELAY_MS = 500;
+
+  let activeSessionId = "";
+
+  function getCacheKey() {
+    return activeSessionId ? `${CACHE_PREFIX}.${activeSessionId}` : "";
+  }
+
+  function getRemoteRef(user) {
+    if (!user || !activeSessionId) return null;
+    const db = getDb();
+    if (!db) return null;
+    return db.ref(`users/${user.uid}/sessions/${activeSessionId}/focusBoard`);
+  }
   const EMPTY_DELTA = { ops: [{ insert: "\n" }] };
   const boardColumnsEl = document.getElementById("focus-board-columns");
   const boardEmptyEl = document.getElementById("focus-board-empty");
@@ -41,7 +54,8 @@
   boot();
 
   function boot() {
-    boardState = readCachedBoard() || createEmptyBoard();
+    // Wait for Sessions to tell us the active id before loading cached data.
+    boardState = createEmptyBoard();
     uiState = readCachedUiState();
     syncUiState();
     applyWorkspaceMode();
@@ -49,6 +63,45 @@
     renderBoard();
     bindEvents();
     attachAuthSync();
+    attachSessionSync();
+  }
+
+  function attachSessionSync() {
+    // If Sessions module already has an active id, use it.
+    if (global.Sessions && typeof global.Sessions.getActiveId === "function") {
+      const id = global.Sessions.getActiveId();
+      if (id) handleActiveSession(id);
+    }
+    window.addEventListener("sessions:active-changed", (event) => {
+      const nextId = event && event.detail ? event.detail.sessionId : "";
+      handleActiveSession(nextId);
+    });
+  }
+
+  function handleActiveSession(nextId) {
+    if (!nextId || nextId === activeSessionId) {
+      if (nextId && !syncReady) {
+        activeSessionId = nextId;
+        boardState = readCachedBoard() || createEmptyBoard();
+        syncUiState();
+        renderBoard();
+        if (currentUser) loadRemoteBoard();
+      }
+      return;
+    }
+    // Switching sessions: flush current editors into state + cache.
+    if (activeSessionId) {
+      syncEditorsIntoState();
+      cacheBoard();
+    }
+    activeSessionId = nextId;
+    syncReady = false;
+    editors.clear();
+    boardState = readCachedBoard() || createEmptyBoard();
+    uiState.activeColumnId = "";
+    syncUiState();
+    renderBoard();
+    if (currentUser) loadRemoteBoard();
   }
 
   function bindEvents() {
@@ -92,9 +145,8 @@
     boardColumnsEl.addEventListener("focusout", handleBoardFocusOut);
 
     window.addEventListener("storage", (event) => {
-      if (event.key !== CACHE_KEY || !event.newValue) {
-        return;
-      }
+      if (!event.key || !event.newValue) return;
+      if (event.key !== getCacheKey()) return;
 
       try {
         boardState = normalizeBoard(JSON.parse(event.newValue));
@@ -131,37 +183,47 @@
       currentUser = user || null;
       syncReady = false;
 
-      if (!currentUser) {
-        return;
-      }
+      if (!currentUser) return;
 
-      fetchRemoteBoard(currentUser)
-        .then((remoteBoard) => {
-          const localBoard = readCachedBoard() || boardState;
+      // Clean up any legacy v1 cache from before sessions.
+      try { localStorage.removeItem(LEGACY_CACHE_KEY); } catch (_) {}
 
-          if (localBoard.updatedAt > remoteBoard.updatedAt) {
-            boardState = localBoard;
-            syncReady = true;
-            renderBoard();
-            persistBoard(true);
-            return;
-          }
-
-          boardState = remoteBoard.updatedAt ? remoteBoard : localBoard;
-          syncReady = true;
-          cacheBoard();
-          renderBoard();
-
-          if (!remoteBoard.updatedAt && localBoard.updatedAt) {
-            persistBoard(true);
-          }
-        })
-        .catch((error) => {
-          console.warn("board: remote load failed", error);
-          syncReady = true;
-          renderBoard();
-        });
+      if (activeSessionId) loadRemoteBoard();
     });
+  }
+
+  function loadRemoteBoard() {
+    if (!currentUser || !activeSessionId) return;
+    const targetSessionId = activeSessionId;
+    fetchRemoteBoard(currentUser)
+      .then((remoteBoard) => {
+        // Guard against a session switch mid-flight.
+        if (targetSessionId !== activeSessionId) return;
+
+        const localBoard = readCachedBoard() || boardState;
+
+        if (localBoard.updatedAt > remoteBoard.updatedAt) {
+          boardState = localBoard;
+          syncReady = true;
+          renderBoard();
+          persistBoard(true);
+          return;
+        }
+
+        boardState = remoteBoard.updatedAt ? remoteBoard : localBoard;
+        syncReady = true;
+        cacheBoard();
+        renderBoard();
+
+        if (!remoteBoard.updatedAt && localBoard.updatedAt) {
+          persistBoard(true);
+        }
+      })
+      .catch((error) => {
+        console.warn("board: remote load failed", error);
+        syncReady = true;
+        renderBoard();
+      });
   }
 
   function createEmptyBoard() {
@@ -275,8 +337,10 @@
   }
 
   function readCachedBoard() {
+    const key = getCacheKey();
+    if (!key) return null;
     try {
-      const raw = localStorage.getItem(CACHE_KEY);
+      const raw = localStorage.getItem(key);
       if (!raw) {
         return null;
       }
@@ -301,8 +365,10 @@
   }
 
   function cacheBoard() {
+    const key = getCacheKey();
+    if (!key) return;
     try {
-      localStorage.setItem(CACHE_KEY, JSON.stringify(boardState));
+      localStorage.setItem(key, JSON.stringify(boardState));
     } catch (error) {
       console.warn("board: failed to cache board", error);
     }
@@ -317,15 +383,11 @@
   }
 
   function fetchRemoteBoard(user) {
-    const db = getDb();
-    if (!db || !user) {
+    const ref = getRemoteRef(user);
+    if (!ref) {
       return Promise.resolve(createEmptyBoard());
     }
-
-    return db
-      .ref(`users/${user.uid}/${REMOTE_KEY}`)
-      .once("value")
-      .then((snapshot) => normalizeBoard(snapshot.val()));
+    return ref.once("value").then((snapshot) => normalizeBoard(snapshot.val()));
   }
 
   function getDb() {
@@ -806,16 +868,14 @@
   function pushRemoteBoard() {
     saveTimer = null;
 
-    if (!currentUser || !syncReady) {
+    if (!currentUser || !syncReady || !activeSessionId) {
       return;
     }
 
-    const db = getDb();
-    if (!db) {
-      return;
-    }
+    const ref = getRemoteRef(currentUser);
+    if (!ref) return;
 
-    db.ref(`users/${currentUser.uid}/${REMOTE_KEY}`)
+    ref
       .set(clone(boardState))
       .catch((error) => {
         console.warn("board: failed to save board", error);
@@ -1187,7 +1247,55 @@
     return escapeHtml(value).replace(/`/g, "&#96;");
   }
 
+  function getNotesText(maxChars = 4000) {
+    syncEditorsIntoState();
+    const chunks = [];
+    boardState.columns
+      .slice()
+      .sort((a, b) => a.order - b.order)
+      .forEach((column) => {
+        if (column.type !== "notes") return;
+        const plain = fullPlainText(column.contentDelta);
+        if (!plain) return;
+        chunks.push(`## ${column.title}\n${plain}`);
+      });
+    const joined = chunks.join("\n\n").trim();
+    return joined.length > maxChars ? joined.slice(0, maxChars) + "\n\u2026" : joined;
+  }
+
+  function getTodos() {
+    syncEditorsIntoState();
+    const result = [];
+    boardState.columns
+      .slice()
+      .sort((a, b) => a.order - b.order)
+      .forEach((column) => {
+        if (column.type !== "todos") return;
+        const items = column.items
+          .slice()
+          .sort((a, b) => a.order - b.order)
+          .map((item) => ({
+            text: item.text,
+            done: !!item.done,
+            priority: item.priority,
+          }));
+        result.push({ title: column.title, items });
+      });
+    return result;
+  }
+
+  function fullPlainText(delta) {
+    if (!delta || !Array.isArray(delta.ops)) return "";
+    return delta.ops
+      .map((op) => (typeof op.insert === "string" ? op.insert : ""))
+      .join("")
+      .replace(/\u00a0/g, " ")
+      .trim();
+  }
+
   global.FocusBoard = {
     readCachedBoard,
+    getNotesText,
+    getTodos,
   };
 })(window);

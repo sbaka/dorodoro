@@ -1,0 +1,28 @@
+name = "dorodoro-ai"
+main = "src/index.js"
+compatibility_date = "2024-11-01"
+
+# Allowed CORS origins (comma-separated). Override per environment if desired.
+[vars]
+ALLOWED_ORIGINS = "https://dorodoro-1234.web.app,https://dorodoro-1234.firebaseapp.com,http://localhost:5000,http://127.0.0.1:5000,http://localhost:5500,http://127.0.0.1:5500,https://dorodoro.space"
+GEMINI_MODEL = "gemini-3-flash-preview"
+
+# Secrets (set via `wrangler secret put <NAME>`):
+#   GEMINI_API_KEY        — from https://aistudio.google.com/apikey
+#   FIREBASE_PROJECT_ID   — e.g. "dorodoro-1234"
+#   RTDB_URL              — e.g. "https://dorodoro-1234-default-rtdb.firebaseio.com"
+#   FIREBASE_SA_JSON      — service-account JSON (single line, stringified)
+[observability]
+enabled = false
+head_sampling_rate = 1
+
+[observability.logs]
+enabled = true
+head_sampling_rate = 1
+persist = true
+invocation_logs = true
+
+[observability.traces]
+enabled = false
+persist = true  
+head_sampling_rate = 1

@@ -1,0 +1,177 @@
+/* Sessions bar: compact switcher rendered above the focus board. */
+.sessions-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  margin: 0 0 12px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(67, 129, 168, 0.2);
+  border-radius: 12px;
+  backdrop-filter: blur(6px);
+}
+
+.sessions-current {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  min-width: 0;
+}
+
+.sessions-current:hover,
+.sessions-current:focus-visible {
+  background: rgba(67, 129, 168, 0.08);
+  outline: none;
+}
+
+.sessions-current-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6c7c8a;
+}
+
+.sessions-current-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.sessions-current::after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid currentColor;
+  opacity: 0.55;
+  flex-shrink: 0;
+}
+
+.sessions-new {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(67, 129, 168, 0.35);
+  background: #fff;
+  color: #4381A8;
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 120ms ease, transform 120ms ease;
+}
+
+.sessions-new:hover { background: #f0f6fb; transform: translateY(-1px); }
+
+.sessions-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 20;
+  background: #fff;
+  border: 1px solid rgba(67, 129, 168, 0.25);
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(34, 62, 84, 0.14);
+  padding: 6px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.sessions-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sessions-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.sessions-menu-item:hover,
+.sessions-menu-item:focus-visible {
+  background: rgba(67, 129, 168, 0.1);
+  outline: none;
+}
+
+.sessions-menu-item.is-active {
+  background: rgba(67, 129, 168, 0.18);
+  font-weight: 600;
+}
+
+.sessions-menu-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #c8d2db;
+  flex-shrink: 0;
+}
+
+.sessions-menu-item.is-active .sessions-menu-dot {
+  background: #4381A8;
+}
+
+.sessions-menu-title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sessions-menu-actions {
+  display: flex;
+  gap: 6px;
+  padding: 6px 4px 2px;
+  border-top: 1px solid rgba(67, 129, 168, 0.12);
+  margin-top: 4px;
+}
+
+.sessions-menu-actions button {
+  flex: 1;
+  padding: 6px 8px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  font: inherit;
+  color: #45627b;
+}
+
+.sessions-menu-actions button:hover {
+  background: rgba(67, 129, 168, 0.1);
+}
+
+@media (max-width: 640px) {
+  .sessions-bar {
+    margin: 0 8px 10px;
+  }
+}
