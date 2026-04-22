@@ -423,6 +423,11 @@
       return;
     }
 
+    if (action === "open-create-column") {
+      openDialog();
+      return;
+    }
+
     if (action === "delete-todo") {
       deleteTodo(columnId, itemId);
       return;
@@ -779,6 +784,7 @@
     boardColumnsEl.innerHTML = `<div class="board-tabs-shell">
       <div class="board-tabs" role="tablist" aria-label="Workspace tabs">
         ${columns.map((column) => renderTab(column, column.id === activeColumn.id)).join("")}
+        ${renderAddTabButton()}
       </div>
       <div class="board-panel-stage">
         ${renderColumn(activeColumn, activeIndex, columns.length)}
@@ -797,6 +803,12 @@
         <span class="board-tab-type">${column.type === "todos" ? "Todo" : "Notes"}</span>
         <span class="board-tab-title" data-tab-title-for="${escapeHtml(column.id)}">${escapeHtml(column.title)}</span>
       </span>
+    </button>`;
+  }
+
+  function renderAddTabButton() {
+    return `<button class="board-tab-create-button" type="button" data-action="open-create-column" aria-label="Add a new tab">
+      <span class="board-tab-create-plus" aria-hidden="true">+</span>
     </button>`;
   }
 
