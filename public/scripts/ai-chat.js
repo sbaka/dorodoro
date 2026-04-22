@@ -354,6 +354,14 @@
       return;
     }
 
+    // On mobile the chat panel is a fullscreen overlay, so the workspace
+    // underneath is invisible until we close it. On desktop the panel is
+    // a right-side slide-over and can stay open alongside the board.
+    const isCompact = window.matchMedia("(max-width: 991px)").matches;
+    if (isCompact) {
+      closePanel();
+    }
+
     board.openColumnFromAssistant(columnId);
   }
 
