@@ -49,6 +49,7 @@
   </header>
 
   <section class="timer-container">
+    <span class="grow"></span>
     <div class="focus-layout" data-mobile-view="workspace">
       <div class="mobile-panel-switcher" id="mobile-panel-switcher" aria-label="Switch between workspace and timer">
         <button class="mobile-panel-button is-active" type="button" data-mobile-view="workspace" aria-pressed="true">
@@ -102,13 +103,6 @@
 
       <div class="timer-wrapper" id="timer-wrapper">
         <div class="timer-card">
-          <div class="subject-field">
-            <label for="subject-input" class="subject-label">What are you working on? <span
-                class="subject-optional">(optional)</span></label>
-            <input type="text" id="subject-input" placeholder="e.g. Calculus chapter 4, essay draft, flashcards"
-              maxlength="60" autocomplete="off" />
-          </div>
-
           <div id="timer-display">
             <div id="pomo-type" aria-live="polite">Time to focus</div>
             <div id="count" aria-live="polite">1 out of 4</div>
@@ -156,6 +150,9 @@
         </div>
       </div>
     </div>
+    <span class="grow"></span>
+    <span class="grow"></span>
+
   </section>
 
   <!-- Modals/Dialogs -->

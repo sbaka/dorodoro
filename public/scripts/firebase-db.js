@@ -7,6 +7,7 @@ const noPomo = document.getElementById("noPomo");
 const lBrInter = document.getElementById("lBrInter");
 const dailyGoal = document.getElementById("dailyGoal");
 const hasSettingsInputs = !!(pomoDur && sBrDur && brDur && noPomo && lBrInter);
+const SETTINGS_PATH = "/settings";
 
 // Default settings to use if no saved settings exist
 const DEFAULT_SETTINGS = {
@@ -17,6 +18,31 @@ const DEFAULT_SETTINGS = {
     "Long Break Interval": "2",
     "Daily Goal": "4"
 };
+
+  function normalizeSettings(raw) {
+    const base = raw && typeof raw === "object" ? raw : {};
+    return {
+      ...DEFAULT_SETTINGS,
+      ...Object.fromEntries(
+        Object.keys(DEFAULT_SETTINGS)
+          .filter((key) => base[key] !== undefined && base[key] !== null)
+          .map((key) => [key, String(base[key])])
+      )
+    };
+  }
+
+  function readLegacySettings(raw) {
+    if (!raw || typeof raw !== "object") {
+      return null;
+    }
+    const picked = Object.keys(DEFAULT_SETTINGS).reduce((acc, key) => {
+      if (raw[key] !== undefined && raw[key] !== null) {
+        acc[key] = String(raw[key]);
+      }
+      return acc;
+    }, {});
+    return Object.keys(picked).length ? picked : null;
+  }
 
 // Add loading indicator in settings page
 const addLoadingIndicator = () => {
@@ -83,12 +109,25 @@ function getCachedSettings() {
 
 // Fetch latest settings from database
 function fetchLatestSettings(userId, updateUI = false) {
-    const settingsRef = db.ref('users/' + userId);
+  const settingsRef = db.ref('users/' + userId + SETTINGS_PATH);
     
     // Use once() instead of on() to prevent multiple listeners
     settingsRef.once("value")
-        .then((snapshot) => {
-            const userSettings = snapshot.val() || DEFAULT_SETTINGS;
+    .then(async (snapshot) => {
+      let storedSettings = snapshot.val();
+
+      if (!storedSettings) {
+        const legacySnapshot = await db.ref('users/' + userId).once("value");
+        const legacySettings = readLegacySettings(legacySnapshot.val());
+        if (legacySettings) {
+          storedSettings = legacySettings;
+          await settingsRef.set(legacySettings).catch((error) => {
+            console.warn("Failed to migrate legacy settings:", error);
+          });
+        }
+      }
+
+      const userSettings = normalizeSettings(storedSettings);
             
             // Cache settings in localStorage
             localStorage.setItem("settings", JSON.stringify(userSettings));
@@ -129,7 +168,7 @@ function setupSaveHandler(userId) {
         };
         
         // Save to database
-        db.ref('users/' + userId).set(newSettings)
+        db.ref('users/' + userId + SETTINGS_PATH).set(newSettings)
             .then(() => {
                 // Update local storage with new settings
                 localStorage.setItem("settings", JSON.stringify(newSettings));

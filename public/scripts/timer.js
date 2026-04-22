@@ -639,8 +639,8 @@ function completeAllPomodoros() {
         const updates = {};
         
         // Generate a unique key for this session
-        const newSessionKey = db.ref('users/' + user.uid + '/sessions').push().key;
-        updates['users/' + user.uid + '/sessions/' + newSessionKey] = sessionData;
+        const newSessionKey = db.ref('users/' + user.uid + '/completedSessions').push().key;
+        updates['users/' + user.uid + '/completedSessions/' + newSessionKey] = sessionData;
         
         // Update user stats in the same transaction
         db.ref('users/' + user.uid + '/stats').once('value')

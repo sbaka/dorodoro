@@ -25,7 +25,7 @@ html {
   flex: 1 1 auto;
   min-height: auto;
   flex-direction: column;
-  align-items: stretch;
+  align-items: center;
   justify-content: flex-start;
   gap: 1.5rem;
   padding: 1.5rem 1rem calc(2.5rem + var(--safe-area-bottom));
@@ -34,7 +34,7 @@ html {
 .focus-layout {
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  align-items: center;
   justify-content: flex-start;
   gap: 1.5rem;
   width: min(100%, 86rem);
@@ -143,7 +143,7 @@ html {
 .timer-wrapper {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   justify-content: flex-start;
   width: 100%;
   padding: 0;
@@ -1131,8 +1131,8 @@ html {
 }
 /* Timer card */
 .timer-card {
-  width: min(100%, 34rem);
-  max-width: 100%;
+  width: 100%;
+  max-width: none;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1900,6 +1900,16 @@ html {
     display: none;
   }
 
+  .focus-layout[data-mobile-view="timer"] .timer-wrapper {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .focus-layout[data-mobile-view="timer"] .timer-card {
+    flex: 1 1 auto;
+    min-height: calc(100dvh - 10.5rem);
+  }
+
   .focus-side-panel,
   .timer-card {
     border-radius: 26px;
@@ -1928,10 +1938,14 @@ html {
     position: sticky;
     top: 6rem;
     align-self: flex-start;
+    flex: 0 0 clamp(22rem, 28vw, 27rem);
+    width: clamp(22rem, 28vw, 27rem);
+    align-items: center;
   }
 
   .timer-card {
-    min-height: calc(100dvh - 9rem);
+    max-width: 27rem;
+    min-height: auto;
     justify-content: flex-start;
   }
 

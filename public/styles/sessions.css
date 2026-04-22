@@ -1,6 +1,7 @@
 /* Sessions bar: compact switcher rendered above the focus board. */
 .sessions-bar {
   position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -10,6 +11,10 @@
   border: 1px solid rgba(67, 129, 168, 0.2);
   border-radius: 12px;
   backdrop-filter: blur(6px);
+}
+
+.sessions-bar.is-open {
+  z-index: 30;
 }
 
 .sessions-current {
@@ -115,6 +120,7 @@
   font: inherit;
   color: inherit;
   cursor: pointer;
+  z-index: 1000;
 }
 
 .sessions-menu-item:hover,

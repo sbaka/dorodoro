@@ -51,7 +51,6 @@ header {
   box-shadow: 0 10px 24px rgba(67, 129, 168, 0.12);
   backdrop-filter: blur(14px);
   border-radius: 24px;
-  z-index: 1000;
 }
 
 #header-left {

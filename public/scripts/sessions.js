@@ -106,6 +106,18 @@
     };
   }
 
+  function isWorkspaceSessionRecord(raw) {
+    if (!raw || typeof raw !== "object") return false;
+    return !!(
+      typeof raw.title === "string"
+      || typeof raw.status === "string"
+      || raw.createdAt !== undefined
+      || raw.updatedAt !== undefined
+      || raw.focusBoard
+      || raw.aiChat
+    );
+  }
+
   function emitActiveChanged() {
     const detail = {
       sessionId: activeSessionId,
@@ -144,6 +156,7 @@
     const snap = await ref.once("value");
     const raw = snap.val() || {};
     const list = Object.keys(raw)
+      .filter((id) => isWorkspaceSessionRecord(raw[id]))
       .map((id) => normalizeMeta(id, raw[id]))
       .filter((s) => !s.archivedAt)
       .sort((a, b) => b.updatedAt - a.updatedAt);

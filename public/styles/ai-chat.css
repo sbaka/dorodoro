@@ -105,8 +105,72 @@
   border-radius: 14px;
   line-height: 1.4;
   font-size: 0.95rem;
-  white-space: pre-wrap;
   word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.ai-chat-bubble-content {
+  display: flow-root;
+}
+
+.ai-chat-bubble-user .ai-chat-bubble-content {
+  white-space: pre-wrap;
+}
+
+.ai-chat-bubble-assistant .ai-chat-bubble-content > *:first-child {
+  margin-top: 0;
+}
+
+.ai-chat-bubble-assistant .ai-chat-bubble-content > *:last-child {
+  margin-bottom: 0;
+}
+
+.ai-chat-bubble-assistant .ai-chat-bubble-content p,
+.ai-chat-bubble-assistant .ai-chat-bubble-content ol,
+.ai-chat-bubble-assistant .ai-chat-bubble-content ul,
+.ai-chat-bubble-assistant .ai-chat-bubble-content pre,
+.ai-chat-bubble-assistant .ai-chat-bubble-content blockquote,
+.ai-chat-bubble-assistant .ai-chat-bubble-content h1,
+.ai-chat-bubble-assistant .ai-chat-bubble-content h2,
+.ai-chat-bubble-assistant .ai-chat-bubble-content h3,
+.ai-chat-bubble-assistant .ai-chat-bubble-content h4 {
+  margin: 0 0 0.65rem;
+}
+
+.ai-chat-bubble-assistant .ai-chat-bubble-content ol,
+.ai-chat-bubble-assistant .ai-chat-bubble-content ul {
+  padding-left: 1.2rem;
+}
+
+.ai-chat-bubble-assistant .ai-chat-bubble-content li + li {
+  margin-top: 0.3rem;
+}
+
+.ai-chat-bubble-assistant .ai-chat-bubble-content h1,
+.ai-chat-bubble-assistant .ai-chat-bubble-content h2,
+.ai-chat-bubble-assistant .ai-chat-bubble-content h3,
+.ai-chat-bubble-assistant .ai-chat-bubble-content h4 {
+  line-height: 1.2;
+  color: #254961;
+}
+
+.ai-chat-bubble-assistant .ai-chat-bubble-content strong {
+  font-weight: 700;
+}
+
+.ai-chat-bubble-assistant .ai-chat-bubble-content code {
+  padding: 0.08rem 0.32rem;
+  border-radius: 6px;
+  background: rgba(67, 129, 168, 0.1);
+  color: #254961;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.88em;
+}
+
+.ai-chat-bubble-assistant .ai-chat-bubble-content a {
+  color: #2b6088;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.14em;
 }
 
 .ai-chat-bubble-user {

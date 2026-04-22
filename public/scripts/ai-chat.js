@@ -16,6 +16,7 @@
   let currentUser = null;
   let currentSessionId = "";
   let messagesCache = [];
+  let optimisticMessages = [];
   let messagesRef = null;
   let sending = false;
 
@@ -53,6 +54,7 @@
     if (sessionId === currentSessionId) return;
     currentSessionId = sessionId || "";
     messagesCache = [];
+    optimisticMessages = [];
     render();
     if (titleEl && global.Sessions) {
       const s = global.Sessions.getActive();
@@ -102,6 +104,10 @@
         messagesCache = Object.keys(val)
           .map((id) => ({ id, ...val[id] }))
           .sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+        optimisticMessages = optimisticMessages.filter((msg) => {
+          const sig = getMessageSignature(msg);
+          return !messagesCache.some((persisted) => getMessageSignature(persisted) === sig);
+        });
         render();
       });
     } catch (err) {
@@ -118,21 +124,43 @@
 
   // ---------- Rendering ----------
   function render() {
-    if (!messagesCache.length) {
+    const visibleMessages = getVisibleMessages();
+    if (!visibleMessages.length) {
       listEl.innerHTML = `
         <div class="ai-chat-empty">
           <p>Ask about your current session — plans, reviews, breakdowns.</p>
         </div>`;
       return;
     }
-    listEl.innerHTML = messagesCache.map(renderBubble).join("");
+    listEl.innerHTML = visibleMessages.map(renderBubble).join("");
     listEl.scrollTop = listEl.scrollHeight;
+  }
+
+  function getVisibleMessages() {
+    const merged = messagesCache.slice();
+    const seen = new Set(merged.map(getMessageSignature));
+    optimisticMessages.forEach((msg) => {
+      const sig = getMessageSignature(msg);
+      if (!seen.has(sig)) {
+        merged.push(msg);
+        seen.add(sig);
+      }
+    });
+    merged.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+    return merged;
+  }
+
+  function getMessageSignature(msg) {
+    return `${msg.role || ""}|${msg.content || ""}|${Number(msg.createdAt) || 0}`;
   }
 
   function renderBubble(msg) {
     const role = msg.role === "assistant" ? "assistant" : "user";
+    const content = role === "assistant"
+      ? renderMarkdown(msg.content || "")
+      : escapeHtml(msg.content || "");
     return `<div class="ai-chat-bubble ai-chat-bubble-${role}" data-msg-id="${escapeAttr(msg.id || "")}">
-      <div class="ai-chat-bubble-content">${escapeHtml(msg.content || "")}</div>
+      <div class="ai-chat-bubble-content">${content}</div>
     </div>`;
   }
 
@@ -167,11 +195,17 @@
     inputEl.value = "";
 
     const db = firebase.database();
+    const now = Date.now();
+    const userMsg = { role: "user", content: text, createdAt: now };
+    optimisticMessages.push({
+      id: `local-${now}`,
+      ...userMsg,
+    });
+    render();
+
     const userMsgRef = db
       .ref(`users/${currentUser.uid}/sessions/${currentSessionId}/aiChat/messages`)
       .push();
-    const now = Date.now();
-    const userMsg = { role: "user", content: text, createdAt: now };
     try {
       await userMsgRef.set(userMsg);
       await db
@@ -182,8 +216,9 @@
     }
 
     const contextPayload = buildContext();
-    const recentMessages = messagesCache.slice(-18).map((m) => ({ role: m.role, content: m.content }));
-    recentMessages.push({ role: "user", content: text });
+    const recentMessages = getVisibleMessages()
+      .slice(-18)
+      .map((m) => ({ role: m.role, content: m.content }));
 
     let streamTarget = null;
     let streamed = "";
@@ -232,7 +267,7 @@
             const obj = JSON.parse(trimmed);
             if (obj.type === "delta" && obj.text) {
               streamed += obj.text;
-              streamTarget.textContent = streamed;
+              streamTarget.innerHTML = renderMarkdown(streamed);
               listEl.scrollTop = listEl.scrollHeight;
             } else if (obj.type === "error") {
               setStatus(obj.message || "AI unavailable", "error");
@@ -290,6 +325,117 @@
       case "global_cap": return "Shared daily cap reached. Try again tomorrow.";
       default: return "Rate limited.";
     }
+  }
+
+  function renderMarkdown(value) {
+    const lines = normalizeMarkdown(value).split("\n");
+    const blocks = [];
+
+    for (let index = 0; index < lines.length;) {
+      const line = lines[index].trim();
+
+      if (!line) {
+        index += 1;
+        continue;
+      }
+
+      const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
+      if (headingMatch) {
+        const level = Math.min(6, headingMatch[1].length);
+        blocks.push(`<h${level}>${renderInlineMarkdown(headingMatch[2])}</h${level}>`);
+        index += 1;
+        continue;
+      }
+
+      if (/^\d+\.\s+/.test(line)) {
+        const items = [];
+        while (index < lines.length) {
+          const listLine = lines[index].trim();
+          const match = listLine.match(/^\d+\.\s+(.+)$/);
+          if (!match) break;
+          items.push(`<li>${renderInlineMarkdown(match[1])}</li>`);
+          index += 1;
+        }
+        blocks.push(`<ol>${items.join("")}</ol>`);
+        continue;
+      }
+
+      if (/^[-*+]\s+/.test(line)) {
+        const items = [];
+        while (index < lines.length) {
+          const listLine = lines[index].trim();
+          const match = listLine.match(/^[-*+]\s+(.+)$/);
+          if (!match) break;
+          items.push(`<li>${renderInlineMarkdown(match[1])}</li>`);
+          index += 1;
+        }
+        blocks.push(`<ul>${items.join("")}</ul>`);
+        continue;
+      }
+
+      const paragraphLines = [];
+      while (index < lines.length) {
+        const paragraphLine = lines[index].trim();
+        if (!paragraphLine) {
+          index += 1;
+          break;
+        }
+        if (/^(#{1,6})\s+/.test(paragraphLine) || /^\d+\.\s+/.test(paragraphLine) || /^[-*+]\s+/.test(paragraphLine)) {
+          break;
+        }
+        paragraphLines.push(renderInlineMarkdown(paragraphLine));
+        index += 1;
+      }
+      blocks.push(`<p>${paragraphLines.join("<br>")}</p>`);
+    }
+
+    return blocks.join("") || `<p>${escapeHtml(value || "")}</p>`;
+  }
+
+  function normalizeMarkdown(value) {
+    return String(value || "")
+      .replace(/\r\n?/g, "\n")
+      .replace(/([:?!])\s+(\d+\.\s+)/g, "$1\n$2")
+      .replace(/([.!?])\s+(\d+\.\s+)/g, "$1\n$2")
+      .replace(/([.!?])\s+([-*+]\s+)/g, "$1\n$2");
+  }
+
+  function renderInlineMarkdown(value) {
+    const tokens = [];
+    let html = escapeHtml(value || "");
+
+    html = html.replace(/`([^`]+)`/g, (_, code) => storeToken(tokens, `<code>${code}</code>`));
+    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, href) => {
+      const safeHref = sanitizeUrl(href);
+      if (!safeHref) {
+        return label;
+      }
+      return storeToken(tokens, `<a href="${escapeAttr(safeHref)}" target="_blank" rel="noreferrer noopener">${label}</a>`);
+    });
+    html = html.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+    html = html.replace(/__(.+?)__/g, "<strong>$1</strong>");
+    html = html.replace(/(^|[\s(])\*(?!\s)(.+?)(?<!\s)\*(?=[$\s).,!?:;])/g, "$1<em>$2</em>");
+    html = html.replace(/(^|[\s(])_(?!\s)(.+?)(?<!\s)_(?=[$\s).,!?:;])/g, "$1<em>$2</em>");
+
+    return restoreTokens(html, tokens);
+  }
+
+  function sanitizeUrl(value) {
+    const trimmed = String(value || "").trim();
+    if (/^(https?:|mailto:)/i.test(trimmed)) {
+      return trimmed;
+    }
+    return "";
+  }
+
+  function storeToken(tokens, html) {
+    const token = `__AI_MD_${tokens.length}__`;
+    tokens.push(html);
+    return token;
+  }
+
+  function restoreTokens(value, tokens) {
+    return value.replace(/__AI_MD_(\d+)__/g, (_, index) => tokens[Number(index)] || "");
   }
 
   function escapeHtml(value) {
