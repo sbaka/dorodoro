@@ -249,6 +249,41 @@ function getEmailActionSettings() {
   };
 }
 
+function getAuthAccessStateForUser(user, options = {}) {
+  if (typeof window.getAuthAccessState === 'function') {
+    return window.getAuthAccessState(user, options);
+  }
+
+  const providerData = Array.isArray(user && user.providerData) ? user.providerData : [];
+  const allowed = Boolean(user) && (
+    Boolean(user.emailVerified) ||
+    providerData.some((provider) => provider && provider.providerId === 'google.com')
+  );
+
+  return Promise.resolve({
+    allowed,
+    reason: allowed ? 'allowed' : 'unverified-email',
+    user
+  });
+}
+
+async function ensureAllowedSession(user, options = {}) {
+  const accessState = await getAuthAccessStateForUser(user, options);
+
+  if (accessState.allowed) {
+    return accessState.user || user;
+  }
+
+  sessionStorage.removeItem('userLoggedIn');
+  await auth.signOut().catch(() => {});
+
+  if (options.showMessage !== false) {
+    showError(options.message || 'Verify your email address before signing in, or continue with Google.');
+  }
+
+  return null;
+}
+
 /**
  * Normalizes and validates the current email input
  * @returns {string | null}
@@ -398,7 +433,15 @@ async function completeMagicLinkSignIn() {
   showMessage('Checking your magic link...', 'info');
 
   try {
-    await auth.signInWithEmailLink(emailValue, window.location.href);
+    const userCredential = await auth.signInWithEmailLink(emailValue, window.location.href);
+    const allowedUser = await ensureAllowedSession(userCredential.user, {
+      message: 'That sign-in link did not produce a verified session. Use Google or request a new email link.'
+    });
+
+    if (!allowedUser) {
+      return;
+    }
+
     window.localStorage.removeItem(EMAIL_LINK_STORAGE_KEY);
     sessionStorage.setItem('userLoggedIn', 'true');
     showSuccess('Magic link accepted. Redirecting...');
@@ -455,14 +498,29 @@ async function handleSignUp(event) {
     await userCredential.user.updateProfile({
       displayName: nameField.value
     });
-    
-    // Store additional user data if needed
-    // You could add code here to store user preferences in Firestore/Realtime DB
-    
-    // Redirect to start page or show success message
-    sessionStorage.setItem('userLoggedIn', 'true');
-    goStart();
+
+    await userCredential.user.sendEmailVerification({
+      url: getLoginActionUrl()
+    });
+
+    sessionStorage.removeItem('userLoggedIn');
+    await auth.signOut();
+
+    if (event.target && typeof event.target.reset === 'function') {
+      event.target.reset();
+    }
+    touchedFields.clear();
+    formValid.name = false;
+    formValid.email = false;
+    formValid.password = false;
+    updateSubmitButton();
+    updatePasswordStrength('');
+
+    showSuccess('Account created. Check your inbox, verify your email, then sign in.');
   } catch (error) {
+    sessionStorage.removeItem('userLoggedIn');
+    await firebase.auth().signOut().catch(() => {});
+
     // Handle specific error cases
     let errorMessage = 'Failed to create account. Please try again.';
     
@@ -479,11 +537,13 @@ async function handleSignUp(event) {
       case 'auth/network-request-failed':
         errorMessage = 'Network error. Please check your connection and try again.';
         break;
+      case 'auth/too-many-requests':
+        errorMessage = 'Too many attempts. Wait a moment, then try again.';
+        break;
     }
     
     showError(errorMessage);
-    
-    // Reset button state
+  } finally {
     submitButton.value = originalText;
     submitButton.disabled = false;
   }
@@ -519,7 +579,12 @@ async function handleSignIn(event) {
   try {
     // Sign in with Firebase Authentication
     const auth = firebase.auth();
-    await auth.signInWithEmailAndPassword(emailField.value, passwordField.value);
+    const userCredential = await auth.signInWithEmailAndPassword(emailField.value, passwordField.value);
+    const allowedUser = await ensureAllowedSession(userCredential.user);
+
+    if (!allowedUser) {
+      return;
+    }
     
     // Set user logged in session and redirect
     sessionStorage.setItem('userLoggedIn', 'true');
@@ -550,8 +615,7 @@ async function handleSignIn(event) {
     }
     
     showError(errorMessage);
-    
-    // Reset button state
+  } finally {
     submitButton.value = originalText;
     submitButton.disabled = false;
   }
@@ -560,30 +624,41 @@ async function handleSignIn(event) {
 /**
  * Handles Google sign-in
  */
-function signInWithGoogle() {
+async function signInWithGoogle() {
   const googleBtn = document.getElementById('sign-with-google');
   const googleBtnLabel = googleBtn ? googleBtn.querySelector('.google-button-label') : null;
   if (googleBtnLabel) {
     googleBtnLabel.textContent = 'Connecting...';
   }
-  googleBtn.disabled = true;
+  if (googleBtn) {
+    googleBtn.disabled = true;
+  }
   
   const provider = new firebase.auth.GoogleAuthProvider();
   provider.setCustomParameters({ prompt: 'select_account' });
-  
-  firebase.auth().signInWithPopup(provider)
-    .then((result) => {
-      // User successfully signed in
-      sessionStorage.setItem('userLoggedIn', 'true');
-      goStart();
-    })
-    .catch((error) => {
-      showError('Google sign-in failed. Please try again.');
-      if (googleBtnLabel) {
-        googleBtnLabel.textContent = 'Continue with Google';
-      }
-      googleBtn.disabled = false;
+
+  try {
+    const result = await firebase.auth().signInWithPopup(provider);
+    const allowedUser = await ensureAllowedSession(result.user, {
+      message: 'Google sign-in could not be verified. Try again.'
     });
+
+    if (!allowedUser) {
+      return;
+    }
+
+    sessionStorage.setItem('userLoggedIn', 'true');
+    goStart();
+  } catch (error) {
+    showError('Google sign-in failed. Please try again.');
+  } finally {
+    if (googleBtnLabel) {
+      googleBtnLabel.textContent = 'Continue with Google';
+    }
+    if (googleBtn) {
+      googleBtn.disabled = false;
+    }
+  }
 }
 
 // Initialize the page

@@ -22,6 +22,42 @@ function redirectTo(page) {
   window.location.href = page;
 }
 
+function isGoogleUser(user) {
+  const providerData = Array.isArray(user && user.providerData) ? user.providerData : [];
+  return providerData.some((provider) => provider && provider.providerId === 'google.com');
+}
+
+async function getAuthAccessState(user, options = {}) {
+  if (!user) {
+    return {
+      allowed: false,
+      reason: 'signed-out',
+      user: null
+    };
+  }
+
+  let resolvedUser = user;
+
+  if (options.reload !== false && typeof user.reload === 'function') {
+    try {
+      await user.reload();
+      resolvedUser = firebase.auth().currentUser || user;
+    } catch (error) {
+      console.warn('Could not refresh auth state before access check.', error);
+    }
+  }
+
+  const allowed = Boolean(resolvedUser.emailVerified) || isGoogleUser(resolvedUser);
+
+  return {
+    allowed,
+    reason: allowed ? 'allowed' : 'unverified-email',
+    user: resolvedUser
+  };
+}
+
+window.getAuthAccessState = getAuthAccessState;
+
 /**
  * Redirects users based on authentication status
  * Public pages are accessible to all users
@@ -37,9 +73,24 @@ function checkAuthAndRedirect() {
   const protectedPages = [PAGES.HOME, PAGES.START, PAGES.SETTINGS];
   
   // Check if the user is authenticated
-  firebase.auth().onAuthStateChanged(user => {
+  firebase.auth().onAuthStateChanged(async (user) => {
     // User is signed in
     if (user) {
+      const accessState = await getAuthAccessState(user);
+
+      if (!accessState.allowed) {
+        sessionStorage.removeItem('userLoggedIn');
+        await firebase.auth().signOut().catch((error) => {
+          console.error('Error signing out unverified user:', error);
+        });
+
+        if (protectedPages.includes(pageName)) {
+          redirectTo(PAGES.LOGIN);
+        }
+
+        return;
+      }
+
       // If on a public page (login, signup, etc.), redirect to home
       if (publicPages.includes(pageName) && pageName !== PAGES.ABOUT) {
         redirectTo(PAGES.HOME);
@@ -102,10 +153,9 @@ function signOut() {
   });
 }
 
-// Initialize redirect check when page loads
+checkAuthAndRedirect();
+
 document.addEventListener('DOMContentLoaded', function() {
-  checkAuthAndRedirect();
-  
   // Attach logout function to all logout buttons
   const logoutButtons = document.querySelectorAll('#logout, #logout-yes');
   logoutButtons.forEach(button => {
