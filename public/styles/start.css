@@ -1,7 +1,7 @@
 :root {
-  --primary-color: #d92828;
-  --secondary-color: #4381a8;
-  --accent-color: #f5f387;
+  --primary-color: #D92828;
+  --secondary-color: #4381A8;
+  --accent-color: #F5F387;
   --success-color: #2ecc71;
   --danger-color: #e74c3c;
   --bg-light: #ffffff;
@@ -22,13 +22,21 @@ html {
 .timer-container {
   display: flex;
   width: 100%;
+  max-width: 100vw;
   flex: 1 1 auto;
   min-height: auto;
+  min-width: 0;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   gap: 1.5rem;
   padding: 1.5rem 1rem calc(2.5rem + var(--safe-area-bottom));
+  overflow-x: clip;
+}
+
+.timer-container > * {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .focus-layout {
@@ -68,10 +76,7 @@ html {
   box-shadow: 0 18px 40px rgba(67, 129, 168, 0.1);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  transition:
-    transform 0.28s ease,
-    box-shadow 0.28s ease,
-    background-color 0.28s ease;
+  transition: transform 0.28s ease, box-shadow 0.28s ease, background-color 0.28s ease;
 }
 
 .focus-side-panel[data-mode="overview"] {
@@ -318,11 +323,7 @@ html {
   overflow-y: hidden;
   padding: 0.22rem 0.35rem 0 var(--board-tabs-left-inset);
   border-radius: 20px 20px 0 0;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.26) 0%,
-    rgba(255, 252, 232, 0.08) 100%
-  );
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 252, 232, 0.08) 100%);
   scrollbar-width: thin;
 }
 
@@ -339,31 +340,19 @@ html {
   border: 1px solid rgba(67, 129, 168, 0.14);
   border-bottom: none;
   border-radius: 18px 18px 0 0;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.52) 0%,
-    rgba(255, 250, 236, 0.88) 100%
-  );
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.52) 0%, rgba(255, 250, 236, 0.88) 100%);
   color: var(--secondary-color);
   text-align: left;
   cursor: pointer;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.78),
-    0 10px 18px rgba(67, 129, 168, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78), 0 10px 18px rgba(67, 129, 168, 0.06);
   transform: translateY(5px);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    border-color 0.2s ease,
-    background-color 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .board-tab-button:hover {
   transform: translateY(2px);
   border-color: rgba(67, 129, 168, 0.28);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.82),
-    0 12px 20px rgba(67, 129, 168, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82), 0 12px 20px rgba(67, 129, 168, 0.08);
 }
 
 .board-tab-button.is-active {
@@ -411,33 +400,17 @@ html {
   padding: 0;
   border: none;
   border-radius: 15px 15px 11px 11px;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.52) 0%,
-    rgba(255, 251, 238, 0.9) 100%
-  );
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.52) 0%, rgba(255, 251, 238, 0.9) 100%);
   color: var(--secondary-color);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.88),
-    0 1px 0 rgba(67, 129, 168, 0.12);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    background-color 0.2s ease,
-    color 0.2s ease;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.88), 0 1px 0 rgba(67, 129, 168, 0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
 
 .board-tab-create-button:hover {
   transform: translateY(-1px);
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.68) 0%,
-    rgba(255, 252, 232, 0.96) 100%
-  );
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.68) 0%, rgba(255, 252, 232, 0.96) 100%);
   color: var(--primary-color);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.94),
-    0 6px 14px rgba(67, 129, 168, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.94), 0 6px 14px rgba(67, 129, 168, 0.08);
 }
 
 .board-tab-create-button:active {
@@ -521,23 +494,16 @@ html {
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.5);
   color: var(--text-dark);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.82),
-    0 8px 18px rgba(67, 129, 168, 0.05);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82), 0 8px 18px rgba(67, 129, 168, 0.05);
   cursor: text;
   text-align: left;
-  transition:
-    background-color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .column-title-display:hover,
 .column-title-display:focus-visible {
   background: rgba(255, 255, 255, 0.72);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.88),
-    0 12px 22px rgba(67, 129, 168, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.88), 0 12px 22px rgba(67, 129, 168, 0.08);
   transform: translateY(-1px);
 }
 
@@ -688,11 +654,7 @@ html {
   font-family: inherit;
   border: none;
   border-bottom: 1px solid rgba(67, 129, 168, 0.12);
-  background: linear-gradient(
-    180deg,
-    rgba(255, 252, 232, 0.82) 0%,
-    rgba(255, 250, 236, 0.68) 100%
-  );
+  background: linear-gradient(180deg, rgba(255, 252, 232, 0.82) 0%, rgba(255, 250, 236, 0.68) 100%);
   box-shadow: inset 0 -1px 0 rgba(67, 129, 168, 0.06);
 }
 
@@ -728,10 +690,7 @@ html {
   width: 2.25rem;
   height: 2.25rem;
   padding: 0;
-  transition:
-    transform 0.15s ease,
-    background-color 0.2s ease,
-    border-color 0.2s ease;
+  transition: transform 0.15s ease, background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .board-notes-toolbar.ql-toolbar.ql-snow button:hover,
@@ -739,9 +698,7 @@ html {
 .board-notes-toolbar.ql-toolbar.ql-snow select:hover,
 .board-notes-toolbar.ql-toolbar.ql-snow select:focus,
 .board-notes-toolbar.ql-toolbar.ql-snow .ql-picker-label:hover,
-.board-notes-toolbar.ql-toolbar.ql-snow
-  .ql-picker.ql-expanded
-  .ql-picker-label {
+.board-notes-toolbar.ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-label {
   background: rgba(67, 129, 168, 0.14);
   border-color: rgba(67, 129, 168, 0.28);
 }
@@ -907,20 +864,13 @@ html {
   border-radius: 16px;
   background: rgba(67, 129, 168, 0.12);
   color: var(--secondary-color);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.8),
-    0 10px 18px rgba(67, 129, 168, 0.08);
-  transition:
-    transform 0.2s ease,
-    background-color 0.2s ease,
-    box-shadow 0.2s ease;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 10px 18px rgba(67, 129, 168, 0.08);
+  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .todo-add-button:hover {
   background: rgba(67, 129, 168, 0.18);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.88),
-    0 12px 20px rgba(67, 129, 168, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.88), 0 12px 20px rgba(67, 129, 168, 0.12);
   transform: translateY(-1px);
 }
 
@@ -953,12 +903,8 @@ html {
   padding: 0.95rem 1rem 0.9rem;
   border-radius: 18px;
   background: #ffffff;
-  box-shadow:
-    0 1px 2px rgba(15, 23, 42, 0.04),
-    0 8px 20px rgba(67, 129, 168, 0.06);
-  transition:
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 20px rgba(67, 129, 168, 0.06);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .todo-item::before {
@@ -975,9 +921,7 @@ html {
 .todo-item:hover,
 .todo-item:focus-within {
   transform: translateY(-1px);
-  box-shadow:
-    0 1px 2px rgba(15, 23, 42, 0.05),
-    0 14px 28px rgba(67, 129, 168, 0.1);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 14px 28px rgba(67, 129, 168, 0.1);
 }
 
 .todo-item.is-done {
@@ -1005,7 +949,6 @@ html {
   align-items: flex-start;
   gap: 0.1rem;
   min-width: 0;
-  width: 100%;
 }
 
 .todo-item-check-wrap {
@@ -1029,10 +972,7 @@ html {
   position: relative;
   cursor: pointer;
   flex: 0 0 auto;
-  transition:
-    border-color 0.2s ease,
-    background-color 0.2s ease,
-    transform 0.2s ease;
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
 }
 
 .todo-item-check:hover {
@@ -1083,9 +1023,6 @@ html {
   flex-direction: column;
   gap: 0.2rem;
   padding-top: 0.05rem;
-  width: 100%;
-  font-size: medium;
-  text-wrap: pretty;
 }
 
 .todo-item.is-done .todo-item-text {
@@ -1102,9 +1039,7 @@ html {
   max-height: 0;
   opacity: 0;
   overflow: hidden;
-  transition:
-    max-height 0.2s ease,
-    opacity 0.2s ease;
+  transition: max-height 0.2s ease, opacity 0.2s ease;
 }
 
 .todo-item:hover .todo-item-controls,
@@ -1144,14 +1079,8 @@ html {
   padding: 1.75rem 1.75rem 1.5rem;
   border-radius: 28px;
   border: 1px solid rgba(255, 255, 255, 0.72);
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.98) 0%,
-    rgba(255, 252, 232, 0.95) 100%
-  );
-  box-shadow:
-    0 28px 60px rgba(67, 129, 168, 0.18),
-    0 10px 24px rgba(0, 0, 0, 0.08);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 252, 232, 0.95) 100%);
+  box-shadow: 0 28px 60px rgba(67, 129, 168, 0.18), 0 10px 24px rgba(0, 0, 0, 0.08);
   text-align: left;
 }
 
@@ -1182,21 +1111,14 @@ html {
 
 .board-dialog input,
 .board-dialog select {
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.92),
-    0 10px 20px rgba(67, 129, 168, 0.06);
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    background-color 0.2s ease;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 10px 20px rgba(67, 129, 168, 0.06);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .board-dialog input:focus,
 .board-dialog select:focus {
   border-color: rgba(67, 129, 168, 0.34);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.96),
-    0 0 0 4px rgba(67, 129, 168, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.96), 0 0 0 4px rgba(67, 129, 168, 0.12);
   outline: none;
 }
 
@@ -1302,12 +1224,7 @@ html {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(
-    circle at center,
-    rgba(255, 255, 255, 0.85) 0%,
-    rgba(255, 252, 232, 0.35) 70%,
-    transparent 100%
-  );
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.85) 0%, rgba(255, 252, 232, 0.35) 70%, transparent 100%);
   border-radius: 50%;
 }
 
@@ -1363,23 +1280,17 @@ html {
   letter-spacing: 0.03em;
   cursor: pointer;
   transition: var(--transition);
-  box-shadow:
-    0 10px 22px rgba(46, 204, 113, 0.35),
-    inset 0 -3px 0 rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 22px rgba(46, 204, 113, 0.35), inset 0 -3px 0 rgba(0, 0, 0, 0.08);
 }
 
 .start-button:hover {
   transform: translateY(-2px);
-  box-shadow:
-    0 14px 28px rgba(46, 204, 113, 0.4),
-    inset 0 -3px 0 rgba(0, 0, 0, 0.08);
+  box-shadow: 0 14px 28px rgba(46, 204, 113, 0.4), inset 0 -3px 0 rgba(0, 0, 0, 0.08);
 }
 
 .start-button:active {
   transform: translateY(0);
-  box-shadow:
-    0 6px 14px rgba(46, 204, 113, 0.3),
-    inset 0 -2px 0 rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 14px rgba(46, 204, 113, 0.3), inset 0 -2px 0 rgba(0, 0, 0, 0.08);
 }
 
 .circle-button {
@@ -1392,10 +1303,7 @@ html {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
 .circle-button .button-icon {
@@ -1654,21 +1562,13 @@ html {
 
 /* Animations */
 @keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes fade-out {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 
 @keyframes pop-in {
@@ -1697,10 +1597,7 @@ html {
   z-index: 1000;
   opacity: 0;
   visibility: hidden;
-  transition:
-    opacity 0.24s ease,
-    transform 0.28s cubic-bezier(0.2, 0, 0, 1),
-    box-shadow 0.28s ease;
+  transition: opacity 0.24s ease, transform 0.28s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.28s ease;
   min-width: 300px;
   max-width: 90%;
   text-align: center;
@@ -1812,10 +1709,10 @@ html {
   }
 
   .board-tab-button {
-    width: min(9.5rem, 70vw);
-    max-width: min(9.5rem, 70vw);
-    min-height: 54px;
-    padding-inline: 0.72rem 0.82rem;
+    width: auto;
+    max-width: 16rem;
+    min-height: 44px;
+    padding: 0.45rem 0.85rem;
   }
 
   .board-tab-create-button {
@@ -1840,6 +1737,114 @@ html {
   .todo-add-form {
     grid-template-columns: 1fr;
   }
+
+  /* ---------- Mobile rethink: simple pill tabs, flat panel ----------
+     Replaces the folder-tab metaphor (which needs matched widths and
+     pixel-perfect offsets to read correctly) with a clean horizontal
+     chip row stacked above a self-contained column card. */
+  .focus-side-panel {
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-radius: 0;
+    gap: 0.85rem;
+  }
+
+  .focus-side-panel[data-mode="overview"] {
+    background: transparent;
+  }
+
+  .focus-board {
+    gap: 0.75rem;
+  }
+
+  .board-tabs-shell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .board-tabs {
+    padding: 0;
+    background: transparent;
+    border-radius: 0;
+    gap: 0.4rem;
+    align-items: center;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .board-tab-button {
+    border-radius: 999px;
+    border: 1px solid rgba(67, 129, 168, 0.18);
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 2px 6px rgba(67, 129, 168, 0.05);
+    transform: none;
+    min-height: 44px;
+    padding: 0.5rem 0.9rem;
+  }
+
+  .board-tab-button:hover {
+    transform: none;
+  }
+
+  .board-tab-button.is-active {
+    background: rgba(217, 40, 40, 0.08);
+    border: 1px solid rgba(217, 40, 40, 0.35);
+    box-shadow: 0 4px 10px rgba(217, 40, 40, 0.1);
+    transform: none;
+  }
+
+  .board-tab-create-button {
+    border-radius: 999px;
+    width: 2.75rem;
+    min-width: 2.75rem;
+    height: 2.75rem;
+    min-height: 2.75rem;
+    align-self: center;
+    margin: 0;
+    border: 1px solid rgba(67, 129, 168, 0.18);
+    background: rgba(255, 255, 255, 0.7);
+  }
+
+  .board-panel-stage {
+    margin-top: 0;
+  }
+
+  .board-column {
+    border-radius: 18px;
+    padding: 0.85rem;
+    gap: 0.7rem;
+  }
+
+  /* Column title row: hide the duplicate title badge, keep just the
+     compact edit button. The tab above already shows the active title. */
+  .board-column-header {
+    gap: 0.5rem;
+  }
+
+  .board-column-meta {
+    grid-template-columns: 1fr auto;
+    gap: 0.5rem;
+  }
+
+  .column-title-display {
+    min-height: 44px;
+    padding: 0.45rem 0.75rem;
+    border-radius: 12px;
+  }
+
+  .column-title-label {
+    font-size: 1rem;
+  }
+
+  /* Prev/next/delete row — keep touch-friendly but tighter */
+  .focus-side-panel .controls,
+  .board-column-actions {
+    gap: 0.5rem;
+  }
 }
 
 @media (max-width: 991px) {
@@ -1848,6 +1853,13 @@ html {
     padding-top: calc(0.5rem + var(--safe-area-top));
     padding-bottom: calc(1rem + var(--safe-area-bottom));
     gap: 1rem;
+  }
+
+  /* Collapse the flex-grow spacers in the timer-container so the
+     workspace content starts at the top and uses page-level scroll
+     instead of being pushed into a centered, viewport-tall box. */
+  .timer-container > .grow {
+    display: none;
   }
 
   header {
@@ -1893,11 +1905,11 @@ html {
     min-height: 0;
   }
 
-  .focus-layout[data-mobile-view="workspace"] .focus-side-panel {
-    flex: 1 1 auto;
-    min-height: 0;
-  }
-
+  /* Mobile workspace: let the column grow with content and use
+     page-level scroll. Remove the flex:1/min-height:0/height:100%
+     chain that was trapping the editor inside the viewport and
+     making only the inner Quill area scroll. */
+  .focus-layout[data-mobile-view="workspace"] .focus-side-panel,
   .focus-layout[data-mobile-view="workspace"] .focus-board,
   .focus-layout[data-mobile-view="workspace"] .board-columns,
   .focus-layout[data-mobile-view="workspace"] .board-tabs-shell,
@@ -1908,21 +1920,31 @@ html {
   .focus-layout[data-mobile-view="workspace"] .todo-column-shell,
   .focus-layout[data-mobile-view="workspace"] .todo-column-content,
   .focus-layout[data-mobile-view="workspace"] .todo-list {
+    flex: 0 0 auto;
     min-height: 0;
-    flex: 1 1 auto;
+    height: auto;
   }
 
-  .focus-layout[data-mobile-view="workspace"] .board-panel-stage,
-  .focus-layout[data-mobile-view="workspace"] .board-column,
-  .focus-layout[data-mobile-view="workspace"] .board-notes-editor-shell,
-  .focus-layout[data-mobile-view="workspace"] .board-notes-editor,
-  .focus-layout[data-mobile-view="workspace"] .todo-column-shell,
-  .focus-layout[data-mobile-view="workspace"] .todo-column-content {
-    height: 100%;
+  .focus-layout[data-mobile-view="workspace"] .board-notes-editor-shell {
+    min-height: clamp(22rem, 58vh, 36rem);
+  }
+
+  .focus-layout[data-mobile-view="workspace"] .board-notes-editor {
+    min-height: clamp(18rem, 50vh, 30rem);
+    overflow: visible;
+  }
+
+  .focus-layout[data-mobile-view="workspace"] .board-notes-editor .ql-container {
+    min-height: clamp(16rem, 48vh, 28rem);
+    height: auto;
+  }
+
+  .focus-layout[data-mobile-view="workspace"] .board-notes-editor .ql-editor {
+    min-height: clamp(16rem, 48vh, 28rem);
   }
 
   .focus-layout[data-mobile-view="workspace"] .board-column {
-    min-height: 100%;
+    min-height: 0;
   }
 
   .timer-card {
@@ -1967,31 +1989,39 @@ html {
     -webkit-backdrop-filter: blur(12px);
   }
 
+  /* When the AI assistant covers the page, the sticky switcher would
+     otherwise stay frozen at the scroll offset it had when the chat
+     opened. Promote it to fixed so it remains anchored to the top. */
+  body:has(.ai-chat-panel.is-open) .mobile-panel-switcher {
+    position: fixed;
+    top: calc(var(--safe-area-top) + 0.35rem);
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(calc(100vw - 1.5rem), 86rem);
+  }
+
   .mobile-panel-button {
-    min-height: 46px;
+    min-height: 48px;
+    min-width: 0;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.35rem;
-    padding: 0.72rem 0.5rem;
+    gap: 0.4rem;
+    padding: 0.72rem 0.55rem;
     border-radius: 999px;
     color: #6d7a85;
     font-size: 0.9rem;
     line-height: 1;
     white-space: nowrap;
-    transition:
-      background-color 0.2s ease,
-      color 0.2s ease,
-      box-shadow 0.2s ease,
-      transform 0.2s ease;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
   }
 
   .mobile-panel-button.is-active {
     background: rgba(255, 255, 255, 0.94);
     color: var(--secondary-color);
-    box-shadow:
-      0 10px 20px rgba(67, 129, 168, 0.12),
-      inset 0 1px 0 rgba(255, 255, 255, 0.92);
+    box-shadow: 0 10px 20px rgba(67, 129, 168, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.92);
   }
 
   .mobile-panel-button:active {
@@ -2002,8 +2032,25 @@ html {
     color: var(--primary-color);
   }
 
+  .mobile-panel-button[data-mobile-view="assistant"].is-active {
+    color: var(--primary-color);
+  }
+
   .mobile-panel-button .button-icon {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    flex: 0 0 auto;
+  }
+
+  /* Sub-360px: drop the label, keep the icon. Keeps all three pills
+     tappable without clipping text. */
+  @media (max-width: 360px) {
+    .mobile-panel-button {
+      font-size: 0;
+      gap: 0;
+    }
+    .mobile-panel-button .button-icon {
+      font-size: 1.05rem;
+    }
   }
 
   .focus-layout[data-mobile-view="workspace"] .timer-wrapper {
@@ -2069,8 +2116,7 @@ html {
 }
 
 /* Accessibility focus styles */
-button:focus,
-input:focus {
+button:focus, input:focus {
   outline: 2px solid var(--secondary-color);
   outline-offset: 2px;
 }

@@ -1024,7 +1024,7 @@
       const buttonView = button.getAttribute("data-mobile-view");
       const isActive = buttonView === "assistant"
         ? isAssistantPanelOpen
-        : buttonView === mobileView;
+        : !isAssistantPanelOpen && buttonView === mobileView;
       button.classList.toggle("is-active", isActive);
       button.setAttribute("aria-pressed", String(isActive));
     });
@@ -1038,7 +1038,10 @@
 
     const nextView = button.getAttribute("data-mobile-view");
     if (nextView === "assistant") {
-      if (global.AIChat && typeof global.AIChat.open === "function") {
+      if (!global.AIChat) return;
+      if (isAssistantPanelOpen && typeof global.AIChat.close === "function") {
+        global.AIChat.close();
+      } else if (typeof global.AIChat.open === "function") {
         global.AIChat.open();
       }
       return;

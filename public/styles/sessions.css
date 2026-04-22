@@ -178,6 +178,27 @@
 
 @media (max-width: 640px) {
   .sessions-bar {
-    margin: 0 8px 10px;
+    gap: 6px;
+    padding: 6px 8px;
+    margin: 0 0 10px;
+    border-radius: 18px;
+  }
+
+  .sessions-current {
+    gap: 8px;
+    padding: 5px 6px;
+  }
+
+  .sessions-current-label {
+    font-size: 0.68rem;
+  }
+
+  .sessions-current-title {
+    font-size: 0.92rem;
+  }
+
+  .sessions-new {
+    width: 36px;
+    height: 36px;
   }
 }

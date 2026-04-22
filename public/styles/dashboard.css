@@ -1,6 +1,44 @@
 /* ============================================
    DoroDoro Dashboard — home.html (signed-in view)
+   Mobile-first. Resets global <section>/<header>
+   rules from style.css so the cards lay out as
+   proper stacked blocks inside the shell.
    ============================================ */
+
+/* Host section: let the shell size naturally, no global flex/padding */
+.home-page {
+  display: block;
+  padding: 0;
+  flex-grow: 0;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: clip;
+}
+
+/* Cards in the dashboard are <section> elements — override the global
+   `section { display: flex; padding: 20px }` so they stack cleanly.
+   Using :where() to keep specificity at 0 so later rules win naturally. */
+:where(.dashboard-shell) section {
+  display: block;
+  padding: 0;
+  flex-grow: 0;
+}
+
+/* Card headers are <header> elements — reset the global sticky navbar styles */
+:where(.dashboard-shell) .dash-card-header {
+  position: static;
+  top: auto;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  border-radius: 0;
+  display: block;
+  flex-wrap: nowrap;
+  gap: 0;
+}
 
 /* Empty states */
 .dash-empty-hero[hidden],
@@ -153,13 +191,26 @@
 }
 
 .dashboard-shell {
-  width: min(100%, 78rem);
+  width: 100%;
+  max-width: 78rem;
   margin: 0 auto;
-  padding: 1.5rem 1.25rem 3rem;
+  padding: 1rem 0.85rem 2.25rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
   color: #2b5f80;
+  min-width: 0;
+}
+
+.dashboard-shell > * {
+  min-width: 0;
+}
+
+@media (min-width: 640px) {
+  .dashboard-shell {
+    padding: 1.5rem 1.25rem 3rem;
+    gap: 1.5rem;
+  }
 }
 
 .dashboard-shell[hidden] {
@@ -169,15 +220,26 @@
 /* Greeting */
 .dash-greeting {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   gap: 1rem;
   background: rgba(255, 255, 255, 0.72);
   border: 2px solid rgba(67, 129, 168, 0.22);
-  border-radius: 1.5rem;
-  padding: 1.5rem 1.75rem;
-  box-shadow: 0 16px 30px rgba(67, 129, 168, 0.12);
+  border-radius: 1.25rem;
+  padding: 1.15rem 1.15rem;
+  box-shadow: 0 12px 24px rgba(67, 129, 168, 0.12);
+}
+
+@media (min-width: 640px) {
+  .dash-greeting {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 1.5rem;
+    padding: 1.5rem 1.75rem;
+    box-shadow: 0 16px 30px rgba(67, 129, 168, 0.12);
+  }
 }
 
 .dash-eyebrow {
@@ -212,16 +274,27 @@
 .dash-cta {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.45rem;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   color: #ffffff;
-  padding: 0.85rem 1.5rem;
+  padding: 0.85rem 1.25rem;
+  min-height: 44px;
+  width: 100%;
   background: linear-gradient(135deg, #d92828, #ef6554);
   border: none;
   border-radius: 999px;
   box-shadow: 0 10px 24px rgba(217, 40, 40, 0.28);
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+@media (min-width: 640px) {
+  .dash-cta {
+    width: auto;
+    font-size: 1.1rem;
+    padding: 0.85rem 1.5rem;
+  }
 }
 
 .dash-cta:hover {
@@ -236,19 +309,41 @@
 /* KPI grid */
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-  gap: 1rem;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+@media (min-width: 480px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+  }
+}
+
+@media (min-width: 900px) {
+  .kpi-grid {
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1rem;
+  }
 }
 
 .kpi-card {
   background: rgba(255, 255, 255, 0.85);
   border: 2px solid rgba(67, 129, 168, 0.18);
-  border-radius: 1.25rem;
-  padding: 1.25rem 1.35rem;
+  border-radius: 1.1rem;
+  padding: 1rem 1.1rem;
   box-shadow: 0 8px 18px rgba(67, 129, 168, 0.08);
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
+  min-width: 0;
+}
+
+@media (min-width: 640px) {
+  .kpi-card {
+    border-radius: 1.25rem;
+    padding: 1.25rem 1.35rem;
+  }
 }
 
 .kpi-label {
@@ -292,13 +387,27 @@
   flex-direction: row;
   align-items: center;
   gap: 1rem;
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 900px) {
+  .kpi-goal {
+    grid-column: auto;
+  }
 }
 
 .kpi-ring {
   position: relative;
-  width: 6.5rem;
-  height: 6.5rem;
+  width: 5.5rem;
+  height: 5.5rem;
   flex-shrink: 0;
+}
+
+@media (min-width: 640px) {
+  .kpi-ring {
+    width: 6.5rem;
+    height: 6.5rem;
+  }
 }
 
 .kpi-ring svg {
@@ -350,6 +459,7 @@
   flex-direction: column;
   gap: 0.25rem;
   min-width: 0;
+  flex: 1;
 }
 
 .kpi-goal h3 {
@@ -361,13 +471,13 @@
 /* Two-column section */
 .dash-columns {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  grid-template-columns: 1fr;
   gap: 1rem;
 }
 
-@media (max-width: 900px) {
+@media (min-width: 900px) {
   .dash-columns {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
   }
 }
 
@@ -377,9 +487,20 @@
 .dash-recent-card {
   background: rgba(255, 255, 255, 0.85);
   border: 2px solid rgba(67, 129, 168, 0.18);
-  border-radius: 1.25rem;
-  padding: 1.25rem 1.35rem;
+  border-radius: 1.1rem;
+  padding: 1rem 1.1rem;
   box-shadow: 0 8px 18px rgba(67, 129, 168, 0.08);
+  min-width: 0;
+}
+
+@media (min-width: 640px) {
+  .dash-chart-card,
+  .dash-stats-card,
+  .dash-heatmap-card,
+  .dash-recent-card {
+    border-radius: 1.25rem;
+    padding: 1.25rem 1.35rem;
+  }
 }
 
 .dash-card-header {
@@ -401,7 +522,13 @@
 
 .chart-wrap {
   position: relative;
-  height: 17rem;
+  height: 13rem;
+}
+
+@media (min-width: 640px) {
+  .chart-wrap {
+    height: 17rem;
+  }
 }
 
 /* Mini stats */
@@ -523,7 +650,13 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 24rem;
+  max-width: 100%;
+}
+
+@media (min-width: 640px) {
+  .recent-subject {
+    max-width: 24rem;
+  }
 }
 
 .recent-subject.muted {
@@ -568,21 +701,18 @@
   color: #2b5f80;
 }
 
-/* Responsive tweaks */
-@media (max-width: 560px) {
-  .dash-greeting {
-    padding: 1.25rem;
+/* Small-phone tweaks (<400px): stack recent items for readability */
+@media (max-width: 400px) {
+  .recent-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
   }
   .kpi-goal {
     flex-direction: column;
     align-items: flex-start;
   }
-  .kpi-ring {
-    width: 5.5rem;
-    height: 5.5rem;
-  }
-  .recent-item {
-    flex-direction: column;
-    align-items: flex-start;
+  .heatmap-cell {
+    font-size: 0.6rem;
   }
 }
