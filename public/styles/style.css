@@ -11,7 +11,8 @@
   --text-light: #ffffff;
   --border-radius: 10px;
   --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  --transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  --interactive-transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
   --safe-area-top: env(safe-area-inset-top, 0px);
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
   --page-background:
@@ -74,7 +75,7 @@ body {
 
 button {
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  transition: var(--interactive-transition);
 }
 
 header {
@@ -701,7 +702,7 @@ input[type="text"], input[type="email"], input[type="password"] {
   font-family: "Bubblegum Sans", sans-serif;
   font-size: 1.1rem;
   cursor: pointer;
-  transition: var(--transition);
+  transition: var(--interactive-transition);
   border: none;
 }
 

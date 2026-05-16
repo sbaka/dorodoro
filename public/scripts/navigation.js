@@ -79,7 +79,8 @@ function initThemeToggle() {
     if (window.matchMedia) {
         const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
         mediaQuery.addEventListener("change", () => {
-            if (localStorage.getItem(THEME_STORAGE_KEY)) {
+            const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+            if (storedTheme === "light" || storedTheme === "dark") {
                 return;
             }
             applyTheme(getSystemTheme());

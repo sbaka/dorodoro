@@ -1287,7 +1287,7 @@ html {
   font-size: clamp(1.3rem, 5vw, 1.75rem);
   letter-spacing: 0.03em;
   cursor: pointer;
-  transition: var(--transition);
+  transition: var(--interactive-transition);
   box-shadow: 0 10px 22px rgba(46, 204, 113, 0.35), inset 0 -3px 0 rgba(0, 0, 0, 0.08);
 }
 
@@ -1373,7 +1373,7 @@ html {
   font-family: "Bubblegum Sans", sans-serif;
   font-size: 1rem;
   cursor: pointer;
-  transition: var(--transition);
+  transition: var(--interactive-transition);
 }
 
 .secondary-button:hover {
@@ -1434,7 +1434,7 @@ html {
   border: 1px solid #e0e0e0;
   border-radius: var(--border-radius);
   font-size: 1rem;
-  transition: var(--transition);
+  transition: var(--interactive-transition);
 }
 
 .task-input-container input:focus {
