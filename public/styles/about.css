@@ -37,3 +37,12 @@ body {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
+
+:root[data-theme="dark"] body {
+  background: linear-gradient(180deg, #091019 0%, #152433 100%);
+}
+
+:root[data-theme="dark"] .imagesContainer > img {
+  background-color: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.24);
+}

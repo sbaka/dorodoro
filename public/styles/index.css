@@ -373,3 +373,50 @@
     margin-bottom: 0.25rem;
   }
 }
+
+:root[data-theme="dark"] .ContentSection,
+:root[data-theme="dark"] .hero-visual,
+:root[data-theme="dark"] .info-card {
+  background: rgba(14, 23, 35, 0.78);
+  border-color: rgba(148, 183, 208, 0.14);
+  box-shadow: 0 24px 44px rgba(0, 0, 0, 0.28);
+}
+
+:root[data-theme="dark"] .ContentSection::before {
+  background: rgba(217, 40, 40, 0.18);
+}
+
+:root[data-theme="dark"] .eyebrow,
+:root[data-theme="dark"] .card-label {
+  background: rgba(245, 243, 135, 0.12);
+  border-color: rgba(245, 243, 135, 0.14);
+}
+
+:root[data-theme="dark"] .textSection > p,
+:root[data-theme="dark"] .highlight-label,
+:root[data-theme="dark"] .info-card p,
+:root[data-theme="dark"] .hero-note,
+:root[data-theme="dark"] .hero-note span {
+  color: #d3e0eb;
+}
+
+:root[data-theme="dark"] .secondary-link,
+:root[data-theme="dark"] .highlight-card,
+:root[data-theme="dark"] .hero-note {
+  background: rgba(17, 30, 44, 0.88);
+  border-color: rgba(148, 183, 208, 0.14);
+}
+
+:root[data-theme="dark"] .secondary-link {
+  color: #d8e8f4;
+}
+
+:root[data-theme="dark"] .hero-mascot-card {
+  background: linear-gradient(180deg, rgba(245, 243, 135, 0.12), rgba(13, 22, 34, 0.92));
+  box-shadow: inset 0 0 0 1px rgba(148, 183, 208, 0.14);
+}
+
+:root[data-theme="dark"] .intro-card,
+:root[data-theme="dark"] .wide-card {
+  background: rgba(13, 22, 34, 0.9);
+}

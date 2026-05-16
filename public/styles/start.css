@@ -2185,3 +2185,70 @@ button:focus, input:focus {
   box-shadow: 0 0 0 4px rgba(67, 129, 168, 0.15);
   background: #fff;
 }
+
+:root[data-theme="dark"] .focus-side-panel,
+:root[data-theme="dark"] .illustration-card,
+:root[data-theme="dark"] .board-empty-card,
+:root[data-theme="dark"] .board-column,
+:root[data-theme="dark"] .timer-card,
+:root[data-theme="dark"] .board-dialog,
+:root[data-theme="dark"] .sessions-bar,
+:root[data-theme="dark"] .sessions-menu {
+  background: rgba(12, 22, 34, 0.88);
+  border-color: rgba(148, 183, 208, 0.14);
+  box-shadow: 0 24px 44px rgba(0, 0, 0, 0.24);
+}
+
+:root[data-theme="dark"] .focus-side-panel[data-mode="overview"],
+:root[data-theme="dark"] .board-tabs,
+:root[data-theme="dark"] #timer-circle {
+  background: rgba(10, 18, 29, 0.68);
+}
+
+:root[data-theme="dark"] .illustration-tagline,
+:root[data-theme="dark"] .focus-pane-head p,
+:root[data-theme="dark"] .board-empty-card p,
+:root[data-theme="dark"] .board-tab-title,
+:root[data-theme="dark"] .todo-empty,
+:root[data-theme="dark"] .todo-item-text,
+:root[data-theme="dark"] .stat-label {
+  color: #c9d8e5;
+}
+
+:root[data-theme="dark"] .column-title-display,
+:root[data-theme="dark"] .column-title-input,
+:root[data-theme="dark"] .todo-item,
+:root[data-theme="dark"] .todo-add-input,
+:root[data-theme="dark"] .todo-item-priority,
+:root[data-theme="dark"] .board-notes-editor,
+:root[data-theme="dark"] .board-notes-toolbar.ql-toolbar.ql-snow,
+:root[data-theme="dark"] .board-notes-toolbar.ql-toolbar.ql-snow button,
+:root[data-theme="dark"] .board-notes-toolbar.ql-toolbar.ql-snow select,
+:root[data-theme="dark"] .board-notes-toolbar.ql-toolbar.ql-snow .ql-picker,
+:root[data-theme="dark"] .board-notes-toolbar.ql-toolbar.ql-snow .ql-picker-label,
+:root[data-theme="dark"] .circle-button,
+:root[data-theme="dark"] .secondary-button {
+  background: rgba(17, 30, 44, 0.88);
+  border-color: rgba(148, 183, 208, 0.16);
+  color: #e7eef7;
+}
+
+:root[data-theme="dark"] .board-notes-toolbar.ql-toolbar.ql-snow button::before,
+:root[data-theme="dark"] .board-notes-toolbar.ql-toolbar.ql-snow .ql-picker-label::after,
+:root[data-theme="dark"] .circle-button .button-icon,
+:root[data-theme="dark"] .secondary-button .button-icon {
+  color: #d9e7f2;
+}
+
+:root[data-theme="dark"] .ring-track,
+:root[data-theme="dark"] .session-dots .dot {
+  background: rgba(148, 183, 208, 0.22);
+  stroke: rgba(148, 183, 208, 0.22);
+}
+
+:root[data-theme="dark"] .task-input-container input,
+:root[data-theme="dark"] .stats-card,
+:root[data-theme="dark"] .session-progress {
+  background: rgba(12, 22, 34, 0.88);
+  color: #e7eef7;
+}
