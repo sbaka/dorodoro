@@ -10,6 +10,18 @@
   <meta name="keywords" content="Pomodoro, study, student, university, focus">
   <meta name="author" content="Abdellatif Kebraoui">
   <title>DoroDoro - Pomodoro Study Timer</title>
+  <script>
+    (function () {
+      try {
+        var storedTheme = localStorage.getItem("dorodoro-theme");
+        var theme = storedTheme === "light" || storedTheme === "dark"
+          ? storedTheme
+          : (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+      } catch (error) { }
+    })();
+  </script>
   <link rel="stylesheet" href="./styles/style.css" />
   <link rel="stylesheet" href="./styles/index.css" />
   <link rel="icon" type="image/x-icon" href="./assets/Logo.ico">

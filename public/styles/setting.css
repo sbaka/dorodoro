@@ -245,7 +245,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
   font-size: 0.9rem;
   border: none;
   cursor: pointer;
-  transition: var(--transition);
+  transition: var(--interactive-transition);
   min-height: 40px;
   flex: 0 1 auto;
   min-width: 7rem;
@@ -330,6 +330,48 @@ input:focus-visible {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+:root[data-theme="dark"] .settings-container {
+  background: rgba(12, 22, 34, 0.88);
+  border-color: rgba(148, 183, 208, 0.16);
+  box-shadow: 0 24px 44px rgba(0, 0, 0, 0.28);
+}
+
+:root[data-theme="dark"] .settingItem {
+  background: rgba(17, 30, 44, 0.86);
+  border-color: rgba(148, 183, 208, 0.12);
+}
+
+:root[data-theme="dark"] .settingItem:hover,
+:root[data-theme="dark"] .settingItem:focus-within {
+  border-color: rgba(148, 183, 208, 0.24);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.16);
+}
+
+:root[data-theme="dark"] .title h2,
+:root[data-theme="dark"] .illustration h1,
+:root[data-theme="dark"] .settingItem label {
+  color: #f0f5fa;
+}
+
+:root[data-theme="dark"] .range-input,
+:root[data-theme="dark"] .setting-description {
+  color: #c8d8e5;
+}
+
+:root[data-theme="dark"] input[type="range"] {
+  background: rgba(148, 183, 208, 0.22);
+}
+
+:root[data-theme="dark"] .settings-actions {
+  border-top-color: rgba(148, 183, 208, 0.12);
+}
+
+:root[data-theme="dark"] .secondary-button {
+  background: rgba(17, 30, 44, 0.86);
+  border-color: rgba(148, 183, 208, 0.16);
+  color: #dce7f0;
 }
 :root {
   --primary-color: #D92828;
@@ -576,7 +618,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
   font-size: 1rem;
   border: none;
   cursor: pointer;
-  transition: var(--transition);
+  transition: var(--interactive-transition);
   min-height: 44px;
 }
 
@@ -780,7 +822,7 @@ input:focus-visible {
   background-color: var(--bg-dark);
   padding: 1.25rem;
   border-radius: var(--border-radius);
-  transition: var(--transition);
+  transition: var(--interactive-transition);
 }
 
 .settingItem:hover {
@@ -838,7 +880,7 @@ input[type="range"]::-webkit-slider-thumb {
   cursor: pointer;
   border-radius: 50%;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  transition: var(--transition);
+  transition: var(--interactive-transition);
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
@@ -854,7 +896,7 @@ input[type="range"]::-moz-range-thumb {
   border-radius: 50%;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   border: none;
-  transition: var(--transition);
+  transition: var(--interactive-transition);
 }
 
 input[type="range"]::-moz-range-thumb:hover {

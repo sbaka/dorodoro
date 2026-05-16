@@ -557,3 +557,74 @@
     font-size: 1rem;
   }
 }
+
+:root[data-theme="dark"] .auth-hero,
+:root[data-theme="dark"] .auth-card {
+  border-color: rgba(148, 183, 208, 0.16);
+  box-shadow: 0 24px 44px rgba(0, 0, 0, 0.28);
+}
+
+:root[data-theme="dark"] .auth-card {
+  background:
+    radial-gradient(circle at top left, rgba(245, 243, 135, 0.1), transparent 24%),
+    rgba(12, 22, 34, 0.9);
+}
+
+:root[data-theme="dark"] .auth-visual-card {
+  background: linear-gradient(180deg, rgba(245, 243, 135, 0.12), rgba(10, 18, 29, 0.92));
+}
+
+:root[data-theme="dark"] .form-tag,
+:root[data-theme="dark"] .toggle-password,
+:root[data-theme="dark"] .google-button,
+:root[data-theme="dark"] .btns input[type="button"] {
+  background: rgba(17, 30, 44, 0.88);
+  border-color: rgba(148, 183, 208, 0.18);
+  color: #d7e4ef;
+}
+
+:root[data-theme="dark"] .field-label,
+:root[data-theme="dark"] .signUpContainer h3,
+:root[data-theme="dark"] .signInContainer h3,
+:root[data-theme="dark"] .auth-inline-note,
+:root[data-theme="dark"] .form-note,
+:root[data-theme="dark"] #strength-text {
+  color: #bcd0df;
+}
+
+:root[data-theme="dark"] .input {
+  background: rgba(10, 20, 31, 0.88);
+  border-color: rgba(148, 183, 208, 0.18);
+  color: #ebf3f9;
+}
+
+:root[data-theme="dark"] .input:focus {
+  background: rgba(13, 24, 37, 0.96);
+}
+
+:root[data-theme="dark"] .input::placeholder {
+  color: #8ea5b6;
+}
+
+:root[data-theme="dark"] .text-action {
+  color: #d7e4ef;
+}
+
+:root[data-theme="dark"] #error {
+  background-color: rgba(72, 25, 25, 0.86);
+  border-color: rgba(255, 138, 138, 0.26);
+}
+
+:root[data-theme="dark"] #error.is-success {
+  background-color: rgba(20, 63, 38, 0.86);
+  border-color: rgba(117, 217, 156, 0.24);
+}
+
+:root[data-theme="dark"] #error.is-info {
+  background-color: rgba(17, 45, 63, 0.86);
+  border-color: rgba(116, 181, 223, 0.24);
+}
+
+:root[data-theme="dark"] .strength-meter {
+  background-color: rgba(148, 183, 208, 0.14);
+}

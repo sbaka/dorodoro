@@ -11,9 +11,54 @@
   --text-light: #ffffff;
   --border-radius: 10px;
   --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --transition: all 0.3s ease;
+  --transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  --interactive-transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
   --safe-area-top: env(safe-area-inset-top, 0px);
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --page-background:
+    radial-gradient(circle at 12% 16%, rgba(255, 255, 255, 0.55) 0 34px, rgba(255, 255, 255, 0.18) 35px 68px, transparent 69px),
+    radial-gradient(circle at 82% 14%, rgba(67, 129, 168, 0.18) 0 40px, rgba(67, 129, 168, 0.08) 41px 78px, transparent 79px),
+    radial-gradient(circle at 88% 76%, rgba(217, 40, 40, 0.14) 0 52px, rgba(217, 40, 40, 0.06) 53px 96px, transparent 97px),
+    radial-gradient(circle at 18% 82%, rgba(67, 129, 168, 0.12) 0 30px, rgba(67, 129, 168, 0.05) 31px 60px, transparent 61px),
+    radial-gradient(circle at 58% 48%, rgba(255, 255, 255, 0.3) 0 18px, rgba(255, 255, 255, 0.08) 19px 34px, transparent 35px),
+    radial-gradient(circle at 40% 28%, rgba(255, 255, 255, 0.24) 0 14px, rgba(255, 255, 255, 0.06) 15px 28px, transparent 29px),
+    linear-gradient(180deg, #fffce7 0%, #f8f0aa 44%, #ecde87 100%);
+  --page-text: #2b5f80;
+  --header-surface: rgba(255, 252, 232, 0.76);
+  --header-border: rgba(255, 255, 255, 0.45);
+  --header-shadow: 0 10px 24px rgba(67, 129, 168, 0.12);
+  --header-button-surface: rgba(255, 255, 255, 0.56);
+  --header-button-border: rgba(67, 129, 168, 0.2);
+  --header-button-hover: rgba(67, 129, 168, 0.12);
+  --surface-popup: rgba(255, 255, 255, 0.96);
+  --surface-popup-border: rgba(67, 129, 168, 0.14);
+  --surface-input: rgba(255, 255, 255, 0.86);
+  --surface-input-border: rgba(67, 129, 168, 0.18);
+  --image-outline: rgba(0, 0, 0, 0.1);
+}
+
+:root[data-theme="dark"] {
+  --bg-light: #101822;
+  --bg-dark: #16212d;
+  --text-dark: #e7eef7;
+  --page-text: #d7e4f0;
+  --box-shadow: 0 24px 50px rgba(0, 0, 0, 0.35);
+  --page-background:
+    radial-gradient(circle at 18% 18%, rgba(80, 134, 171, 0.18) 0 34px, rgba(80, 134, 171, 0.06) 35px 68px, transparent 69px),
+    radial-gradient(circle at 82% 14%, rgba(217, 40, 40, 0.14) 0 40px, rgba(217, 40, 40, 0.04) 41px 78px, transparent 79px),
+    radial-gradient(circle at 88% 76%, rgba(245, 243, 135, 0.1) 0 52px, rgba(245, 243, 135, 0.03) 53px 96px, transparent 97px),
+    linear-gradient(180deg, #091019 0%, #13202c 48%, #1a2734 100%);
+  --header-surface: rgba(10, 18, 29, 0.82);
+  --header-border: rgba(163, 194, 221, 0.12);
+  --header-shadow: 0 18px 36px rgba(0, 0, 0, 0.32);
+  --header-button-surface: rgba(17, 30, 44, 0.78);
+  --header-button-border: rgba(150, 182, 207, 0.16);
+  --header-button-hover: rgba(67, 129, 168, 0.22);
+  --surface-popup: rgba(13, 22, 34, 0.96);
+  --surface-popup-border: rgba(150, 182, 207, 0.18);
+  --surface-input: rgba(12, 24, 38, 0.82);
+  --surface-input-border: rgba(150, 182, 207, 0.18);
+  --image-outline: rgba(255, 255, 255, 0.1);
 }
 
 * {
@@ -30,7 +75,7 @@ body {
 
 button {
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--interactive-transition);
 }
 
 header {
@@ -46,9 +91,9 @@ header {
   margin-left: 1rem;
   margin-right: 1rem;
   padding: 0.75rem 1rem;
-  background: rgba(255, 252, 232, 0.76);
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  box-shadow: 0 10px 24px rgba(67, 129, 168, 0.12);
+  background: var(--header-surface);
+  border: 1px solid var(--header-border);
+  box-shadow: var(--header-shadow);
   backdrop-filter: blur(14px);
   border-radius: 24px;
 }
@@ -89,19 +134,19 @@ header {
   justify-content: center;
   padding: 0.7rem 1rem;
   min-height: 44px;
-  border: 1px solid rgba(67, 129, 168, 0.2);
+  border: 1px solid var(--header-button-border);
   border-radius: 999px;
-  background-color: rgba(255, 255, 255, 0.56);
+  background-color: var(--header-button-surface);
   color: #4381a8;
   font-weight: 400;
   font-size: 1rem;
   line-height: 1;
   white-space: nowrap;
-  transition: all 0.3s ease;
+  transition: var(--interactive-transition);
 }
 
 #header-right > button:hover {
-  background-color: rgba(67, 129, 168, 0.12);
+  background-color: var(--header-button-hover);
   border-color: rgba(67, 129, 168, 0.32);
 }
 
@@ -110,7 +155,7 @@ header {
   cursor: pointer;
   display: flex;
   align-items: center;
-  transition: all 0.3s ease;
+  transition: var(--interactive-transition);
 }
 #profil .circle {
   margin: 0;
@@ -118,11 +163,9 @@ header {
 
 .circle:hover {
   background-color: rgba(67, 129, 168, 0.8);
-  transition: all 0.3s ease;
 }
 .popup-menu-btn:hover {
   background-color: rgba(67, 129, 168, 0.1);
-  transition: all 0.3s ease;
 }
 .popup-menu-btn{
   outline: none;
@@ -138,6 +181,7 @@ header {
   font-family: "Bubblegum Sans" , sans-serif;
   align-items: center;
   justify-content: center;
+  transition: var(--interactive-transition);
 }
 
 .popup-sign {
@@ -153,8 +197,8 @@ header {
   flex-direction: column;
   align-items: stretch;
   /*sytle*/
-  background-color: white;
-  border: none;
+  background-color: var(--surface-popup);
+  border: 1px solid var(--surface-popup-border);
   border-radius: 5px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12);
 }
@@ -172,6 +216,7 @@ header {
   height: 50%;
   cursor: pointer;
   font-size: 20px;
+  transition: var(--interactive-transition);
 }
 
 /* --------------------------------------Body-------------------------------------- */
@@ -180,16 +225,10 @@ body {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  background-color: #f5f387;
-  background-image:
-    radial-gradient(circle at 12% 16%, rgba(255, 255, 255, 0.55) 0 34px, rgba(255, 255, 255, 0.18) 35px 68px, transparent 69px),
-    radial-gradient(circle at 82% 14%, rgba(67, 129, 168, 0.18) 0 40px, rgba(67, 129, 168, 0.08) 41px 78px, transparent 79px),
-    radial-gradient(circle at 88% 76%, rgba(217, 40, 40, 0.14) 0 52px, rgba(217, 40, 40, 0.06) 53px 96px, transparent 97px),
-    radial-gradient(circle at 18% 82%, rgba(67, 129, 168, 0.12) 0 30px, rgba(67, 129, 168, 0.05) 31px 60px, transparent 61px),
-    radial-gradient(circle at 58% 48%, rgba(255, 255, 255, 0.3) 0 18px, rgba(255, 255, 255, 0.08) 19px 34px, transparent 35px),
-    radial-gradient(circle at 40% 28%, rgba(255, 255, 255, 0.24) 0 14px, rgba(255, 255, 255, 0.06) 15px 28px, transparent 29px),
-    linear-gradient(180deg, #fffce7 0%, #f8f0aa 44%, #ecde87 100%);
+  background-color: var(--bg-light);
+  background-image: var(--page-background);
   background-attachment: fixed;
+  color: var(--page-text);
   position: relative;
   overflow-x: hidden;
 }
@@ -204,6 +243,8 @@ img {
   max-width: 100%;
   height: auto;
   object-fit: contain;
+  outline: 1px solid var(--image-outline);
+  outline-offset: -1px;
 }
 
 
@@ -430,9 +471,10 @@ footer > div > button:hover {
 .form-group input {
   width: 100%;
   padding: 0.75rem 0rem;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--surface-input-border);
   border-radius: var(--border-radius);
   font-size: 1rem;
+  background: var(--surface-input);
   transition: var(--transition);
 }
 
@@ -446,7 +488,7 @@ footer > div > button:hover {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0.95);
-  background: var(--bg-light);
+  background: var(--surface-popup);
   border-radius: var(--border-radius);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   padding: 2rem;
@@ -518,6 +560,102 @@ input[type="text"], input[type="email"], input[type="password"] {
   margin-top: 1.5rem;
 }
 
+.theme-toggle {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 999px;
+  border: 1px solid var(--header-button-border);
+  background: var(--header-button-surface);
+  color: var(--secondary-color);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(67, 129, 168, 0.12);
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+  background: var(--header-button-hover);
+  border-color: rgba(67, 129, 168, 0.34);
+  box-shadow: 0 14px 24px rgba(67, 129, 168, 0.18);
+  outline: none;
+}
+
+.theme-toggle:active {
+  transform: scale(0.96);
+}
+
+.theme-toggle-floating {
+  position: fixed;
+  top: calc(var(--safe-area-top) + 1rem);
+  right: 1rem;
+  z-index: 80;
+}
+
+.theme-toggle-icon {
+  position: absolute;
+  inset: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  line-height: 1;
+  transition: opacity 0.3s cubic-bezier(0.2, 0, 0, 1), transform 0.3s cubic-bezier(0.2, 0, 0, 1), filter 0.3s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.theme-toggle .theme-toggle-sun {
+  opacity: 0;
+  transform: scale(0.25);
+  filter: blur(4px);
+}
+
+.theme-toggle .theme-toggle-moon {
+  opacity: 1;
+  transform: scale(1);
+  filter: blur(0px);
+}
+
+:root[data-theme="dark"] .theme-toggle .theme-toggle-sun {
+  opacity: 1;
+  transform: scale(1);
+  filter: blur(0px);
+}
+
+:root[data-theme="dark"] .theme-toggle .theme-toggle-moon {
+  opacity: 0;
+  transform: scale(0.25);
+  filter: blur(4px);
+}
+
+:root[data-theme="dark"] #header-left > h4,
+:root[data-theme="dark"] #header-right > button,
+:root[data-theme="dark"] .form-group label,
+:root[data-theme="dark"] .helper-text,
+:root[data-theme="dark"] .popup-sign button,
+:root[data-theme="dark"] .dialog,
+:root[data-theme="dark"] .dialog h2,
+:root[data-theme="dark"] .dialog h3 {
+  color: var(--text-dark);
+}
+
+:root[data-theme="dark"] .circle,
+:root[data-theme="dark"] .popup-menu-btn:hover {
+  color: #ffffff;
+}
+
+:root[data-theme="dark"] footer > div > button {
+  color: var(--text-light);
+}
+
+:root[data-theme="dark"] .overlay {
+  background-color: rgba(2, 7, 12, 0.68);
+}
+
 .profile-image {
   width: 60px;
   height: 60px;
@@ -568,7 +706,7 @@ input[type="text"], input[type="email"], input[type="password"] {
   font-family: "Bubblegum Sans", sans-serif;
   font-size: 1.1rem;
   cursor: pointer;
-  transition: var(--transition);
+  transition: var(--interactive-transition);
   border: none;
 }
 

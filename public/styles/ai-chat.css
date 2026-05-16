@@ -526,3 +526,19 @@
   /* Close button acts as a back button on mobile */
   .ai-chat-list { padding: 14px 12px 10px; }
 }
+
+:root[data-theme="dark"] .ai-chat-panel,
+:root[data-theme="dark"] .ai-fab {
+  --ai-accent: #6aa7cf;
+  --ai-accent-strong: #cfe7fb;
+  --ai-accent-soft: rgba(106, 167, 207, 0.14);
+  --ai-accent-softer: rgba(106, 167, 207, 0.08);
+  --ai-surface: #0d1824;
+  --ai-surface-muted: #12202e;
+  --ai-text: #ebf3f9;
+  --ai-text-muted: #b7c9d8;
+  --ai-text-faint: #8fa6b8;
+  --ai-divider: rgba(148, 183, 208, 0.12);
+  --ai-divider-strong: rgba(148, 183, 208, 0.2);
+  --ai-shadow: 0 24px 48px rgba(0, 0, 0, 0.32);
+}

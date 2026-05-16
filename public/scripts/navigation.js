@@ -12,6 +12,81 @@ link.href = "../assets/Logo.ico"
  * This allows for easy migration between development and production environments
  */
 const basePath = "";
+const THEME_STORAGE_KEY = "dorodoro-theme";
+
+function getSystemTheme() {
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+}
+
+function getActiveTheme() {
+    const theme = document.documentElement.dataset.theme;
+    return theme === "dark" || theme === "light" ? theme : getSystemTheme();
+}
+
+function applyTheme(theme, persist = false) {
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+
+    if (persist) {
+        localStorage.setItem(THEME_STORAGE_KEY, theme);
+    }
+
+    document.querySelectorAll("[data-theme-toggle]").forEach((toggle) => {
+        const nextTheme = theme === "dark" ? "light" : "dark";
+        toggle.setAttribute("aria-label", `Switch to ${nextTheme} mode`);
+        toggle.setAttribute("title", `Switch to ${nextTheme} mode`);
+        toggle.setAttribute("aria-pressed", String(theme === "dark"));
+        toggle.dataset.themeState = theme;
+    });
+}
+
+function createThemeToggle() {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "theme-toggle";
+    button.setAttribute("data-theme-toggle", "");
+    button.innerHTML = `
+        <span class="theme-toggle-icon theme-toggle-sun" aria-hidden="true">☀</span>
+        <span class="theme-toggle-icon theme-toggle-moon" aria-hidden="true">☾</span>
+    `;
+    button.addEventListener("click", () => {
+        applyTheme(getActiveTheme() === "dark" ? "light" : "dark", true);
+    });
+    return button;
+}
+
+function initThemeToggle() {
+    const mountPoint = document.querySelector("#header-right");
+    if (!mountPoint && document.querySelector("[data-theme-toggle]")) {
+        applyTheme(getActiveTheme());
+        return;
+    }
+
+    if (!document.querySelector("[data-theme-toggle]")) {
+        const toggle = createThemeToggle();
+        if (mountPoint) {
+            mountPoint.insertBefore(toggle, mountPoint.firstChild);
+        } else {
+            toggle.classList.add("theme-toggle-floating");
+            document.body.appendChild(toggle);
+        }
+    }
+
+    applyTheme(getActiveTheme());
+
+    if (window.matchMedia) {
+        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+        mediaQuery.addEventListener("change", () => {
+            const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+            if (storedTheme === "light" || storedTheme === "dark") {
+                return;
+            }
+            applyTheme(getSystemTheme());
+        });
+    }
+}
 
 /**
  * Navigate to a page with error handling and optional callback
@@ -105,4 +180,10 @@ function checkAuthRequirement(requiresAuth = false) {
         }
 
     }
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initThemeToggle, { once: true });
+} else {
+    initThemeToggle();
 }

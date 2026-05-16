@@ -320,6 +320,44 @@
   }
 }
 
+:root[data-theme="dark"] .dashboard-shell {
+  color: #d7e4f0;
+}
+
+:root[data-theme="dark"] .dash-greeting,
+:root[data-theme="dark"] .kpi-card,
+:root[data-theme="dark"] .dash-chart-card,
+:root[data-theme="dark"] .dash-stats-card,
+:root[data-theme="dark"] .dash-heatmap-card,
+:root[data-theme="dark"] .dash-recent-card,
+:root[data-theme="dark"] .dash-empty-hero {
+  background: rgba(12, 22, 34, 0.86);
+  border-color: rgba(148, 183, 208, 0.16);
+  box-shadow: 0 24px 44px rgba(0, 0, 0, 0.24);
+}
+
+:root[data-theme="dark"] .dash-empty-visual {
+  background: rgba(17, 30, 44, 0.88);
+}
+
+:root[data-theme="dark"] .dash-subtitle,
+:root[data-theme="dark"] .dash-empty-text > p,
+:root[data-theme="dark"] .dash-empty-list li,
+:root[data-theme="dark"] .chart-empty,
+:root[data-theme="dark"] .chart-empty p,
+:root[data-theme="dark"] .chart-empty small,
+:root[data-theme="dark"] .heatmap-empty,
+:root[data-theme="dark"] .kpi-sub,
+:root[data-theme="dark"] .mini-label,
+:root[data-theme="dark"] .recent-empty {
+  color: #c8d8e5;
+}
+
+:root[data-theme="dark"] .dash-eyebrow {
+  background: rgba(245, 243, 135, 0.12);
+  border-color: rgba(245, 243, 135, 0.14);
+}
+
 @media (min-width: 900px) {
   .kpi-grid {
     grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
