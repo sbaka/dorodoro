@@ -142,6 +142,7 @@ header {
   font-size: 1rem;
   line-height: 1;
   white-space: nowrap;
+  transition: var(--interactive-transition);
 }
 
 #header-right > button:hover {
@@ -154,6 +155,7 @@ header {
   cursor: pointer;
   display: flex;
   align-items: center;
+  transition: var(--interactive-transition);
 }
 #profil .circle {
   margin: 0;
@@ -179,6 +181,7 @@ header {
   font-family: "Bubblegum Sans" , sans-serif;
   align-items: center;
   justify-content: center;
+  transition: var(--interactive-transition);
 }
 
 .popup-sign {
@@ -213,6 +216,7 @@ header {
   height: 50%;
   cursor: pointer;
   font-size: 20px;
+  transition: var(--interactive-transition);
 }
 
 /* --------------------------------------Body-------------------------------------- */
