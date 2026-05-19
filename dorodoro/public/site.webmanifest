@@ -1,0 +1,29 @@
+{
+    "id": "/",
+    "name": "DoroDoro",
+    "short_name": "DoroDoro",
+    "description": "A calmer Pomodoro workspace for focused study sessions, breaks, dashboards, and planning.",
+    "start_url": "/",
+    "scope": "/",
+    "display": "standalone",
+    "background_color": "#fdf8ef",
+    "theme_color": "#d92828",
+    "categories": [
+        "productivity",
+        "education"
+    ],
+    "icons": [
+        {
+            "src": "/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        }
+    ]
+}

@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Recurse -Path \"c:\\\\Users\\\\abdel\\\\Documents\\\\Hobby\\\\dorodoro\\\\next-js\\\\dorodoro\\\\app\" -Include \"*chat*\", \"*ai*\" -Exclude node_modules -File)",
+      "Bash(Select-Object FullName)"
+    ]
+  }
+}

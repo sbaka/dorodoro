@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#d92828" />
+    <title>DoroDoro Offline</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --cream: #fdf8ef;
+            --cream-2: #f5e9cc;
+            --red: #d92828;
+            --navy: #1a1a2e;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            background:
+                radial-gradient(circle at top, rgba(217, 40, 40, 0.12), transparent 35%),
+                var(--cream);
+            color: var(--navy);
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        main {
+            width: min(100%, 32rem);
+            border: 2px solid var(--navy);
+            border-radius: 24px;
+            padding: 32px;
+            background: linear-gradient(180deg, #fff, var(--cream-2));
+            box-shadow: 8px 8px 0 var(--navy);
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-block;
+            margin-bottom: 16px;
+            padding: 8px 14px;
+            border: 2px solid var(--navy);
+            border-radius: 999px;
+            background: #fff;
+            color: var(--red);
+            font-weight: 700;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            font-size: clamp(2rem, 5vw, 2.75rem);
+            line-height: 1;
+        }
+
+        p {
+            margin: 0 0 24px;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        a {
+            display: inline-block;
+            padding: 12px 18px;
+            border: 2px solid var(--navy);
+            border-radius: 999px;
+            background: var(--red);
+            color: #fff;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 4px 4px 0 var(--navy);
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <div class="badge">Offline mode</div>
+        <h1>DoroDoro is temporarily offline.</h1>
+        <p>
+            Your app shell is installed, but this page needs a connection right now.
+            Reconnect and try again to keep your study session moving.
+        </p>
+        <a href="/">Try again</a>
+    </main>
+</body>
+
+</html>
