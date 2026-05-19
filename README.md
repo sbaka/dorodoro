@@ -2,206 +2,210 @@
 <h1 align="center">
 <img src="https://raw.githubusercontent.com/PKief/vscode-material-icon-theme/ec559a9f6bfd399b82bb44393651661b08aaf7ba/icons/folder-markdown-open.svg" width="100" />
 <br>DoroDoro</h1>
-<h3>◦ Active Next.js app now lives at the repository root</h3>
-<h3>◦ Developed with the software and tools below.</h3>
+<h3>Pomodoro workspace with sessions, notes, analytics, and AI</h3>
 
 <p align="center">
 <img src="https://img.shields.io/badge/Next.js-000000.svg?style&logo=nextdotjs&logoColor=white" alt="Next.js" />
+<img src="https://img.shields.io/badge/React-61DAFB.svg?style&logo=react&logoColor=061A23" alt="React" />
 <img src="https://img.shields.io/badge/TypeScript-3178C6.svg?style&logo=TypeScript&logoColor=white" alt="TypeScript" />
 <img src="https://img.shields.io/badge/Firebase-FFCA28.svg?style&logo=Firebase&logoColor=black" alt="Firebase" />
 <img src="https://img.shields.io/badge/Vercel-000000.svg?style&logo=Vercel&logoColor=white" alt="Vercel" />
 <img src="https://img.shields.io/badge/Cloudflare-F38020.svg?style&logo=Cloudflare&logoColor=white" alt="Cloudflare" />
-<img src="https://img.shields.io/badge/ESLint-4B32C3.svg?style&logo=ESLint&logoColor=white" alt="ESLint" />
-<img src="https://img.shields.io/badge/JSON-000000.svg?style&logo=JSON&logoColor=white" alt="JSON" />
 </p>
 <img src="https://img.shields.io/github/license/sbaka/dorodoro?style&color=5D6D7E" alt="MIT License" />
-<img src="https://img.shields.io/github/last-commit/sbaka/dorodoro?style&color=5D6D7E" alt="git-last-commit" />
+<img src="https://img.shields.io/github/last-commit/sbaka/dorodoro?style&color=5D6D7E" alt="Last commit" />
 <img src="https://img.shields.io/github/commit-activity/m/sbaka/dorodoro?style&color=5D6D7E" alt="GitHub commit activity" />
 <img src="https://img.shields.io/github/languages/top/sbaka/dorodoro?style&color=5D6D7E" alt="GitHub top language" />
 </div>
 
 ---
 
-## 📖 Table of Contents
+## Table of Contents
 
-- [📖 Table of Contents](#-table-of-contents)
-- [📍 Overview](#-overview)
-- [📦 Features](#-features)
-- [📂 Repository Structure](#-repository-structure)
-- [📄 License](#-license)
+- [Overview](#overview)
+- [Features](#features)
+- [Local Development](#local-development)
+- [Deployment](#deployment)
+- [Repository Structure](#repository-structure)
+- [Sessions and AI](#sessions-and-ai)
+- [Current Status](#current-status)
+- [License](#license)
 
 ---
 
-## 📍 Overview
+## Overview
 
-It is a project I did with a friend, she did the design and I coded the website. The intention was to simulate a Client/Developer experience and get as close to what the client wanted as possible.
+DoroDoro is a study-focused Pomodoro app. The active application lives at the repository root and runs on Next.js with Firebase Auth, Firebase Realtime Database, and a Cloudflare Worker for AI requests.
 
-The current app is a Next.js migration of the original static prototype. Vercel now hosts the frontend, Firebase still powers auth and Realtime Database, and a Cloudflare Worker handles the AI proxy.
+The signed-in app is built around long-lived work sessions. Each session keeps its own timer state, notes, todos, analytics history, and assistant thread so you can switch between subjects or projects without losing context.
 
 ![Screenshot of the first screen](image.png)
 
----
+## Features
 
-## 📦 Features
+- Public landing, about, privacy, and terms pages.
+- Email/password, Google, reset-password, and magic-link sign-in flows.
+- Customizable Pomodoro timer with persisted state, skip controls, and session history.
+- Session switcher with per-session notes, todos, and AI chat history.
+- Dashboard analytics for completed focus time and weekly progress.
+- Settings hub with profile editing, synced timer preferences, assistant usage, data export, and account deletion.
+- Server-side AI proxy through a Cloudflare Worker with per-user and global quotas.
 
-- The Pomodoro logic is quite simple to understand, but I tried adding some customization to give the end user more control and personalization.
-- I played a little with animation to get that timer animation working and synching with the timer.
-- The Firebase integration was quite straightforward although I faced some unusual errors but nothing was impossible.
-- Getting the grasp over the Flexbox
-- Small transition here and there
+## Local Development
+
+Install dependencies from the repository root:
+
+```bash
+npm install
+```
+
+Create a local env file from [.env.example](.env.example) and fill in the required values for:
+
+- Firebase web config
+- Firebase Admin service account
+- Resend email delivery
+- Cloudflare Worker URL and shared secret
+
+Start the Next.js app:
+
+```bash
+npm run dev
+```
+
+The app runs at `http://localhost:3000` by default.
+
+If you want to work on the AI proxy locally, start the Worker in a second terminal:
+
+```bash
+cd worker
+npm install
+npx wrangler dev
+```
+
+Then set `WORKER_URL=http://localhost:8787` in your local app environment.
+
+Useful root commands:
+
+```bash
+npm run dev
+npm run lint
+npm run build
+```
 
 ## Deployment
 
-The active app is the Next.js project at the repository root.
-
-- Hosting is now handled by Vercel.
-- Firebase remains in use for auth and Realtime Database.
-- Cloudflare Worker remains in use for the AI proxy.
-
 ### Vercel
 
-The local Next.js directory is already linked to the Vercel project `dorodoro` through its local `.vercel/project.json` metadata.
+The frontend is deployed from the repository root. This repo already contains local Vercel metadata for the `dorodoro` project.
 
-Deploy or relink from the repository root:
-
-```
-npm install
+```bash
 npx vercel link
 npx vercel pull --yes
 npx vercel deploy
 ```
 
-For production:
+For a production deployment:
 
-```
+```bash
 npx vercel deploy --prod
 ```
 
-Set the project Root Directory in Vercel to the repository root.
-
-Required Vercel environment variables are documented in `.env.example`.
+Set the Vercel project Root Directory to the repository root. Required environment variables are documented in [.env.example](.env.example).
 
 ### Firebase
 
-Firebase Hosting has been removed from this repository. Firebase is still used for auth and Realtime Database, so only database rules should be deployed from the repo root.
+Firebase Hosting is no longer used here. Firebase still handles auth and Realtime Database, so the deploy step from this repo is the database rules update:
 
-```
+```bash
 firebase deploy --only database
 ```
 
-## TODOS
+### Cloudflare Worker
 
-This project isn't 100% done actually its not even fully usable as of now (10/10/2023):
+The Worker handles `/chat` and `/quota` for the assistant. One-time setup from [worker/](worker/):
 
-- There are like 0 tests.
-- It still needs more transitions and fluidity.
-- There are some bugs here and there like when you skip all the pomos it doesn't restart.
-- This website isn't responsive nor adaptive, It was developed for large 1080p screens and Chromium browsers.
-- The auth isn't quite there either, there isn't enough logic or security except for the one provided by Firebase.
+1. Create a Gemini API key.
+2. Create a Firebase service account JSON.
+3. Sign in to Wrangler.
+4. Set the Worker secrets.
+5. Deploy with `npx wrangler deploy`.
 
----
+Required Worker secrets:
 
-## 📂 Repository Structure
-
-```sh
-└── dorodoro/
-   ├── app/                 # Next.js app router entrypoints
-   ├── components/          # shared UI primitives and app components
-   ├── lib/                 # Firebase, timer, settings, and workspace logic
-   ├── public/              # PWA assets and static media
-   ├── worker/              # Cloudflare Worker for AI routes
-   ├── plans/               # migration tracking and implementation slices
-   ├── firebase.json
-   ├── database.rules.json
-   └── README.md
+```bash
+npx wrangler secret put GEMINI_API_KEY
+npx wrangler secret put FIREBASE_PROJECT_ID
+npx wrangler secret put RTDB_URL
+npx wrangler secret put FIREBASE_SA_JSON
+npx wrangler secret put WORKER_SHARED_SECRET
 ```
 
----
+After deploy, set `WORKER_URL` and `WORKER_SHARED_SECRET` in the Next.js app environment.
 
-## 🧠 Sessions & AI
+## Repository Structure
 
-DoroDoro is organized around **work sessions** — long-lived project containers that each own their own notes, todos, pomodoro stats, and AI chat thread. The sessions switcher lives above the focus board on the `/start` route; the AI assistant is a slide-over panel opened from the sparkle action inside the authenticated app.
-
-### Data model (Firebase Realtime Database)
-
+```text
+dorodoro/
+├── app/                 # App Router routes, API routes, and app components
+├── components/ui/       # shared shadcn-style UI primitives
+├── lib/                 # auth, settings, sessions, timer, analytics, chat, and RTDB helpers
+├── public/              # static assets, PWA files, and service worker files
+├── worker/              # Cloudflare Worker for AI streaming and quota checks
+├── plans/               # migration and implementation notes
+├── database.rules.json  # Firebase Realtime Database rules
+├── firebase.json
+├── package.json
+└── README.md
 ```
+
+## Sessions and AI
+
+DoroDoro stores user data per session. A session owns its own notes, todos, focus history, and assistant conversation.
+
+### Realtime Database shape
+
+```text
 users/{uid}/
-  activeSessionId
-  sessions/{sessionId}/{ title, description, status, createdAt, updatedAt, archivedAt,
-                         focusBoard/…, aiChat/messages/…, stats/… }
-  events/{eventId}              # now carries sessionId
-  statsDaily/{YYYY-MM-DD}
+   activeSessionId
+   sessions/{sessionId}/{ title, description, status, createdAt, updatedAt, archivedAt,
+                                     focusBoard/..., aiChat/messages/..., stats/... }
+   events/{eventId}
+   statsDaily/{YYYY-MM-DD}
 aiLimits/
-  global/{YYYY-MM-DD}/count
-  users/{uid}/{ daily/{YYYY-MM-DD}/count, monthly/{YYYY-MM}/count, lastRequestAt }
+   global/{YYYY-MM-DD}/count
+   users/{uid}/{ daily/{YYYY-MM-DD}/count, monthly/{YYYY-MM}/count, lastRequestAt }
 ```
 
-Rules are in [`database.rules.json`](database.rules.json). Deploy with:
+Rules live in [database.rules.json](database.rules.json).
 
-```
-firebase deploy --only database
-```
+The browser never talks to the Worker directly in production. It calls Next.js API routes under `app/api/ai`, which forward the request after verifying the Firebase session and attaching the shared secret.
 
-On the first load after deploy, each signed-in user's legacy `users/{uid}/focusBoard` is migrated into a new "Default" session and the legacy path is removed.
+Current assistant limits:
 
-### AI chat: Cloudflare Worker
+- 50 requests per day per user
+- 500 requests per month per user
+- 1,000 requests per day globally
+- 3 second cooldown between requests
 
-The AI assistant streams through a Cloudflare Worker that verifies the Firebase ID token and enforces per-user + global rate limits in RTDB. The Next app calls the Worker from same-origin API routes, so browser traffic goes to `/api/ai/chat` instead of the Worker URL directly. All Worker code lives in [`worker/`](worker/).
-
-Limits: **50/day, 500/month per user; 1,000/day global; 3s cooldown**.
-
-#### One-time setup
-
-1. **Create a Gemini API key**: https://aistudio.google.com/apikey
-2. **Create a Firebase service account**: Firebase console → *Project settings* → *Service accounts* → *Generate new private key*. Keep the downloaded JSON safe.
-3. **Install wrangler & sign in**:
-
-   ```
-   cd worker
-   npm install
-   npx wrangler login
-   ```
-4. **Set secrets** (run each from inside `worker/`):
-
-   ```
-   npx wrangler secret put GEMINI_API_KEY
-   npx wrangler secret put FIREBASE_PROJECT_ID      # e.g. dorodoro-1234
-   npx wrangler secret put RTDB_URL                  # e.g. https://dorodoro-1234-default-rtdb.firebaseio.com
-   npx wrangler secret put FIREBASE_SA_JSON          # paste the entire service-account JSON (single line)
-   npx wrangler secret put WORKER_SHARED_SECRET      # same value used by the Next app
-   ```
-5. **Update allowed CORS origins** in [`worker/wrangler.toml`](worker/wrangler.toml) (`ALLOWED_ORIGINS`) if your hosting domain isn't already listed.
-6. **Deploy**:
-
-   ```
-   npx wrangler deploy
-   ```
-
-   Wrangler will print the Worker URL (e.g. `https://dorodoro-ai.<subdomain>.workers.dev`).
-7. **Point the Next app at it**: set `WORKER_URL` and `WORKER_SHARED_SECRET` in the Next app environment. The Worker URL is server-only now and should not use a `NEXT_PUBLIC_` prefix.
-
-#### Local development
-
-```
-cd worker
-npx wrangler dev           # serves at http://localhost:8787
-```
-
-Set `WORKER_URL=http://localhost:8787` and the same `WORKER_SHARED_SECRET` in the Next app while developing. Direct browser-to-worker testing is only for local debugging.
-
-#### Routes
+Worker routes:
 
 | Route | Method | Auth | Description |
 | --- | --- | --- | --- |
-| `/chat` | POST | Firebase ID token | Streams an assistant reply (NDJSON). Body: `{ sessionId, messages, context }`. |
-| `/quota` | GET | Firebase ID token | Returns the caller's current daily + monthly counts. |
+| `/chat` | `POST` | Firebase ID token | Streams assistant output as NDJSON. |
+| `/quota` | `GET` | Firebase ID token | Returns daily and monthly usage. |
 
-Upstream Gemini 5xx failures trigger an automatic counter rollback so quota isn't burned on flaky days.
+## Current Status
 
----
+The root Next.js app is the source of truth now. The main product surfaces are live:
 
-## 📄 License
+- Landing and marketing pages
+- Auth flows and email delivery
+- Dashboard analytics
+- Focus board with timer, notes, todos, and AI chat
+- Settings, privacy tools, export, and account deletion
 
-This project is licensed under the `MIT License` License. See the [LICENSE-Type](LICENSE) file for additional info.
+Automated tests are still missing, so the current workflow relies on linting, build checks, and manual validation.
 
-[↑ Return](#Top)
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE).
