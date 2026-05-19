@@ -1,8 +1,0 @@
-{
-  "compilerOptions": {
-    "ignoreDeprecations": "6.0",
-    "target": "es5",
-    "module": "commonjs"
-  },
-  "exclude": ["node_modules"]
-}

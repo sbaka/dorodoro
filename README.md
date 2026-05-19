@@ -2,7 +2,7 @@
 <h1 align="center">
 <img src="https://raw.githubusercontent.com/PKief/vscode-material-icon-theme/ec559a9f6bfd399b82bb44393651661b08aaf7ba/icons/folder-markdown-open.svg" width="100" />
 <br>DoroDoro</h1>
-<h3>◦ Active Next.js app lives in <code>dorodoro</code></h3>
+<h3>◦ Active Next.js app now lives at the repository root</h3>
 <h3>◦ Developed with the software and tools below.</h3>
 
 <p align="center">
@@ -52,7 +52,7 @@ The current app is a Next.js migration of the original static prototype. Vercel 
 
 ## Deployment
 
-The active app is the Next.js project in `dorodoro`.
+The active app is the Next.js project at the repository root.
 
 - Hosting is now handled by Vercel.
 - Firebase remains in use for auth and Realtime Database.
@@ -62,10 +62,9 @@ The active app is the Next.js project in `dorodoro`.
 
 The local Next.js directory is already linked to the Vercel project `dorodoro` through its local `.vercel/project.json` metadata.
 
-Deploy or relink from inside `dorodoro`:
+Deploy or relink from the repository root:
 
 ```
-cd dorodoro
 npm install
 npx vercel link
 npx vercel pull --yes
@@ -75,13 +74,12 @@ npx vercel deploy
 For production:
 
 ```
-cd dorodoro
 npx vercel deploy --prod
 ```
 
-Set the project Root Directory in Vercel to `dorodoro` if the dashboard is still pointing at the repository root.
+Set the project Root Directory in Vercel to the repository root.
 
-Required Vercel environment variables are documented in `dorodoro/.env.example`.
+Required Vercel environment variables are documented in `.env.example`.
 
 ### Firebase
 
@@ -107,11 +105,14 @@ This project isn't 100% done actually its not even fully usable as of now (10/10
 
 ```sh
 └── dorodoro/
+   ├── app/                 # Next.js app router entrypoints
+   ├── components/          # shared UI primitives and app components
+   ├── lib/                 # Firebase, timer, settings, and workspace logic
+   ├── public/              # PWA assets and static media
+   ├── worker/              # Cloudflare Worker for AI routes
+   ├── plans/               # migration tracking and implementation slices
    ├── firebase.json
    ├── database.rules.json
-   ├── dorodoro/            # active Next.js app deployed to Vercel
-   ├── plans/               # migration tracking and implementation slices
-   ├── worker/              # Cloudflare Worker for AI routes
    └── README.md
 ```
 
