@@ -12,14 +12,27 @@ import { streamChat } from "./gemini.js";
 import { rtdbGet, rtdbPush, rtdbPatch } from "./rtdb.js";
 
 const ACTION_BLOCK_RE = /<doro-action>\s*([\s\S]*?)\s*<\/doro-action>/i;
+const SESSION_ID_RE = /^[A-Za-z0-9_-]{8,128}$/;
+const CHAT_ID_RE = /^[A-Za-z0-9_-]{1,128}$/;
+const MAX_MESSAGES = 40;
+const MAX_MESSAGE_CHARS = 8000;
+const MAX_NOTES_CHARS = 40000;
+const MAX_TODOS = 20;
+const MAX_TODO_ITEMS = 20;
 
 function corsHeaders(env, origin) {
-  const allowed = (env.ALLOWED_ORIGINS || "").split(",").map((s) => s.trim());
-  const allowOrigin = allowed.includes(origin) ? origin : allowed[0] || "*";
+  const allowed = (env.ALLOWED_ORIGINS || "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  if (!origin || !allowed.includes(origin)) {
+    return { Vary: "Origin" };
+  }
+
   return {
-    "Access-Control-Allow-Origin": allowOrigin,
+    "Access-Control-Allow-Origin": origin,
     "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
-    "Access-Control-Allow-Headers": "Authorization,Content-Type",
+    "Access-Control-Allow-Headers": "Authorization,Content-Type,X-Dorodoro-Worker-Secret",
     "Access-Control-Max-Age": "86400",
     Vary: "Origin",
   };
@@ -121,6 +134,64 @@ function normalizePriority(value) {
 
 function cleanText(value, maxLen) {
   return typeof value === "string" ? value.trim().slice(0, maxLen) : "";
+}
+
+function normalizeMessages(value) {
+  if (!Array.isArray(value) || !value.length) {
+    return null;
+  }
+
+  const messages = value
+    .slice(-MAX_MESSAGES)
+    .map((item) => {
+      const msg = item && typeof item === "object" ? item : {};
+      const role = msg.role === "assistant" ? "assistant" : msg.role === "user" ? "user" : "";
+      const content = cleanText(msg.content, MAX_MESSAGE_CHARS);
+      return role && content ? { role, content } : null;
+    })
+    .filter(Boolean);
+
+  return messages.length ? messages : null;
+}
+
+function normalizeContextTodos(value) {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.slice(0, MAX_TODOS).map((column) => {
+    const source = column && typeof column === "object" ? column : {};
+    const items = Array.isArray(source.items)
+      ? source.items
+          .slice(0, MAX_TODO_ITEMS)
+          .map((item) => {
+            const base = item && typeof item === "object" ? item : {};
+            const text = cleanText(base.text, 160);
+            if (!text) return null;
+            return {
+              text,
+              done: base.done === true,
+              priority: normalizePriority(base.priority),
+            };
+          })
+          .filter(Boolean)
+      : [];
+
+    return {
+      title: cleanText(source.title, 80),
+      items,
+    };
+  });
+}
+
+function hasValidWorkerSecret(request, env) {
+  const expected = typeof env.WORKER_SHARED_SECRET === "string"
+    ? env.WORKER_SHARED_SECRET.trim()
+    : "";
+  if (!expected) {
+    return true;
+  }
+  return request.headers.get("X-Dorodoro-Worker-Secret") === expected;
 }
 
 function inferFallbackAction(messages, assistantText) {
@@ -281,18 +352,38 @@ async function handleChat(request, env) {
     return json({ error: "invalid_json" }, { status: 400 });
   }
 
-  const { sessionId, messages, context } = body || {};
+  const { sessionId, chatId, messages, context } = body || {};
   if (!sessionId || typeof sessionId !== "string") {
     return json({ error: "missing_sessionId" }, { status: 400 });
   }
-  if (!Array.isArray(messages) || !messages.length) {
+  const safeSessionId = sessionId.trim();
+  if (!SESSION_ID_RE.test(safeSessionId)) {
+    return json({ error: "invalid_sessionId" }, { status: 400 });
+  }
+
+  if (!chatId || typeof chatId !== "string") {
+    return json({ error: "missing_chatId" }, { status: 400 });
+  }
+  const safeChatId = chatId.trim();
+  if (!CHAT_ID_RE.test(safeChatId)) {
+    return json({ error: "invalid_chatId" }, { status: 400 });
+  }
+
+  const safeMessages = normalizeMessages(messages);
+  if (!safeMessages) {
     return json({ error: "missing_messages" }, { status: 400 });
   }
 
   // Confirm the session belongs to the authenticated user.
-  const sessionMeta = await rtdbGet(env, `users/${user.uid}/sessions/${sessionId}`);
+  const sessionMeta = await rtdbGet(env, `users/${user.uid}/sessions/${safeSessionId}`);
   if (!sessionMeta) {
     return json({ error: "forbidden_session" }, { status: 403 });
+  }
+
+  // Confirm the chat belongs to this session.
+  const chatMeta = await rtdbGet(env, `users/${user.uid}/sessions/${safeSessionId}/aiChat/chats/${safeChatId}`);
+  if (!chatMeta) {
+    return json({ error: "forbidden_chat" }, { status: 403 });
   }
 
   const limit = await rateLimit.check(env, user.uid);
@@ -304,11 +395,11 @@ async function handleChat(request, env) {
   }
 
   const safeContext = {
-    sessionTitle: (context && context.sessionTitle) || sessionMeta.title || "Untitled session",
-    sessionDescription: sessionMeta.description || "",
+    sessionTitle: cleanText((context && context.sessionTitle) || sessionMeta.title, 80) || "Untitled session",
+    sessionDescription: cleanText(sessionMeta.description, 300),
     stats: sessionMeta.stats || null,
-    notes: (context && typeof context.notes === "string") ? context.notes.slice(0, 40000) : "",
-    todos: Array.isArray(context && context.todos) ? context.todos.slice(0, 20) : [],
+    notes: (context && typeof context.notes === "string") ? context.notes.slice(0, MAX_NOTES_CHARS) : "",
+    todos: normalizeContextTodos(context && context.todos),
   };
 
   const encoder = new TextEncoder();
@@ -320,7 +411,7 @@ async function handleChat(request, env) {
       let tokensOut = 0;
       let upstreamFailed = false;
       try {
-        for await (const part of streamChat(env, { messages, context: safeContext })) {
+        for await (const part of streamChat(env, { messages: safeMessages, context: safeContext })) {
           if (part.type === "delta") {
             assistantText += part.text;
             controller.enqueue(encoder.encode(JSON.stringify({ type: "delta", text: part.text }) + "\n"));
@@ -333,7 +424,7 @@ async function handleChat(request, env) {
 
         const parsed = extractAssistantPayload(assistantText);
         assistantText = parsed.visibleText || "";
-        actionPayload = parsed.action || inferFallbackAction(messages, assistantText);
+        actionPayload = parsed.action || inferFallbackAction(safeMessages, assistantText);
       } catch (err) {
         upstreamFailed = true;
         console.warn("gemini failed:", err.message);
@@ -351,7 +442,7 @@ async function handleChat(request, env) {
         try {
           const msgId = await rtdbPush(
             env,
-            `users/${user.uid}/sessions/${sessionId}/aiChat/messages`,
+            `users/${user.uid}/sessions/${safeSessionId}/aiChat/chats/${safeChatId}/messages`,
             {
               role: "assistant",
               content: assistantText,
@@ -360,7 +451,7 @@ async function handleChat(request, env) {
               tokensOut,
             }
           );
-          await rtdbPatch(env, `users/${user.uid}/sessions/${sessionId}/aiChat`, {
+          await rtdbPatch(env, `users/${user.uid}/sessions/${safeSessionId}/aiChat/chats/${safeChatId}`, {
             updatedAt: Date.now(),
           });
           controller.enqueue(
@@ -407,6 +498,10 @@ export default {
     }
 
     try {
+      if (!hasValidWorkerSecret(request, env)) {
+        return json({ error: "forbidden_worker" }, { status: 403 }, corsHeaders(env, origin));
+      }
+
       if (url.pathname === "/chat" && request.method === "POST") {
         return await handleChat(request, env);
       }
